@@ -1,0 +1,15 @@
+svn-*
+wget-*
+build-*
+*.gz
+*.bz2
+gnustep-base-svn/
+gnustep-corebase-svn/
+gnustep-make-svn/
+icu/
+libBlocksRuntime-0.1/
+libdispatch-0~svn197/
+libffi-3.0.10/
+libkqueue-1.0.6/
+libobjc2-1.6/
+llvm-3.0.src/

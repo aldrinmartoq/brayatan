@@ -1,0 +1,36 @@
+diff -pr libdispatch-0~svn197/Makefile.am libdispatch-0~svn197.new/Makefile.am
+*** libdispatch-0~svn197/Makefile.am	2010-12-24 12:30:44.000000000 -0300
+--- libdispatch-0~svn197.new/Makefile.am	2012-04-21 20:54:53.968408318 -0300
+*************** ACLOCAL_AMFLAGS = -I m4
+*** 6,10 ****
+  SUBDIRS=		\
+  	dispatch	\
+  	man		\
+! 	src		\
+! 	testing
+--- 6,9 ----
+  SUBDIRS=		\
+  	dispatch	\
+  	man		\
+! 	src		
+diff -pr libdispatch-0~svn197/Makefile.in libdispatch-0~svn197.new/Makefile.in
+*** libdispatch-0~svn197/Makefile.in	2010-12-24 12:31:05.000000000 -0300
+--- libdispatch-0~svn197.new/Makefile.in	2012-04-21 20:54:48.407477031 -0300
+*************** ACLOCAL_AMFLAGS = -I m4
+*** 242,249 ****
+  SUBDIRS = \
+  	dispatch	\
+  	man		\
+! 	src		\
+! 	testing
+  
+  all: all-recursive
+  
+--- 242,248 ----
+  SUBDIRS = \
+  	dispatch	\
+  	man		\
+! 	src		
+  
+  all: all-recursive
+  

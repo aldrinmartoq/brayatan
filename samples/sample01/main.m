@@ -11,7 +11,7 @@
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        Http *http = [Http createServerWithIP:@"127.0.0.1" atPort:8888 callback:^(Request *req, Response *res) {
+        Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:8888 callback:^(Request *req, Response *res) {
             [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
             [res endWithBody:@"Hola, Flaites!"];
         }];

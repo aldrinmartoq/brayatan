@@ -1,0 +1,151 @@
+Description: Upstream changes introduced in version 635-1
+ This patch has been created by dpkg-source during the package build.
+ Here's the last changelog entry, hopefully it gives details on why
+ those changes were made:
+ .
+ libcorefoundation (635-1) unstable; urgency=low
+ .
+   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+ .
+ The person named in the Author field signed this changelog entry.
+Author: Mark Heily <mark@heily.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- libcorefoundation-635.orig/CFArray.c
++++ libcorefoundation-635/CFArray.c
+@@ -30,7 +30,6 @@
+ #include <CoreFoundation/CFPriv.h>
+ #include "CFInternal.h"
+ #include <string.h>
+-#include <CoreFoundation/CFVersionCheck.h>
+ 
+ const CFArrayCallBacks kCFTypeArrayCallBacks = {0, __CFTypeCollectionRetain, __CFTypeCollectionRelease, CFCopyDescription, CFEqual};
+ static const CFArrayCallBacks __kCFNullArrayCallBacks = {0, NULL, NULL, NULL, NULL};
+--- libcorefoundation-635.orig/Makefile
++++ libcorefoundation-635/Makefile
+@@ -4,39 +4,44 @@ include MakefileVersion
+ MIN_MACOSX_VERSION=10.7
+ MAX_MACOSX_VERSION=MAC_OS_X_VERSION_10_7
+ 
+-OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
++OBJECTS = CFCharacterSet.o CFPreferences.o CFApplicationPreferences.o CFXMLPreferencesDomain.o CFStringEncodingConverter.o CFUniChar.o CFArray.o CFPropertyList.o CFStringEncodingDatabase.o CFUnicodeDecomposition.o CFBag.o CFData.o  CFStringEncodings.o CFUnicodePrecomposition.o CFBase.o CFDate.o CFNumber.o CFRuntime.o CFStringScanner.o CFBinaryHeap.o CFDateFormatter.o CFNumberFormatter.o CFSet.o CFStringUtilities.o CFUtilities.o CFBinaryPList.o CFDictionary.o CFPlatform.o CFSystemDirectories.o CFVersion.o CFBitVector.o CFError.o CFPlatformConverters.o CFTimeZone.o  CFBuiltinConverters.o CFFileUtilities.o  CFSortFunctions.o CFTree.o CFICUConverters.o CFURL.o CFLocale.o  CFURLAccess.o CFCalendar.o CFLocaleIdentifier.o CFString.o CFUUID.o CFStorage.o CFLocaleKeys.o
+ OBJECTS += CFBasicHash.o
+ HFILES = $(wildcard *.h)
+ INTERMEDIATE_HFILES = $(addprefix $(OBJBASE)/CoreFoundation/,$(HFILES))
+ 
+-PUBLIC_HEADERS=CFArray.h CFBag.h CFBase.h CFBinaryHeap.h CFBitVector.h CFBundle.h CFByteOrder.h CFCalendar.h CFCharacterSet.h CFData.h CFDate.h CFDateFormatter.h CFDictionary.h CFError.h CFLocale.h CFMessagePort.h CFNumber.h CFNumberFormatter.h CFPlugIn.h CFPlugInCOM.h CFPreferences.h CFPropertyList.h CFRunLoop.h CFSet.h CFSocket.h CFStream.h CFString.h CFStringEncodingExt.h CFTimeZone.h CFTree.h CFURL.h CFURLAccess.h CFUUID.h CFUserNotification.h CFXMLNode.h CFXMLParser.h CoreFoundation.h
++PUBLIC_HEADERS=CFArray.h CFBag.h CFBase.h CFBinaryHeap.h CFBitVector.h CFByteOrder.h CFCalendar.h CFCharacterSet.h CFData.h CFDate.h CFDateFormatter.h CFDictionary.h CFError.h CFLocale.h CFMachPort.h CFNumber.h CFNumberFormatter.h CFPreferences.h CFPropertyList.h CFSet.h CFString.h CFStringEncodingExt.h CFTimeZone.h CFTree.h CFURL.h CFURLAccess.h CFUUID.h CoreFoundation.h TargetConditionals.h
+ 
+-PRIVATE_HEADERS=CFBundlePriv.h CFCharacterSetPriv.h CFError_Private.h CFLogUtilities.h CFPriv.h CFRuntime.h CFStorage.h CFStreamAbstract.h CFStreamPriv.h CFStreamInternal.h CFStringDefaultEncoding.h CFStringEncodingConverter.h CFStringEncodingConverterExt.h CFUniChar.h CFUnicodeDecomposition.h CFUnicodePrecomposition.h ForFoundationOnly.h
++PRIVATE_HEADERS= CFCharacterSetPriv.h CFError_Private.h CFLogUtilities.h CFPriv.h CFRuntime.h CFStorage.h CFStringDefaultEncoding.h CFStringEncodingConverter.h CFStringEncodingConverterExt.h CFUniChar.h CFUnicodeDecomposition.h CFUnicodePrecomposition.h ForFoundationOnly.h 
+ 
+-MACHINE_TYPE := $(shell uname -p)
+-unicode_data_file_name = $(if $(or $(findstring i386,$(1)),$(findstring i686,$(1)),$(findstring x86_64,$(1))),CFUnicodeData-L.mapping,CFUnicodeData-B.mapping)
++RESOURCES = CFCharacterSetBitmaps.bitmap CFUnicodeData-L.mapping CFUnicodeData-B.mapping
+ 
+ OBJBASE_ROOT = CF-Objects
+ OBJBASE = $(OBJBASE_ROOT)/$(STYLE)
+-DSTBASE = $(if $(DSTROOT),$(DSTROOT)/System/Library/Frameworks,../CF-Root)
++DSTBASE = $(BRAYATAN)
+ 
+ STYLE=normal
+-STYLE_CFLAGS=-O2
++STYLE_CFLAGS=-O0 -g -I$(BRAYATAN)/include
+ STYLE_LFLAGS=
+-ARCHFLAGS=-arch i386 -arch x86_64
+-INSTALLNAME=/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation_$(STYLE)
+ 
+-CC = /usr/bin/llvm-gcc
++CC = clang
+ 
+-CFLAGS=-c -x c -pipe -std=gnu99 -Wmost -Wno-trigraphs -mmacosx-version-min=$(MIN_MACOSX_VERSION) -fconstant-cfstrings -fexceptions -DCF_BUILDING_CF=1 -DDEPLOYMENT_TARGET_MACOSX=1 -DMAC_OS_X_VERSION_MAX_ALLOWED=$(MAX_MACOSX_VERSION) -DU_SHOW_DRAFT_API=1 -DU_SHOW_CPLUSPLUS_API=0 -I$(OBJBASE) -DVERSION=$(VERSION) -include CoreFoundation_Prefix.h
++CFLAGS=-c -x c -fblocks -fpic -pipe -std=gnu99 -Wno-trigraphs -fexceptions -DCF_BUILDING_CF=1 -DDEPLOYMENT_TARGET_LINUX=1 -DMAC_OS_X_VERSION_MAX_ALLOWED=$(MAX_MACOSX_VERSION) -DU_SHOW_DRAFT_API=1 -DU_SHOW_CPLUSPLUS_API=0 -I$(OBJBASE) -I$(OBJBASE)/CoreFoundation -DVERSION=$(VERSION) -include CoreFoundation_Prefix.h -I$(BRAYATAN)/include
+ 
+-LFLAGS=-dynamiclib -mmacosx-version-min=$(MIN_MACOSX_VERSION) -twolevel_namespace -fexceptions -init ___CFInitialize -compatibility_version 150 -current_version $(VERSION) -Wl,-alias_list,SymbolAliases -sectcreate __UNICODE __csbitmaps CFCharacterSetBitmaps.bitmap -sectcreate __UNICODE __properties CFUniCharPropertyDatabase.data -sectcreate __UNICODE __data $(call unicode_data_file_name,$(MACHINE_TYPE)) -segprot __UNICODE r r
++LFLAGS=-shared -fpic -init=___CFInitialize -Wl,--no-undefined,-soname,libCoreFoundation.so
+ 
++# Libs for open source version of ICU
++#LIBS=-lc -lpthread -lm -lrt  -licuuc -licudata -licui18n -lBlocksRuntime
++
++# Libs for Apple version of ICU
++#LIBS=-lc -lpthread -lm -lrt  -licucore -lBlocksRuntime
++
++# Libs for Debian version of ICU
++LIBS=-lc -lpthread -lm -lrt  `icu-config --ldflags` -lBlocksRuntime -L$(BRAYATAN)/lib
+ 
+ .PHONY: all install clean
+ .PRECIOUS: $(OBJBASE)/CoreFoundation/%.h
+ 
+-all: install
++all: $(OBJBASE)/libCoreFoundation.so
+ 
+ clean:
+ 	-/bin/rm -rf $(OBJBASE_ROOT)
+@@ -48,34 +53,27 @@ $(OBJBASE)/CoreFoundation/%.h: %.h $(OBJ
+ 	/bin/cp $< $@
+ 
+ $(OBJBASE)/%.o: %.c $(INTERMEDIATE_HFILES)
+-	$(CC) $(STYLE_CFLAGS) $(ARCHFLAGS) $(CFLAGS) $< -o $@
++	$(CC) $(STYLE_CFLAGS) $(CFLAGS) $< -o $@
+ 
+ $(OBJBASE)/%.o: %.m $(INTERMEDIATE_HFILES)
+-	$(CC) $(STYLE_CFLAGS) $(ARCHFLAGS) $(CFLAGS) $< -o $@
+-
+-$(OBJBASE)/CoreFoundation_$(STYLE): $(addprefix $(OBJBASE)/,$(OBJECTS))
+-	$(CC) $(STYLE_LFLAGS) -install_name $(INSTALLNAME) $(ARCHFLAGS) $(LFLAGS) $^ -licucore.A -o $(OBJBASE)/CoreFoundation_$(STYLE)
+-
+-install: $(OBJBASE)/CoreFoundation_$(STYLE)
+-	/bin/rm -rf $(DSTBASE)/CoreFoundation.framework
+-	/bin/mkdir -p $(DSTBASE)/CoreFoundation.framework/Versions/A/Resources
+-	/bin/mkdir -p $(DSTBASE)/CoreFoundation.framework/Versions/A/Headers
+-	/bin/mkdir -p $(DSTBASE)/CoreFoundation.framework/Versions/A/PrivateHeaders
+-	/bin/ln -sf A $(DSTBASE)/CoreFoundation.framework/Versions/Current
+-	/bin/ln -sf Versions/Current/Resources $(DSTBASE)/CoreFoundation.framework/Resources
+-	/bin/ln -sf Versions/Current/Headers $(DSTBASE)/CoreFoundation.framework/Headers
+-	/bin/ln -sf Versions/Current/PrivateHeaders $(DSTBASE)/CoreFoundation.framework/PrivateHeaders
+-	/bin/ln -sf Versions/Current/CoreFoundation $(DSTBASE)/CoreFoundation.framework/CoreFoundation
+-	/bin/cp Info.plist $(DSTBASE)/CoreFoundation.framework/Versions/A/Resources
+-	/bin/mkdir -p $(DSTBASE)/CoreFoundation.framework/Versions/A/Resources/en.lproj
+-	/bin/cp $(PUBLIC_HEADERS) $(DSTBASE)/CoreFoundation.framework/Versions/A/Headers
+-	/bin/cp $(PRIVATE_HEADERS) $(DSTBASE)/CoreFoundation.framework/Versions/A/PrivateHeaders
+-	#/usr/bin/strip -S -o $(DSTBASE)/CoreFoundation.framework/Versions/A/CoreFoundation $(OBJBASE)/CoreFoundation_$(STYLE)
+-	/bin/cp $(OBJBASE)/CoreFoundation_$(STYLE) $(DSTBASE)/CoreFoundation.framework/Versions/A/CoreFoundation
+-	/usr/bin/dsymutil $(DSTBASE)/CoreFoundation.framework/Versions/A/CoreFoundation -o $(DSTBASE)/CoreFoundation.framework.dSYM
+-	/usr/sbin/chown -RH -f root:wheel $(DSTBASE)/CoreFoundation.framework
+-	/bin/chmod -RH a-w,a+rX $(DSTBASE)/CoreFoundation.framework
+-	/bin/chmod -RH u+w $(DSTBASE)
+-	install_name_tool -id /System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation $(DSTBASE)/CoreFoundation.framework/Versions/A/CoreFoundation
+-	@echo "Installing done.  The framework is in $(DSTBASE)"
++	$(CC) $(STYLE_CFLAGS) $(CFLAGS) $< -o $@
+ 
++$(OBJBASE)/libCoreFoundation.so: $(addprefix $(OBJBASE)/,$(OBJECTS))
++	$(CC) $(STYLE_LFLAGS) $(LFLAGS) $^ -L$(DSTBASE)/lib $(LIBS) -o $(OBJBASE)/libCoreFoundation.so.0
++	@echo "Building done. 'sudo make install' to put the result into $(DSTBASE)/lib and $(DSTBASE)/include."
++	
++install: $(OBJBASE)/libCoreFoundation.so
++	/bin/mkdir -p $(DESTDIR)$(DSTBASE)
++	/bin/mkdir -p $(DESTDIR)$(DSTBASE)/include/CoreFoundation
++	/bin/mkdir -p $(DESTDIR)$(DSTBASE)/share/CoreFoundation
++	-/bin/rm $(DESTDIR)$(DSTBASE)/include/CoreFoundation/*.h
++	/bin/mkdir -p $(DESTDIR)$(DSTBASE)/lib
++	/bin/cp $(PRIVATE_HEADERS) $(DESTDIR)$(DSTBASE)/include/CoreFoundation
++	/bin/cp $(PUBLIC_HEADERS) $(DESTDIR)$(DSTBASE)/include/CoreFoundation
++	/bin/cp $(OBJBASE)/libCoreFoundation.so.0 $(DESTDIR)$(DSTBASE)/lib
++	/bin/ln -s libCoreFoundation.so.0 $(DESTDIR)$(DSTBASE)/lib/libCoreFoundation.so
++	/bin/cp $(RESOURCES) $(DESTDIR)$(DSTBASE)/share/CoreFoundation
++	# this one goes outside the base directory
++	/bin/cp TargetConditionals.h $(DESTDIR)$(DSTBASE)/include
++	/sbin/ldconfig -n $(DESTDIR)$(DSTBASE)/lib
++	@echo "Installing done. The library is in $(DSTBASE)/lib and the headers are in $(DSTBASE)/include/CoreFoundation"
