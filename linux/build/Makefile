@@ -176,7 +176,7 @@ build-libhttp_parser:
 	@ cp -r ../../libhttp_parser/http_parser.h $(BRAYATAN)/include/
 	@ mv build-libhttp_parser.log build-libhttp_parser
 
-build-libbrayatan: build-libhttp_parser build-libuv build-gnustep-corebase
+build-libbrayatan: build-gnustep-base build-libhttp_parser build-libuv
 	@ echo "Building libbrayatan"
 	@ make -C ../../libbrayatan install > build-libbrayatan.log
 	@ cp ../bin/brayatan-cc $(BRAYATAN)/bin
