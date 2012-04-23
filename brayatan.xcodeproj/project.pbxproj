@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		20335A4D1544081C00A94822 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 203359BF1544021800A94822 /* Foundation.framework */; };
-		20335A501544081C00A94822 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20335A4F1544081C00A94822 /* main.m */; };
-		20335AEB1544137100A94822 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
+		20D8227A1544E56A00024240 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 203359BF1544021800A94822 /* Foundation.framework */; };
+		20D8229C1544E64700024240 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D8229A1544E64700024240 /* main.m */; };
+		20D8229D1544E67700024240 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,7 +23,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		20335A491544081C00A94822 /* CopyFiles */ = {
+		20D822761544E56A00024240 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -36,19 +36,19 @@
 
 /* Begin PBXFileReference section */
 		203359BF1544021800A94822 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		20335A4B1544081C00A94822 /* test01 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test01; sourceTree = BUILT_PRODUCTS_DIR; };
-		20335A4F1544081C00A94822 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		20335A521544081C00A94822 /* test01-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "test01-Prefix.pch"; sourceTree = "<group>"; };
 		20335AD31544132D00A94822 /* libbrayatan.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libbrayatan.xcodeproj; path = libbrayatan/libbrayatan.xcodeproj; sourceTree = "<group>"; };
+		20D822781544E56A00024240 /* sample01 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample01; sourceTree = BUILT_PRODUCTS_DIR; };
+		20D8229A1544E64700024240 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		20D8229B1544E64700024240 /* sample01-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "sample01-Prefix.pch"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		20335A481544081C00A94822 /* Frameworks */ = {
+		20D822751544E56A00024240 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20335AEB1544137100A94822 /* libbrayatan.a in Frameworks */,
-				20335A4D1544081C00A94822 /* Foundation.framework in Frameworks */,
+				20D8229D1544E67700024240 /* libbrayatan.a in Frameworks */,
+				20D8227A1544E56A00024240 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				20335AD31544132D00A94822 /* libbrayatan.xcodeproj */,
-				20335A4E1544081C00A94822 /* test01 */,
+				20D822701544E4E700024240 /* samples */,
 				203359BE1544021800A94822 /* Frameworks */,
 				203359BC1544021800A94822 /* Products */,
 			);
@@ -68,7 +68,7 @@
 		203359BC1544021800A94822 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				20335A4B1544081C00A94822 /* test01 */,
+				20D822781544E56A00024240 /* sample01 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,23 +81,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		20335A4E1544081C00A94822 /* test01 */ = {
-			isa = PBXGroup;
-			children = (
-				20335A4F1544081C00A94822 /* main.m */,
-				20335A511544081C00A94822 /* Supporting Files */,
-			);
-			path = test01;
-			sourceTree = "<group>";
-		};
-		20335A511544081C00A94822 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				20335A521544081C00A94822 /* test01-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		20335AD41544132D00A94822 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -106,24 +89,41 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		20D822701544E4E700024240 /* samples */ = {
+			isa = PBXGroup;
+			children = (
+				20D822991544E64700024240 /* sample01 */,
+			);
+			path = samples;
+			sourceTree = "<group>";
+		};
+		20D822991544E64700024240 /* sample01 */ = {
+			isa = PBXGroup;
+			children = (
+				20D8229A1544E64700024240 /* main.m */,
+				20D8229B1544E64700024240 /* sample01-Prefix.pch */,
+			);
+			path = sample01;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		20335A4A1544081C00A94822 /* test01 */ = {
+		20D822771544E56A00024240 /* sample01 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 20335A551544081C00A94822 /* Build configuration list for PBXNativeTarget "test01" */;
+			buildConfigurationList = 20D822821544E56A00024240 /* Build configuration list for PBXNativeTarget "sample01" */;
 			buildPhases = (
-				20335A471544081C00A94822 /* Sources */,
-				20335A481544081C00A94822 /* Frameworks */,
-				20335A491544081C00A94822 /* CopyFiles */,
+				20D822741544E56A00024240 /* Sources */,
+				20D822751544E56A00024240 /* Frameworks */,
+				20D822761544E56A00024240 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = test01;
-			productName = test01;
-			productReference = 20335A4B1544081C00A94822 /* test01 */;
+			name = sample01;
+			productName = sample01;
+			productReference = 20D822781544E56A00024240 /* sample01 */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -133,6 +133,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = A0;
 			};
 			buildConfigurationList = 203359B51544021800A94822 /* Build configuration list for PBXProject "brayatan" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -152,7 +153,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				20335A4A1544081C00A94822 /* test01 */,
+				20D822771544E56A00024240 /* sample01 */,
 			);
 		};
 /* End PBXProject section */
@@ -168,11 +169,11 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
-		20335A471544081C00A94822 /* Sources */ = {
+		20D822741544E56A00024240 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20335A501544081C00A94822 /* main.m in Sources */,
+				20D8229C1544E64700024240 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,20 +229,20 @@
 			};
 			name = Release;
 		};
-		20335A561544081C00A94822 /* Debug */ = {
+		20D822831544E56A00024240 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "test01/test01-Prefix.pch";
+				GCC_PREFIX_HEADER = "samples/sample01/sample01-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		20335A571544081C00A94822 /* Release */ = {
+		20D822841544E56A00024240 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "test01/test01-Prefix.pch";
+				GCC_PREFIX_HEADER = "samples/sample01/sample01-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -258,11 +259,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		20335A551544081C00A94822 /* Build configuration list for PBXNativeTarget "test01" */ = {
+		20D822821544E56A00024240 /* Build configuration list for PBXNativeTarget "sample01" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				20335A561544081C00A94822 /* Debug */,
-				20335A571544081C00A94822 /* Release */,
+				20D822831544E56A00024240 /* Debug */,
+				20D822841544E56A00024240 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
