@@ -186,7 +186,7 @@ build-libbrayatan: build-gnustep-base build-libhttp_parser build-libuv
 	@ echo '---------------------------------------------------'
 	@ echo 'Do not forget to add the following to your .profile'
 	@ echo
-	@ echo 'export BRAYATAN=$$HOME/brayatan'
+	@ echo 'export BRAYATAN=$$HOME/local/brayatan'
 	@ echo 'export PATH=$$BRAYATAN/bin:$$PATH' 
 	@ echo
 	@ echo '---------------------------------------------------'
