@@ -31,7 +31,12 @@ Add the following to your .bashrc, .profile or equivalent:
     export BRAYATAN=$HOME/local/brayatan
     export PATH=$BRAYATAN/bin:$PATH
 
-Go to the linux/build folder and run make. Everything will be installed in your $HOME/local/brayatan folder. To build the sample01 source code, go to samples/sample01 and build it with brayatan-cc compiler:
+Go to the linux/build folder and run make.
+
+    $ cd linux/build
+    $ time make -j 4
+
+Go and get some coffe: everything will be downloaded from internet, compiled and installed in your $HOME/local/brayatan folder. To build the sample01 source code, go to samples/sample01 and build it with brayatan-cc compiler:
 
     $ cd samples/sample01
     $ brayatan-cc main.m
