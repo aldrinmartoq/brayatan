@@ -162,14 +162,14 @@ build-gnustep-base: svn-gnustep-base build-gnustep-make
 	@ cd gnustep-base-svn && make -j$(NUMCORES) install >> ../build-gnustep-base.log 2>&1
 	@ mv build-gnustep-base.log build-gnustep-base
 
-build-libuv:
+build-libuv: build-llvm-clang
 	@ echo "Building libuv"
 	@ make -C ../../libuv uv.a > build-libuv.log
 	@ cp ../../libuv/uv.a $(BRAYATAN)/lib/libuv.a
 	@ cp -r ../../libuv/include/* $(BRAYATAN)/include/
 	@ mv build-libuv.log build-libuv
 
-build-libhttp_parser:
+build-libhttp_parser: build-llvm-clang
 	@ echo "Building libhttp_parser"
 	@ make -C ../../libhttp_parser package > build-libhttp_parser.log
 	@ cp ../../libhttp_parser/libhttp_parser.a $(BRAYATAN)/lib/libhttp_parser.a
@@ -181,3 +181,13 @@ build-libbrayatan: build-gnustep-base build-libhttp_parser build-libuv
 	@ make -C ../../libbrayatan install > build-libbrayatan.log
 	@ cp ../bin/brayatan-cc $(BRAYATAN)/bin
 	@ mv build-libbrayatan.log build-libbrayatan
+	@ echo "DONE."
+	@ echo
+	@ echo '---------------------------------------------------'
+	@ echo 'Do not forget to add the following to your .profile'
+	@ echo
+	@ echo 'export BRAYATAN=$$HOME/brayatan'
+	@ echo 'export PATH=$$BRAYATAN/bin:$$PATH' 
+	@ echo
+	@ echo '---------------------------------------------------'
+	@ echo 
