@@ -1,0 +1,191 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5F4B3573D655B0E645CD501C /* http_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D90D9ED4C02D0A63D926053 /* http_parser.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1801301F7038583B51A4D241 /* libhttp_parser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libhttp_parser.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D90D9ED4C02D0A63D926053 /* http_parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = http_parser.c; path = ./http_parser.c; sourceTree = "<group>"; };
+		51B75EA9BC03495B89EBCAB2 /* http_parser.gyp */ = {isa = PBXFileReference; lastKnownFileType = text; path = http_parser.gyp; sourceTree = "<group>"; };
+		8A72D3E7ACFC87E2FF268E3D /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		01AA6DA0558FBADB76C637B5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1E7C83CF76937897C1B1975F /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				2D90D9ED4C02D0A63D926053 /* http_parser.c */,
+				8A72D3E7ACFC87E2FF268E3D /* test.c */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		4129389BAEB290C58DCE98BA = {
+			isa = PBXGroup;
+			children = (
+				1E7C83CF76937897C1B1975F /* Source */,
+				A69FD4B91748B6E639A454C6 /* Products */,
+				DB2C9E94332EFA3F6EDBD77F /* Build */,
+			);
+			sourceTree = "<group>";
+		};
+		A69FD4B91748B6E639A454C6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1801301F7038583B51A4D241 /* libhttp_parser.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DB2C9E94332EFA3F6EDBD77F /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				51B75EA9BC03495B89EBCAB2 /* http_parser.gyp */,
+			);
+			name = Build;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2C3D692EDB432A59FB72344A /* http_parser */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79A40D195AF6AE1F0E8E41DB /* Build configuration list for PBXNativeTarget "http_parser" */;
+			buildPhases = (
+				95B8174A79C419155B98E354 /* Sources */,
+				01AA6DA0558FBADB76C637B5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = http_parser;
+			productName = http_parser;
+			productReference = 1801301F7038583B51A4D241 /* libhttp_parser.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		556444191BAB19E0CEE666A6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = 2A732909C2A39816BD6A582A /* Build configuration list for PBXProject "libhttp_parser" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4129389BAEB290C58DCE98BA;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2C3D692EDB432A59FB72344A /* http_parser */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		95B8174A79C419155B98E354 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F4B3573D655B0E645CD501C /* http_parser.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		441F6FED719A9CEB3F60535B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"\"HTTP_PARSER_STRICT=0\"",
+					"\"DEBUG\"",
+					"\"_DEBUG\"",
+				);
+				HEADER_SEARCH_PATHS = .;
+				PRODUCT_NAME = http_parser;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6E9FDFF804D15C0AAF48EDD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
+			};
+			name = Debug;
+		};
+		C5D83A4016954FE319667863 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
+			};
+			name = Release;
+		};
+		F9438AB1443F82ACFCF2A967 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"\"HTTP_PARSER_STRICT=0\"",
+					"\"NDEBUG\"",
+				);
+				HEADER_SEARCH_PATHS = .;
+				PRODUCT_NAME = http_parser;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2A732909C2A39816BD6A582A /* Build configuration list for PBXProject "libhttp_parser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6E9FDFF804D15C0AAF48EDD7 /* Debug */,
+				C5D83A4016954FE319667863 /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+		79A40D195AF6AE1F0E8E41DB /* Build configuration list for PBXNativeTarget "http_parser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				441F6FED719A9CEB3F60535B /* Debug */,
+				F9438AB1443F82ACFCF2A967 /* Release */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 556444191BAB19E0CEE666A6 /* Project object */;
+}
