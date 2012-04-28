@@ -35,6 +35,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		20022518154533750067D98E /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		200225191545337D0067D98E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		203359BF1544021800A94822 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		20335AD31544132D00A94822 /* libbrayatan.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libbrayatan.xcodeproj; path = libbrayatan/libbrayatan.xcodeproj; sourceTree = "<group>"; };
 		20D822781544E56A00024240 /* sample01 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample01; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +60,8 @@
 		203359B01544021800A94822 = {
 			isa = PBXGroup;
 			children = (
+				200225191545337D0067D98E /* README.md */,
+				20022518154533750067D98E /* LICENSE */,
 				20335AD31544132D00A94822 /* libbrayatan.xcodeproj */,
 				20D822701544E4E700024240 /* samples */,
 				203359BE1544021800A94822 /* Frameworks */,

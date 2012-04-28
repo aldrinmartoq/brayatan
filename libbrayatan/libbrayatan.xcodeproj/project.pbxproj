@@ -36,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		200225131545329F0067D98E /* linux-miniruntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "linux-miniruntime.m"; sourceTree = "<group>"; };
 		20335AB6154412D700A94822 /* libbrayatan.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbrayatan.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		20335ABE154412D700A94822 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		20335ADD1544135000A94822 /* brayatan-common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "brayatan-common.h"; sourceTree = "<group>"; };
@@ -74,6 +75,7 @@
 				20335AE11544135000A94822 /* Request.m */,
 				20335AE21544135000A94822 /* Response.h */,
 				20335AE31544135000A94822 /* Response.m */,
+				200225131545329F0067D98E /* linux-miniruntime.m */,
 				20335AB8154412D700A94822 /* Frameworks */,
 				20335AB7154412D700A94822 /* Products */,
 			);
