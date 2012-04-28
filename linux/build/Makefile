@@ -133,7 +133,7 @@ svn-gnustep-make:
 
 build-gnustep-make: svn-gnustep-make build-libdispatch
 	@ echo "Configuring gnustep-make"
-	@ cd gnustep-make-svn && CC=clang CXX=clang++ ./configure --prefix=$(BRAYATAN) > ../build-gnustep-make.log 2>&1
+	@ cd gnustep-make-svn && CC=clang CXX=clang++ LDFLAGS="-L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) > ../build-gnustep-make.log 2>&1
 	@ echo "Building gnustep-make"
 	@ cd gnustep-make-svn && make -j$(NUMCORES) install >> ../build-gnustep-make.log 2>&1
 	@ mv build-gnustep-make.log build-gnustep-make
@@ -157,7 +157,7 @@ svn-gnustep-base:
 
 build-gnustep-base: svn-gnustep-base build-gnustep-make
 	@ echo "Configuring gnustep-base"
-	@ cd gnustep-base-svn && CC=clang CXX=clang++ ./configure --prefix=$(BRAYATAN) --disable-xml --disable-tls > ../build-gnustep-base.log 2>&1
+	@ cd gnustep-base-svn && CC=clang CXX=clang++ LDFLAGS="-L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) --disable-xml --disable-tls > ../build-gnustep-base.log 2>&1
 	@ echo "Building gnustep-base"
 	@ cd gnustep-base-svn && make -j$(NUMCORES) install >> ../build-gnustep-base.log 2>&1
 	@ mv build-gnustep-base.log build-gnustep-base

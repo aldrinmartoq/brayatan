@@ -6,9 +6,4 @@ CC="clang"
 CFLAGS="-fblocks -fobjc-arc -fobjc-nonfragile-abi -g -I$BRAYATAN/include -I$BRAYATAN/include/brayatan -fexceptions -fobjc-exceptions -fnative-objc-exceptions -D_NATIVE_OBJC_EXCEPTIONS"
 LDFLAGS="-lpthread -lBlocksRuntime -lgnustep-base -lobjc -luv -lbrayatan -lhttp_parser -Wl,-rpath,$BRAYATAN/lib -L$BRAYATAN/lib -L/opt/objc/lib"
 
-echo $1
-SRC=$1
-OUT=$(basename $(basename $SRC .m) .c)
-
-echo $CC $CFLAGS $SRC $LDFLAGS -o $OUT
-exec $CC $CFLAGS $SRC $LDFLAGS -o $OUT
+exec $CC $CFLAGS $LDFLAGS $*
