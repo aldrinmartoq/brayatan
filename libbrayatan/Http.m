@@ -235,6 +235,6 @@ void on_connection(uv_stream_t* uv_tcp, int status) {
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<Http: 0x%lx ip:%@ port:%d>", self, _ip, _port];
+    return [NSString stringWithFormat:@"<Http: 0x%lx ip: %@ port: %d url: http://%@:%d/ >", self, _ip, _port, _ip, _port];
 }
 @end
