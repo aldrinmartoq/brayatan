@@ -91,7 +91,7 @@ wget-libkqueue:
 build-libkqueue: wget-libkqueue build-icu
 	@ echo "Configuring libkqueue"
 	@ tar xfz libkqueue-1.0.6.tar.gz
-	cd libkqueue-1.0.6 && CC=clang ./configure --prefix=$(BRAYATAN) > ../build-libkqueue.log 2>&1
+	cd libkqueue-1.0.6 && CC=clang CFLAGS="-O2" ./configure --prefix=$(BRAYATAN) > ../build-libkqueue.log 2>&1
 	@ echo "Building libkqueue"
 	@ cd libkqueue-1.0.6 && make -j$(NUMCORES) >> ../build-libkqueue.log 2>&1
 	@ cd libkqueue-1.0.6 && make -j$(NUMCORES) install >> ../build-libkqueue.log 2>&1
@@ -108,7 +108,7 @@ build-libdispatch: wget-libdispatch build-libkqueue
 	@ cp /usr/include/unistd.h $(BRAYATAN)/include
 	@ perl -p -i -e 's/__block/___block/' $(BRAYATAN)/include/unistd.h
 	@ patch -p 0 < patch-libdispatch
-	@ cd libdispatch-0~svn197 && CC=clang CFLAGS="-I$(BRAYATAN)/include" KQUEUE_CFLAGS="-I$(BRAYATAN)/include/kqueue" KQUEUE_LIBS="-L$(BRAYATAN)/lib" LDFLAGS="-L$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) > ../build-libdispatch.log 2>&1
+	@ cd libdispatch-0~svn197 && CC=clang CFLAGS="-I$(BRAYATAN)/include -O2" KQUEUE_CFLAGS="-I$(BRAYATAN)/include/kqueue" KQUEUE_LIBS="-L$(BRAYATAN)/lib" LDFLAGS="-L$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) > ../build-libdispatch.log 2>&1
 	@ echo "Building libdispatch"
 	@ cd libdispatch-0~svn197 && make -j$(NUMCORES) install >> ../build-libdispatch.log 2>&1
 	@ mv build-libdispatch.log build-libdispatch
