@@ -34,3 +34,116 @@ diff -pr libdispatch-0~svn197/Makefile.in libdispatch-0~svn197.new/Makefile.in
   
   all: all-recursive
   
+diff -pr libdispatch-0~svn197/src/queue.c new.libdispatch-0~svn197/src/queue.c
+*** libdispatch-0~svn197/src/queue.c	2010-12-24 12:30:44.000000000 -0300
+--- new.libdispatch-0~svn197/src/queue.c	2012-05-04 02:06:12.008746166 -0300
+*************** static mach_port_t main_q_port;
+*** 165,170 ****
+--- 165,177 ----
+  
+  static void _dispatch_cache_cleanup2(void *value);
+  
++ #if DISPATCH_LINUX_COMPAT
++ static void _dispatch_queue_wakeup_main(void);
++ 
++ static bool main_q_is_draining = false;
++ static void (*main_q_handler)(void) = NULL;
++ #endif
++ 
+  static const struct dispatch_queue_vtable_s _dispatch_queue_vtable = {
+  	.do_type = DISPATCH_QUEUE_TYPE,
+  	.do_kind = "queue",
+*************** _dispatch_main_q_port_init(void *ctxt __
+*** 914,920 ****
+--- 921,929 ----
+  	_dispatch_program_is_probably_callback_driven = true;
+  	_dispatch_safe_fork = false;
+  }
++ #endif
+  
++ #if DISPATCH_COCOA_COMPAT || DISPATCH_LINUX_COMPAT
+  // 6618342 Contact the team that owns the Instrument DTrace probe before renaming this symbol
+  DISPATCH_NOINLINE
+  static void
+*************** _dispatch_wakeup(dispatch_object_t dou)
+*** 1088,1094 ****
+  	}
+  
+  	if (!_dispatch_trylock(dou._do)) {
+! #if DISPATCH_COCOA_COMPAT
+  		if (dou._dq == &_dispatch_main_q) {
+  			_dispatch_queue_wakeup_main();
+  		}
+--- 1097,1103 ----
+  	}
+  
+  	if (!_dispatch_trylock(dou._do)) {
+! #if DISPATCH_COCOA_COMPAT || DISPATCH_LINUX_COMPAT
+  		if (dou._dq == &_dispatch_main_q) {
+  			_dispatch_queue_wakeup_main();
+  		}
+*************** _dispatch_queue_wakeup_main(void)
+*** 1125,1130 ****
+--- 1134,1146 ----
+  	_dispatch_safe_fork = false;
+  }
+  #endif
++ #if DISPATCH_LINUX_COMPAT
++ void _dispatch_queue_wakeup_main(void) {
++ 	if (!main_q_handler) { return; }
++ 	main_q_handler();
++ 	_dispatch_safe_fork = false;
++ }
++ #endif
+  
+  #if HAVE_PTHREAD_WORKQUEUES
+  static inline int
+*************** _dispatch_get_main_queue_port_4CF(void)
+*** 1603,1608 ****
+--- 1619,1644 ----
+  }
+  #endif
+  
++ #if DISPATCH_LINUX_COMPAT
++ void _dispatch_main_queue_callback_4LINUX(){
++         if (main_q_is_draining) {
++                 return;
++         }
++ 
++         _dispatch_queue_set_mainq_drain_state(true);
++         _dispatch_queue_serial_drain_till_empty(&_dispatch_main_q);
++         _dispatch_queue_set_mainq_drain_state(false);
++ }
++ 
++ void _dispatch_register_signal_handler_4LINUX(_dispatch_main_q_handler_4LINUX handler){
++         if(main_q_handler)
++                 return; // we assure that only one handler can be registered
++ 
++         main_q_handler = handler;
++ }
++ 
++ #endif
++ 
+  #ifndef DISPATCH_NO_LEGACY
+  static void
+  dispatch_queue_attr_dispose(dispatch_queue_attr_t attr)
+diff -pr libdispatch-0~svn197/src/private.h new.libdispatch-0~svn197/src/private.h
+*** libdispatch-0~svn197/src/private.h	2010-12-24 12:30:44.000000000 -0300
+--- new.libdispatch-0~svn197/src/private.h	2012-05-04 02:13:20.130397761 -0300
+*************** void (*_dispatch_end_NSAutoReleasePool)(
+*** 119,124 ****
+--- 119,132 ----
+  #endif
+  #endif /* HAVE_MACH */
+  
++ #ifdef DISPATCH_LINUX_COMPAT
++ typedef void (_dispatch_main_q_handler_4LINUX)(void);
++ DISPATCH_EXPORT
++ void _dispatch_main_queue_callback_4LINUX();
++ DISPATCH_EXPORT
++ void _dispatch_register_signal_handler_4LINUX(_dispatch_main_q_handler_4LINUX);
++ #endif
++ 
+  /* pthreads magic */
+  
+  DISPATCH_NOTHROW void dispatch_atfork_prepare(void);
