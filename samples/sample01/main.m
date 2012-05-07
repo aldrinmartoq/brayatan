@@ -13,7 +13,7 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:8888 callback:^(Request *req, Response *res) {
             [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-            [res endWithBody:@"Hola, Flaites!"];
+            [res endWithBody:@"Hola, Flaites!\n"];
         }];
         
         NSLog(@"%@", http);
