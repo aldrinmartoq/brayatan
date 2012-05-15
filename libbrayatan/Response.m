@@ -127,6 +127,8 @@ static NSString *contentType(NSString *path) {
     if ([path hasSuffix:@".xml"]) return @"text/xml";
     if ([path hasSuffix:@".gif"]) return @"image/gif";
     if ([path hasSuffix:@".txt"]) return @"text/plain; charset=utf-8";
+
+    if ([path hasSuffix:@".ico"]) return @"image/x-icon";
     return @"text/plain";
 }
 
@@ -243,7 +245,7 @@ static NSString *contentType(NSString *path) {
                 return NO;
             }
             
-            [self setHeader:@"Content-Type" value:@"text/plain"];
+            [self setHeader:@"Content-Type" value:contentType(path)];
             [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%d", stat.st_size]];
             [self writeHeader];
             br_socket_delwatch((br_socket_t*)c, BRSOCKET_WATCH_READ);

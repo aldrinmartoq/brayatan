@@ -13,12 +13,12 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(Request *req, Response *res) {
 
-            if ([req.host hasPrefix:@"localhost"]) {
-                [res staticContentForPath:req.urlPath FromFolder:@"/var/www/test"];
-            } else {
+            if ([req.urlPath hasPrefix:@"/testing"]) {
                 NSString *msg = [NSString stringWithFormat:@"Hola, Flaites!\r\npath: %@ host: %@\r\n", req.urlPath, req.host];
                 [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
                 [res endWithBody:msg];
+            } else {
+                [res staticContentForPath:req.urlPath FromFolder:@"/var/www/test"];
             }
         }];
 
