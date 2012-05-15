@@ -164,14 +164,14 @@ build-gnustep-base: svn-gnustep-base build-gnustep-make
 
 build-libhttp_parser: build-llvm-clang
 	@ echo "Building libhttp_parser"
-	@ make -C ../../libhttp_parser package > build-libhttp_parser.log
+	@ +make -C ../../libhttp_parser -j$(NUMCORES) package > build-libhttp_parser.log
 	@ cp ../../libhttp_parser/libhttp_parser.a $(BRAYATAN)/lib/libhttp_parser.a
 	@ cp -r ../../libhttp_parser/http_parser.h $(BRAYATAN)/include/
 	@ mv build-libhttp_parser.log build-libhttp_parser
 
 build-libbrayatan: build-gnustep-base build-libhttp_parser
 	@ echo "Building libbrayatan"
-	@ make -C ../../libbrayatan install > build-libbrayatan.log
+	@ +make -C ../../libbrayatan -j$(NUMCORES) install > build-libbrayatan.log
 	@ cp ../bin/brayatan-cc $(BRAYATAN)/bin
 	@ mv build-libbrayatan.log build-libbrayatan
 	@ echo "DONE."
