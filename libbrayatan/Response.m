@@ -221,7 +221,7 @@ static NSString *contentType(NSString *path) {
         }
         closedir(dir);
 
-        [self writeBody:[NSString stringWithFormat:@"<BR><HT><I>%@</I>", BRVERSION]];
+        [self writeBody:[NSString stringWithFormat:@"<BR><HR><I>%@</I>", BRVERSION]];
     };
 }
 
