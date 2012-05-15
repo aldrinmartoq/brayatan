@@ -1,11 +1,11 @@
 BRAYATAN=$(HOME)/local/brayatan
 
 CC=clang
-CFLAGS=-fblocks -fobjc-nonfragile-abi -g -I$(BRAYATAN)/include -D_NATIVE_OBJC_EXCEPTIONS
+CFLAGS=-fblocks -fobjc-nonfragile-abi -I$(BRAYATAN)/include -I$(BRAYATAN)/include/kqueue -D_NATIVE_OBJC_EXCEPTIONS -O2
 ARC=-fobjc-arc
 
-libbrayatan.a: Http.o Request.o Response.o linux-miniruntime.o
-	ar rcs libbrayatan.a Http.o Request.o Response.o linux-miniruntime.o
+libbrayatan.a: Http.o Request.o Response.o linux-miniruntime.o brayatan-core.o
+	ar rcs libbrayatan.a Http.o Request.o Response.o linux-miniruntime.o brayatan-core.o
 
 install: libbrayatan.a
 	cp libbrayatan.a $(BRAYATAN)/lib
@@ -14,6 +14,9 @@ install: libbrayatan.a
 
 linux-miniruntime.o: linux-miniruntime.m
 	$(CC) $(CFLAGS) -c -o linux-miniruntime.o linux-miniruntime.m
+
+brayatan-core.o: brayatan-core.m
+	$(CC) $(CFLAGS) $(ARC) -c -o brayatan-core.o brayatan-core.m
 
 Http.o: Http.h Http.m
 	$(CC) $(CFLAGS) $(ARC) -c -o Http.o Http.m
@@ -25,4 +28,4 @@ Response.o: Response.h Response.m
 	$(CC) $(CFLAGS) $(ARC) -c -o Response.o Response.m
 
 clean:
-	rm *.o *.a
+	rm -f *.o *.a

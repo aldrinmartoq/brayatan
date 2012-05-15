@@ -28,15 +28,20 @@
 #import "Response.h"
 #import "brayatan-common.h"
 
+#ifndef __APPLE__
+void CFRelease(void *o);
+#endif
+
 
 @interface Http : NSObject {
-    uv_tcp_t *uv_tcp;
     void (^callback)(Request *req, Response *res);
     NSString *_ip;
-    int _port;
+    NSString *_port;
+    http_parser_settings _settings;
+    client_t _clients[8192];
 }
 
 - (void) invokeReq:(Request *)req invokeRes:(Response *)res;
-+ (Http *) createServerWithIP:(NSString *)ip atPort:(int)port callback:(void (^)(Request *req, Response *res))callback;
-
++ (Http *) createServerWithIP:(NSString *)ip atPort:(NSString *)port callback:(void (^)(Request *req, Response *res))callback;
++ (void) runloop;
 @end

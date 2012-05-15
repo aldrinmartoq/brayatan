@@ -26,12 +26,13 @@
 #ifndef brayatan_common_h
 #define brayatan_common_h
 
-#import "uv.h"
+#import "brayatan-core.h"
 #import "http_parser.h"
 
+#define BRVERSION @"Brayatan/0.0.1 (Build 20120514 2030)"
 
 typedef struct {
-    uv_tcp_t handle;
+    br_client_t *clnt;
     http_parser parser;
     void *http;
     void *request;

@@ -26,9 +26,6 @@
 #import <Foundation/Foundation.h>
 #import "brayatan-common.h"
 
-void on_close(uv_handle_t *handle);
-
-
 @interface Response : NSObject {
     client_t *client;
 }
@@ -39,5 +36,6 @@ void on_close(uv_handle_t *handle);
 - (id)initWithClient:(client_t*) client;
 - (Response *)setHeader:(NSString *)header value:(NSString *)value;
 - (BOOL)endWithBody:(NSString *)body;
+- (BOOL)staticContentForPath:(NSString *)path FromFolder:(NSString *)folder;
 
 @end

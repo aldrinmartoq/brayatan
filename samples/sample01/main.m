@@ -11,13 +11,20 @@
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:8888 callback:^(Request *req, Response *res) {
-            [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-            [res endWithBody:@"Hola, Flaites!\n"];
+        Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(Request *req, Response *res) {
+
+            if ([req.host hasPrefix:@"localhost"]) {
+                [res staticContentForPath:req.urlPath FromFolder:@"/var/www/test"];
+            } else {
+                NSString *msg = [NSString stringWithFormat:@"Hola, Flaites!\r\npath: %@ host: %@\r\n", req.urlPath, req.host];
+                [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
+                [res endWithBody:msg];
+            }
         }];
-        
+
         NSLog(@"%@", http);
-        uv_run(uv_default_loop());
+        [Http runloop];
     }
+
     return 0;
 }

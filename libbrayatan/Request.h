@@ -29,6 +29,7 @@
 }
 
 @property (retain, nonatomic) NSMutableDictionary *headers;
-@property (retain, nonatomic) NSString *url;
+@property (retain, nonatomic) NSString *urlPath;
+@property (retain, nonatomic) NSString *host;
 
 @end

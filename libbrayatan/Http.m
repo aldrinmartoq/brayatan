@@ -26,65 +26,18 @@
 #import "Http.h"
 #import "Request.h"
 #import "Response.h"
+#import "brayatan-core.h"
 
-static http_parser_settings settings;
-
-void do_release(uv_handle_t *handle) {
-    client_t *client = (client_t *)handle->data;
-    if (client->request != NULL) {
-        CFRelease(client->request);
-        client->request = NULL;
-    }
-    if (client->response != NULL) {
-        CFRelease(client->response);
-        client->response = NULL;
-    }
-    if (client->last_header_field != NULL) {
-        CFRelease(client->last_header_field);
-        client->last_header_field = NULL;
-    }
-}
-
-void on_close(uv_handle_t *handle) {
-    do_release(handle);
-    client_t *client = (client_t *)handle->data;
-    free(client);
-}
-
-uv_buf_t on_alloc(uv_handle_t* handle, size_t suggested_size) {
-    uv_buf_t buf;
-    buf.base = malloc(suggested_size);
-    buf.len = suggested_size;
-    return buf;
-}
-
-void on_read(uv_stream_t* handle, ssize_t nread, uv_buf_t buf) {
-    client_t *client = (client_t *)handle->data;
-    if (nread >= 0) {
-        /* parse http ... somehow */
-        size_t parsed = http_parser_execute(&client->parser, &settings, buf.base, nread);
-        if (parsed < nread) {
-            uv_close((uv_handle_t*)handle, on_close);
-        }
-    } else {
-        uv_err_t err = uv_last_error(uv_default_loop());
-        if (err.code == UV_EOF) {
-            uv_close((uv_handle_t*)handle, on_close);
-        } else {
-            /* handle error here */
-        }
-    }
-    free(buf.base);
-}
+static br_loop_t *loop;
 
 int on_header_field(http_parser* parser, const char *at, size_t length) {
     @autoreleasepool {
         client_t *client = (client_t *)parser->data;
         
         void *last = client->last_header_field;
-        if (client->was_header_field) { /* append field */
+        if (client->was_header_field) { // append field
             client->last_header_field = (__bridge_retained void *)[NSString stringWithFormat:@"%@%.*s", last, length, at];
-        } else { /* create field */
+        } else { // create field
             client->last_header_field = (__bridge_retained void *)[NSString stringWithFormat:@"%.*s", length, at];
             client->was_header_field = YES;
         }
@@ -101,11 +54,11 @@ int on_header_value(http_parser* parser, const char *at, size_t length) {
         client_t *client = (client_t *)parser->data;
         Request *request = (__bridge Request *)client->request;
         
-        if (client->was_header_value) { /* append value */
+        if (client->was_header_value) { // append value
             NSString *field = (__bridge NSString *)client->last_header_field;
             NSString *value = [request.headers objectForKey:field];
             [request.headers setObject:[NSString stringWithFormat:@"%@%.*s", value, length, at] forKey:field];
-        } else { /* create value */
+        } else { // create value
             NSString *field = (__bridge NSString *)client->last_header_field;
             [request.headers setObject:[NSString stringWithFormat:@"%.*s", length, at] forKey:field];
         }
@@ -115,29 +68,14 @@ int on_header_value(http_parser* parser, const char *at, size_t length) {
     }
 }
 
-int on_url (http_parser* parser, const char *at, size_t length) {
+int on_headers_complete(http_parser* parser) {
     @autoreleasepool {
         client_t *client = (client_t *)parser->data;
         Request *request = (__bridge Request *)client->request;
         
-        request.url = (request.url == nil ? [NSString stringWithFormat:@"%.*s", length, at] : [NSString stringWithFormat:@"%@%.*s", request.url, length, at]);
+        request.host = [[request headers] objectForKey:@"Host"];
         return 0;
-    }
-}
-
-
-int on_headers_complete(http_parser* parser) {
-//    @autoreleasepool {
-//        client_t *client = (client_t *)parser->data;
-//        Response *response = client->response != NULL ? (__bridge Response *)client->response : nil;
-//        Request *request = client->request != NULL ? (__bridge Request *)client->request : nil;
-//        Http *http = (__bridge Http *)client->http;
-//        
-//        [http invokeReq:request invokeRes:response];
-//
-//        return 0;
-//    }
-    return 0;
+    };
 }
 
 int on_message_complete(http_parser *parser) {
@@ -146,74 +84,90 @@ int on_message_complete(http_parser *parser) {
         Response *response = client->response != NULL ? (__bridge Response *)client->response : nil;
         Request *request = client->request != NULL ? (__bridge Request *)client->request : nil;
         Http *http = (__bridge Http *)client->http;
-        
+
         [http invokeReq:request invokeRes:response];
         return 0;
     }
 }
 
-void on_connection(uv_stream_t* uv_tcp, int status) {
-        //NSLog(@"connected: %@", uv_tcp->data);
+int on_url (http_parser* parser, const char *at, size_t length) {
+    @autoreleasepool {
+        client_t *client = (client_t *)parser->data;
+        Request *request = (__bridge Request *)client->request;
         
-        client_t *client = malloc(sizeof(client_t));
-        client->request = NULL;
-        uv_tcp_init(uv_tcp->loop, &client->handle);
-        
-        int r = uv_accept(uv_tcp, (uv_stream_t*)&client->handle);
-        if (r) {
-            //NSLog(@"accept: %s\n", uv_strerror(uv_last_error(uv_default_loop())));
-            return;
-        }
-        
-        http_parser_init(&client->parser, HTTP_REQUEST);
-        
-        client->handle.data = client;
-        client->parser.data = client;
-        client->http = uv_tcp->data;
-        client->request =  (__bridge_retained void *)[[Request alloc] init];
-        client->response = (__bridge_retained void *)[[Response alloc] initWithClient:client];
-        client->was_header_field = NO;
-        client->was_header_value = NO;
-        client->last_header_field = NULL;
-        
-        settings.on_headers_complete = on_headers_complete;
-        settings.on_message_complete = on_message_complete;
-        settings.on_header_field = on_header_field;
-        settings.on_header_value = on_header_value;
-        settings.on_url = on_url;
-        
-        uv_read_start((uv_stream_t*)&client->handle, on_alloc, on_read);
+        request.urlPath = (request.urlPath == nil ? [NSString stringWithFormat:@"%.*s", length, at] : [NSString stringWithFormat:@"%@%.*s", request.urlPath, length, at]);
+        return 0;
+    }
 }
+
 
 @implementation Http
 
 - (id) init {
     if (self = [super init]) {
-        uv_tcp = malloc(sizeof(uv_tcp_t));
-        uv_tcp_init(uv_default_loop(), uv_tcp);
-        uv_tcp->data = (__bridge void *)self;
+        _settings.on_url = on_url;
+        _settings.on_header_field = on_header_field;
+        _settings.on_header_value = on_header_value;
+        _settings.on_headers_complete = on_headers_complete;
+        _settings.on_message_complete = on_message_complete;
+        memset(_clients, 0, sizeof(_clients));
     }
     
     return self;
 }
 
-- (BOOL) listenWithIP:(NSString *)ip atPort:(int)port callback:(void (^)(Request *req, Response *res))cb {
-    int r = uv_tcp_bind(uv_tcp, uv_ip4_addr([ip cStringUsingEncoding:NSASCIIStringEncoding], port));
-    
+- (BOOL) listenWithIP:(NSString *)ip atPort:(NSString *)port callback:(void (^)(Request *req, Response *res))cb {
+    callback = cb;
     _ip = ip;
     _port = port;
-    
-    if (r) {
+
+    br_server_t *serv = br_server_create(loop, (char *)[ip UTF8String], (char *)[port UTF8String], ^(br_client_t *clnt) {
+        @autoreleasepool {
+            /* on_accept */
+            br_log_debug("HTTP ACCEPT socket %d %s:%s", clnt->sock.fd, clnt->sock.hbuf, clnt->sock.sbuf);
+            
+            client_t *client = &_clients[clnt->sock.fd];
+            http_parser *parser = &(client->parser);
+            http_parser_init(parser, HTTP_REQUEST);
+            parser->data = client;
+            client->clnt = clnt;
+            client->http = (__bridge void *)self;
+            client->request =  (__bridge_retained void *)[[Request alloc] init];
+            client->response = (__bridge_retained void *)[[Response alloc] initWithClient:client];
+            client->was_header_field = NO;
+            client->was_header_value = NO;
+            client->last_header_field = NULL;
+            
+            br_socket_addwatch((br_socket_t *)clnt, BRSOCKET_WATCH_READ);
+        };
+    }, ^(br_client_t *clnt, char *buff, size_t buff_len) {
+        @autoreleasepool {
+            /* on_read */
+            br_log_debug("HTTP READ   socket %d %s:%s", clnt->sock.fd, clnt->sock.hbuf, clnt->sock.sbuf);
+            
+            client_t *client = &_clients[clnt->sock.fd];
+            http_parser *parser = &(client->parser);
+            http_parser_execute(parser, &_settings, buff, buff_len);
+        };
+    }, ^(br_client_t *clnt) {
+        @autoreleasepool {
+            /* on_close */
+            br_log_debug("HTTP CLOSE  socket %d %s:%s", clnt->sock.fd, clnt->sock.hbuf, clnt->sock.sbuf);
+            
+            client_t *client = &_clients[clnt->sock.fd];
+            if (client->last_header_field != nil) CFRelease(client->last_header_field);
+            if (client->request != nil) CFRelease(client->request);
+            if (client->request != nil) CFRelease(client->response);
+        }
+    }, ^(br_server_t *serv) {
+        /* on_release */
+        br_log_debug("HTTP RELEASE SERVER %d %s:%s", serv->sock.fd, serv->sock.hbuf, serv->sock.sbuf);
+    });
+
+    if (serv == NULL) {
         return NO;
     }
-    
-    r = uv_listen((uv_stream_t*)uv_tcp, 128, on_connection);
-    if (r) {
-        return NO;
-    }
-    
-    callback = cb;
-        
+
     return YES;
 }
 
@@ -222,7 +176,7 @@ void on_connection(uv_stream_t* uv_tcp, int status) {
 }
 
 
-+ (Http *) createServerWithIP:(NSString *)ip atPort:(int)port callback:(void (^)(Request *req, Response *res))callback {
++ (Http *) createServerWithIP:(NSString *)ip atPort:(NSString *)port callback:(void (^)(Request *req, Response *res))callback {
     Http *http = [[Http alloc] init];
     if ([http listenWithIP:ip atPort:port callback:callback]) {
         return http;
@@ -231,10 +185,19 @@ void on_connection(uv_stream_t* uv_tcp, int status) {
 }
 
 - (void) dealloc {
-    free(uv_tcp);
+    NSLog(@"dealloc: %@", self);
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<Http: 0x%lx ip: %@ port: %d url: http://%@:%d/ >", self, _ip, _port, _ip, _port];
+    return [NSString stringWithFormat:@"<Http: 0x%lx ip: %@ port: %@ url: http://%@:%@/ >", self, _ip, _port, _ip, _port];
 }
+
++ (void) initialize {
+    loop = br_loop_create();
+}
+
++ (void) runloop {
+    br_runloop(loop);
+}
+
 @end
