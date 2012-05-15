@@ -253,7 +253,8 @@ static NSString *contentType(NSString *path) {
                 closedir(dir);
                 
                 if (indexFile != nil) {
-                    [self staticContentForRequest:req FromFolder:fullPath];
+                    req.urlPath = [req.urlPath stringByAppendingFormat:@"/%@", indexFile];
+                    [self staticContentForRequest:req FromFolder:folder];
                     return NO;
                 }
 
@@ -262,9 +263,13 @@ static NSString *contentType(NSString *path) {
             }
             
             /* cache support */
-            NSString *lastmod = br_time_fmt_gmt(stat.st_mtimespec);
+#ifdef __APPLE__
+            NSString *lastmod = br_time_fmt_gmt(stat.st_mtimespec.tv_sec);
+#else
+            NSString *lastmod = br_time_fmt_gmt(stat.st_mtime);
+#endif
             
-            if ([lastmod isEqualTo:[req.headers objectForKey:@"If-Modified-Since"]]) {
+            if ([lastmod isEqual:[req.headers objectForKey:@"If-Modified-Since"]]) {
                 self.status = 304;
             }
             

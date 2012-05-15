@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
                 [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
                 [res endWithBody:msg];
             } else {
-                [res staticContentForPath:req.urlPath FromFolder:@"/var/www/test"];
+                [res staticContentForRequest:req FromFolder:@"/var/www/test"];
             }
         }];
 

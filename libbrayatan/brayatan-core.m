@@ -325,11 +325,10 @@ char *br_time_curr_gmt() {
 
 
 /* formats to string as a time_t time */
-NSString *br_time_fmt_gmt(struct timespec t) {
+NSString *br_time_fmt_gmt(time_t t) {
     static char *week[7] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
     static char *month[12] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-    time_t tt = t.tv_sec;
-    struct tm *gtm = gmtime(&tt);
+    struct tm *gtm = gmtime(&t);
     gtm->tm_year += 1900;
     return [NSString stringWithFormat:@"%s, %02d %s %d %02d:%02d:%02d GMT", week[gtm->tm_wday], gtm->tm_mday, month[gtm->tm_mon], gtm->tm_year, gtm->tm_hour, gtm->tm_min, gtm->tm_sec];
 }
@@ -492,7 +491,7 @@ void br_client_sendfile(br_client_t *c, char *path, BOOL (^on_open)(br_client_t 
         int fd = open(path, O_RDONLY);
         if (fd == -1) {
             on_open_error(c, errno);
-            c->sock.usage--;
+            if (c->sock.usage > 0) c->sock.usage--;
             return;
         }
         
@@ -501,12 +500,12 @@ void br_client_sendfile(br_client_t *c, char *path, BOOL (^on_open)(br_client_t 
         if (r == -1) {
             on_open_error(c, errno);
             close(fd);
-            c->sock.usage--;
+            if (c->sock.usage > 0) c->sock.usage--;
             return;
         }
         if (on_open(c, stat) == NO) {
             close(fd);
-            c->sock.usage--;
+            if (c->sock.usage > 0) c->sock.usage--;
             return;
         }
         
