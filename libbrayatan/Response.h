@@ -25,6 +25,7 @@
 
 #import <Foundation/Foundation.h>
 #import "brayatan-common.h"
+#import "Request.h"
 
 @interface Response : NSObject {
     client_t *client;
@@ -36,6 +37,6 @@
 - (id)initWithClient:(client_t*) client;
 - (Response *)setHeader:(NSString *)header value:(NSString *)value;
 - (BOOL)endWithBody:(NSString *)body;
-- (BOOL)staticContentForPath:(NSString *)path FromFolder:(NSString *)folder;
+- (BOOL)staticContentForRequest:(Request *)req FromFolder:(NSString *)folder;
 
 @end

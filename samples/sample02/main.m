@@ -46,7 +46,9 @@ NSString *status() {
     unsigned long r1 = r.tv_sec;
     unsigned long r2 = r.tv_usec / 10000;
     
-    return [NSString stringWithFormat:@"Server status\n\nRequests: %llu\ncpu user: %ld.%02ld\ncpu  sys: %ld.%02ld\n  uptime: %ld.%02ld", request_count, t1, t2, t3, t4, r1, r2];
+    unsigned long m1 = ru.ru_maxrss / 1024;
+    
+    return [NSString stringWithFormat:@"Hola, Flaites!\n\n--- Server status ---\nRequests: %llu\ncpu user: %ld.%02ld\ncpu  sys: %ld.%02ld\n  uptime: %ld.%02ld\nmem used: %ld KiB\n", request_count, t1, t2, t3, t4, r1, r2, m1];
 }
 
 
@@ -62,14 +64,14 @@ int main(int argc, const char * argv[]) {
             } else {
                 /* mapping virtual host brayatan.org to static content in /var/www/brayatan/ */
                 if ([req.host hasPrefix:@"brayatan.org"]) {
-                    [res staticContentForPath:req.urlPath FromFolder:@"/var/www/brayatan/"];
+                    [res staticContentForRequest:req FromFolder:@"/var/www/brayatan/"];
                 } else {
                     if ([req.urlPath hasPrefix:@"/javascripts/"]) {
                         /* alias /javascripts/ to /usr/share/javascripts/ */
-                        [res staticContentForPath:req.urlPath FromFolder:@"/usr/share/"];
+                        [res staticContentForRequest:req FromFolder:@"/usr/share/"];
                     } else {
                         /* everything else should be in /var/www/ */
-                        [res staticContentForPath:req.urlPath FromFolder:@"/var/www/"];
+                        [res staticContentForRequest:req FromFolder:@"/var/www/"];
                     }
                 }
             }

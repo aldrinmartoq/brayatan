@@ -77,7 +77,8 @@ void br_log_error(char *fmt, ...);
 void br_socket_addwatch(br_socket_t *s, int mode);
 void br_socket_delwatch(br_socket_t *s, int mode);
 
-char *br_time_char_gmt();
+char *br_time_curr_gmt();
+NSString *br_time_fmt_gmt(struct timespec t);
 
 br_loop_t *br_loop_create();
 
