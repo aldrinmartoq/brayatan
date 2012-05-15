@@ -241,6 +241,22 @@ static NSString *contentType(NSString *path) {
         br_client_sendfile(client->clnt, (char *)[fullPath UTF8String], ^BOOL(br_client_t *c, struct stat stat) {
             /* on_open */
             if (S_ISDIR(stat.st_mode)) {
+                NSString *indexFile = nil;
+                struct dirent *e;
+                DIR *dir = opendir([fullPath UTF8String]);
+                while ((e = readdir(dir)) != NULL) {
+                    if (strncmp(e->d_name, "index.html", 10) == 0) {
+                        indexFile = @"index.html";
+                        break;
+                    }
+                }
+                closedir(dir);
+                
+                if (indexFile != nil) {
+                    [self staticContentForPath:indexFile FromFolder:fullPath];
+                    return NO;
+                }
+
                 [self writeDirectoryListingFor:fullPath Path:path];
                 return NO;
             }
