@@ -11,7 +11,9 @@ Brayatan is based in core OS X technologies, like:
 * ARC Automatic Reference Counting
 * GCD Grand Central Dispatch
 
-We are using http-parser and libuv from nodejs project, but they will be dumped as soon as we can rewrite them using blocks instead of callbacks.
+The project started using http_parser and libuv from nodejs project, the current status is:
+- libuv has been replaced by brayatan-core, a high performance libdispatch aware library that uses clang's blocks.
+- http_parser can't be replaced yet, but it works nicely with the current framework.
 
 
 

@@ -162,13 +162,6 @@ build-gnustep-base: svn-gnustep-base build-gnustep-make
 	@ cd gnustep-base-svn && make -j$(NUMCORES) install >> ../build-gnustep-base.log 2>&1
 	@ mv build-gnustep-base.log build-gnustep-base
 
-build-libuv: build-llvm-clang
-	@ echo "Building libuv"
-	@ make -C ../../libuv uv.a > build-libuv.log
-	@ cp ../../libuv/uv.a $(BRAYATAN)/lib/libuv.a
-	@ cp -r ../../libuv/include/* $(BRAYATAN)/include/
-	@ mv build-libuv.log build-libuv
-
 build-libhttp_parser: build-llvm-clang
 	@ echo "Building libhttp_parser"
 	@ make -C ../../libhttp_parser package > build-libhttp_parser.log
@@ -176,7 +169,7 @@ build-libhttp_parser: build-llvm-clang
 	@ cp -r ../../libhttp_parser/http_parser.h $(BRAYATAN)/include/
 	@ mv build-libhttp_parser.log build-libhttp_parser
 
-build-libbrayatan: build-gnustep-base build-libhttp_parser build-libuv
+build-libbrayatan: build-gnustep-base build-libhttp_parser
 	@ echo "Building libbrayatan"
 	@ make -C ../../libbrayatan install > build-libbrayatan.log
 	@ cp ../bin/brayatan-cc $(BRAYATAN)/bin

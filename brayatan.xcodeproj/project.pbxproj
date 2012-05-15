@@ -208,7 +208,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "libbrayatan/** libuv/include/** libhttp_parser/**";
+				USER_HEADER_SEARCH_PATHS = "libbrayatan/** libhttp_parser/**";
 			};
 			name = Debug;
 		};
@@ -229,7 +229,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "libbrayatan/** libuv/include/** libhttp_parser/**";
+				USER_HEADER_SEARCH_PATHS = "libbrayatan/** libhttp_parser/**";
 			};
 			name = Release;
 		};

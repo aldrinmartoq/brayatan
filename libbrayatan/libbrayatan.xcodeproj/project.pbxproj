@@ -27,13 +27,6 @@
 			remoteGlobalIDString = 1801301F7038583B51A4D241;
 			remoteInfo = http_parser;
 		};
-		20335AFC1544138B00A94822 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 20335AF51544138B00A94822 /* libuv.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1366FBDA3B41EA03E9CC86CA;
-			remoteInfo = uv;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -48,7 +41,6 @@
 		20335AE21544135000A94822 /* Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Response.h; sourceTree = "<group>"; };
 		20335AE31544135000A94822 /* Response.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Response.m; sourceTree = "<group>"; };
 		20335AEC1544138100A94822 /* libhttp_parser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libhttp_parser.xcodeproj; path = ../libhttp_parser/libhttp_parser.xcodeproj; sourceTree = "<group>"; };
-		20335AF51544138B00A94822 /* libuv.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libuv.xcodeproj; path = ../libuv/libuv.xcodeproj; sourceTree = "<group>"; };
 		20D10ED315616FC300100E3C /* brayatan-core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "brayatan-core.h"; sourceTree = "<group>"; };
 		20D10ED415616FC300100E3C /* brayatan-core.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "brayatan-core.m"; sourceTree = "<group>"; };
 		20D10ED7156188AE00100E3C /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -69,7 +61,6 @@
 		20335AAB154412D700A94822 = {
 			isa = PBXGroup;
 			children = (
-				20335AF51544138B00A94822 /* libuv.xcodeproj */,
 				20335AEC1544138100A94822 /* libhttp_parser.xcodeproj */,
 				20335ADD1544135000A94822 /* brayatan-common.h */,
 				20D10ED315616FC300100E3C /* brayatan-core.h */,
@@ -115,14 +106,6 @@
 			isa = PBXGroup;
 			children = (
 				20335AF41544138100A94822 /* libhttp_parser.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		20335AF61544138B00A94822 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				20335AFD1544138B00A94822 /* libuv.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -186,10 +169,6 @@
 					ProductGroup = 20335AED1544138100A94822 /* Products */;
 					ProjectRef = 20335AEC1544138100A94822 /* libhttp_parser.xcodeproj */;
 				},
-				{
-					ProductGroup = 20335AF61544138B00A94822 /* Products */;
-					ProjectRef = 20335AF51544138B00A94822 /* libuv.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -204,13 +183,6 @@
 			fileType = archive.ar;
 			path = libhttp_parser.a;
 			remoteRef = 20335AF31544138100A94822 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		20335AFD1544138B00A94822 /* libuv.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libuv.a;
-			remoteRef = 20335AFC1544138B00A94822 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -254,7 +226,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "../libuv/include/** ../libhttp_parser/**";
+				USER_HEADER_SEARCH_PATHS = "../libhttp_parser/**";
 			};
 			name = Debug;
 		};
@@ -275,7 +247,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "../libuv/include/** ../libhttp_parser/**";
+				USER_HEADER_SEARCH_PATHS = "../libhttp_parser/**";
 			};
 			name = Release;
 		};
