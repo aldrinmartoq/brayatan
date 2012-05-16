@@ -142,7 +142,7 @@ static NSString *contentType(NSString *path) {
         headers = [[NSMutableDictionary alloc] init];
         client = c;
         status = 200;
-        [headers setObject:BRVERSION forKey:@"Server"];
+        [headers setObject:BR_BUILD_VERSION_NSSTR forKey:@"Server"];
         [headers setObject:[[NSString alloc] initWithCString:br_time_curr_gmt() encoding:NSUTF8StringEncoding] forKey:@"Date"];
     }
     return self;
@@ -221,7 +221,7 @@ static NSString *contentType(NSString *path) {
         }
         closedir(dir);
 
-        [self writeBody:[NSString stringWithFormat:@"<BR><HR><I>%@</I>", BRVERSION]];
+        [self writeBody:[NSString stringWithFormat:@"<BR><HR><I>%@</I>", BR_BUILD_VERSION_NSSTR]];
     };
 }
 
@@ -238,10 +238,11 @@ static NSString *contentType(NSString *path) {
 
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@", folder, req.urlPath];
         
+        __block NSString *indexFile = nil;
+        
         br_client_sendfile(client->clnt, (char *)[fullPath UTF8String], ^BOOL(br_client_t *c, struct stat stat) {
             /* on_open */
             if (S_ISDIR(stat.st_mode)) {
-                NSString *indexFile = nil;
                 struct dirent *e;
                 DIR *dir = opendir([fullPath UTF8String]);
                 while ((e = readdir(dir)) != NULL) {
@@ -253,12 +254,11 @@ static NSString *contentType(NSString *path) {
                 closedir(dir);
                 
                 if (indexFile != nil) {
-                    req.urlPath = [req.urlPath stringByAppendingFormat:@"/%@", indexFile];
-                    [self staticContentForRequest:req FromFolder:folder];
                     return NO;
                 }
 
                 [self writeDirectoryListingFor:fullPath Path:req.urlPath];
+                br_client_close(client->clnt);        
                 return NO;
             }
             
@@ -279,6 +279,7 @@ static NSString *contentType(NSString *path) {
             [self writeHeader];
 
             if (self.status == 304) {
+                br_client_close(client->clnt);        
                 return NO;
             }
             
@@ -289,10 +290,14 @@ static NSString *contentType(NSString *path) {
             /* on_open_error */
             self.status = 404;
             [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-            [self endWithBody:[NSString stringWithFormat:@"%@ Not Found.\r\n\r\n-- %@\r\n", req.urlPath, BRVERSION]];
+            [self endWithBody:[NSString stringWithFormat:@"%@ Not Found.\r\n\r\n-- %@\r\n", req.urlPath, BR_BUILD_VERSION_NSSTR]];
         });
 
-        br_client_close(client->clnt);
+        if (indexFile != nil) {
+            req.urlPath = [req.urlPath stringByAppendingFormat:@"/%@", indexFile];
+            [self staticContentForRequest:req FromFolder:folder];
+            br_client_close(client->clnt);
+        }
     }
     return YES;
 }

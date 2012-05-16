@@ -491,7 +491,7 @@ void br_client_sendfile(br_client_t *c, char *path, BOOL (^on_open)(br_client_t 
         int fd = open(path, O_RDONLY);
         if (fd == -1) {
             on_open_error(c, errno);
-            if (c->sock.usage > 0) c->sock.usage--;
+            br_client_close(c);
             return;
         }
         
@@ -500,12 +500,12 @@ void br_client_sendfile(br_client_t *c, char *path, BOOL (^on_open)(br_client_t 
         if (r == -1) {
             on_open_error(c, errno);
             close(fd);
-            if (c->sock.usage > 0) c->sock.usage--;
+            br_client_close(c);
             return;
         }
         if (on_open(c, stat) == NO) {
             close(fd);
-            if (c->sock.usage > 0) c->sock.usage--;
+            br_client_close(c);
             return;
         }
         

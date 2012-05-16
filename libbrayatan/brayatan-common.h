@@ -29,7 +29,9 @@
 #import "brayatan-core.h"
 #import "http_parser.h"
 
-#define BRVERSION @"Brayatan/0.0.1 (Build " __TIME__ " " __DATE__ ")"
+#define BRAYATAN_VERSION "0.0.1"
+
+#define BR_BUILD_VERSION_NSSTR @"Brayatan/" BRAYATAN_VERSION " (Build " __TIME__ " " __DATE__ ")"
 
 typedef struct {
     br_client_t *clnt;
