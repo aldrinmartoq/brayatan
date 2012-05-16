@@ -136,7 +136,7 @@ int on_url (http_parser* parser, const char *at, size_t length) {
             client->response = (__bridge_retained void *)[[Response alloc] initWithClient:client];
             client->was_header_field = NO;
             client->was_header_value = NO;
-            client->last_header_field = NULL;
+            client->last_header_field = nil;
             
             br_socket_addwatch((br_socket_t *)clnt, BRSOCKET_WATCH_READ);
         };

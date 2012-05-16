@@ -488,7 +488,7 @@ void br_client_sendfile(br_client_t *c, char *path, BOOL (^on_open)(br_client_t 
         c->sock.usage++;
         
         br_log_trace("%3d client_sendfile path: %s", c->sock.fd, path);
-        int fd = open(path, O_RDONLY);
+        __block int fd = open(path, O_RDONLY);
         if (fd == -1) {
             on_open_error(c, errno);
             br_client_close(c);
@@ -512,6 +512,15 @@ void br_client_sendfile(br_client_t *c, char *path, BOOL (^on_open)(br_client_t 
         br_socket_addwatch((br_socket_t *)c, BRSOCKET_WATCH_WRITE);
         __block off_t offset = 0;
         void (^on_write)(off_t) = ^ (off_t count){
+            if (count == -1) {
+                br_log_info("closing on_write for %d", fd);
+                close(fd);
+                fd = -1;
+                void (^on_write)(off_t) = (__bridge_transfer void(^)(off_t count))c->on_write;
+                on_write = NULL;
+                c->on_write = NULL;
+                return;
+            }
 #ifdef __APPLE__
             br_log_trace("%3d send file before offset: %lld count %lld", c->sock.fd, offset, count);
             int r = sendfile(fd, c->sock.fd, offset, &count, NULL, 0);
@@ -522,6 +531,7 @@ void br_client_sendfile(br_client_t *c, char *path, BOOL (^on_open)(br_client_t 
             br_log_trace("%3d send file after  offset: %lld count %lld", c->sock.fd, offset, count);
             if (count == 0) {
                 close(fd);
+                fd = -1;
                 void (^on_write)(off_t) = (__bridge_transfer void(^)(off_t count))c->on_write;
                 on_write = NULL;
                 c->on_write = NULL;
@@ -535,6 +545,7 @@ void br_client_sendfile(br_client_t *c, char *path, BOOL (^on_open)(br_client_t 
             }
             if (r == 0 || r == -1) {
                 close(fd);
+                fd = -1;
                 void (^on_write)(off_t) = (__bridge_transfer void(^)(off_t count))c->on_write;
                 c->on_write = NULL;
                 br_client_close(c);
@@ -703,14 +714,15 @@ void br_runloop(br_loop_t *loop) {
                     /* remove socket watchers */
                     br_socket_delwatch(sock, BRSOCKET_WATCH_READWRITE);
                     
+                    /* close socket fd */
+                    close(sock->fd);
+
                     /* clean on_write block */
                     if (c->on_write != NULL) {
-                        void (^on_write)(off_t) = (__bridge_transfer void(^)(off_t count))c->on_write;
-                        on_write = NULL;
-                        c->on_write = NULL;
+                        void (^on_write)(off_t) = (__bridge void(^)(off_t count))c->on_write;
+                        on_write(-1);
                     }
                     
-                    close(sock->fd);
                     
                     /* call user block */
                     void (^on_close)(br_client_t *) = (__bridge void (^)(br_client_t *x))c->serv->on_close;
