@@ -42,7 +42,7 @@ void CFRelease(void *o);
 }
 
 - (void) invokeReq:(Request *)req invokeRes:(Response *)res;
-- (NSString *) statusString;
++ (NSString *) statusString;
 + (Http *) createServerWithIP:(NSString *)ip atPort:(NSString *)port callback:(void (^)(Request *req, Response *res))callback;
 + (void) runloop;
 @end

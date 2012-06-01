@@ -11,13 +11,13 @@
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        __block Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(Request *req, Response *res) {
+        Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(Request *req, Response *res) {
             if ([req.urlPath hasPrefix:@"/status"]) {
                 [res redirectToURL:@"/brayatan-status"];
             } else if ([req.urlPath hasPrefix:@"/brayatan-status"]) {
                 /* show server status in /brayatan-status */
                 [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-                [res endWithBody:[http statusString]];
+                [res endWithBody:[Http statusString]];
             } else {
                 /* mapping virtual host brayatan.org to static content in /var/www/brayatan/ */
                 if ([req.host hasPrefix:@"brayatan.org"]) {

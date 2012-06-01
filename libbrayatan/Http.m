@@ -200,7 +200,7 @@ int on_url (http_parser* parser, const char *at, size_t length) {
     callback(req, res);
 }
 
-- (NSString *) statusString {
++ (NSString *) statusString {
     struct rusage ru;
     getrusage(RUSAGE_SELF, &ru);
     unsigned long t1 = ru.ru_utime.tv_sec;
