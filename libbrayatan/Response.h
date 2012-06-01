@@ -38,5 +38,6 @@
 - (Response *)setHeader:(NSString *)header value:(NSString *)value;
 - (BOOL)endWithBody:(NSString *)body;
 - (BOOL)staticContentForRequest:(Request *)req FromFolder:(NSString *)folder;
+- (BOOL)redirectToURL:(NSString *)url;
 
 @end

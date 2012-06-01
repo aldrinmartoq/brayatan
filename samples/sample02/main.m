@@ -57,7 +57,9 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(Request *req, Response *res) {
             request_count++;
-            if ([req.urlPath hasPrefix:@"/brayatan-status"]) {
+            if ([req.urlPath hasPrefix:@"/status"]) {
+                [res redirectToURL:@"/brayatan-status"];
+            } else if ([req.urlPath hasPrefix:@"/brayatan-status"]) {
                 /* show server status in /brayatan-status */
                 [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
                 [res endWithBody:status()];

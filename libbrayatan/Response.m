@@ -225,7 +225,6 @@ static NSString *contentType(NSString *path) {
     };
 }
 
-
 - (BOOL)staticContentForRequest:(Request *)req FromFolder:(NSString *)folder {
     @autoreleasepool {
         NSRange range = [req.urlPath rangeOfString:@"/../"];
@@ -262,7 +261,7 @@ static NSString *contentType(NSString *path) {
                 return NO;
             }
             
-            /* cache support */
+            /* HTTP Last-Modified support */
 #ifdef __APPLE__
             NSString *lastmod = br_time_fmt_gmt(stat.st_mtimespec.tv_sec);
 #else
@@ -301,6 +300,14 @@ static NSString *contentType(NSString *path) {
     }
     return YES;
 }
+
+- (BOOL)redirectToURL:(NSString *)url {
+    self.status = 302;
+    [self setHeader:@"Location" value:url];
+    [self endWithBody:[NSString stringWithFormat:@"Redirected to %@", url]];
+    return YES;
+}
+
 
 @end
 
