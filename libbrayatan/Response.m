@@ -217,7 +217,8 @@ static NSString *contentType(NSString *path) {
         DIR *dir = opendir([fullpath UTF8String]);
         while ((e = readdir(dir)) != NULL) {
             if (e->d_name[0] == '.') continue;
-            [self writeBody:[NSString stringWithFormat:@"<A href=\"%s\"/>%s</A><BR>", e->d_name, e->d_name]];
+            char *s = e->d_type == DT_DIR ? "/" : "";
+            [self writeBody:[NSString stringWithFormat:@"<A href=\"%s%s\"/>%s%s</A><BR>", e->d_name, s, e->d_name, s]];
         }
         closedir(dir);
 
@@ -242,6 +243,12 @@ static NSString *contentType(NSString *path) {
         br_client_sendfile(client->clnt, (char *)[fullPath UTF8String], ^BOOL(br_client_t *c, struct stat stat) {
             /* on_open */
             if (S_ISDIR(stat.st_mode)) {
+                
+                if (![fullPath hasSuffix:@"/"]) {
+                    [self redirectToURL:[req.urlPath stringByAppendingString:@"/"]];
+                    return NO;
+                }
+                
                 struct dirent *e;
                 DIR *dir = opendir([fullPath UTF8String]);
                 while ((e = readdir(dir)) != NULL) {
