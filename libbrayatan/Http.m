@@ -27,8 +27,32 @@
 #import "Request.h"
 #import "Response.h"
 #import "brayatan-core.h"
+#import <sys/resource.h>
+#import <sys/time.h>
 
 static br_loop_t *loop;
+
+struct timeval diff(struct timeval x, struct timeval y) {
+    struct timeval r;
+    if (x.tv_usec < y.tv_usec) {
+        int s = (y.tv_usec - x.tv_usec) / 1000000 + 1;
+        y.tv_usec -= 1000000 * s;
+        y.tv_sec += s;
+    }
+    if (x.tv_usec - y.tv_usec > 1000000) {
+        int s = (x.tv_usec - y.tv_usec) / 1000000;
+        y.tv_usec += 1000000 * s;
+        y.tv_sec -= s;
+    }
+    r.tv_sec = x.tv_sec - y.tv_sec;
+    r.tv_usec = x.tv_usec - y.tv_usec;
+    
+    return r;
+}
+
+static struct timeval time_start;
+static unsigned long long request_count = 0;
+
 
 int on_header_field(http_parser* parser, const char *at, size_t length) {
     @autoreleasepool {
@@ -172,8 +196,29 @@ int on_url (http_parser* parser, const char *at, size_t length) {
 }
 
 - (void) invokeReq:(Request *)req invokeRes:(Response *)res {
+    request_count++;
     callback(req, res);
 }
+
+- (NSString *) statusString {
+    struct rusage ru;
+    getrusage(RUSAGE_SELF, &ru);
+    unsigned long t1 = ru.ru_utime.tv_sec;
+    unsigned long t2 = ru.ru_utime.tv_usec / 10000;
+    unsigned long t3 = ru.ru_stime.tv_sec;
+    unsigned long t4 = ru.ru_stime.tv_usec / 10000;
+    
+    struct timeval time_curr;
+    gettimeofday(&time_curr, NULL);
+    struct timeval r = diff(time_curr, time_start);
+    unsigned long r1 = r.tv_sec;
+    unsigned long r2 = r.tv_usec / 10000;
+    
+    unsigned long m1 = ru.ru_maxrss / 1024;
+    
+    return [NSString stringWithFormat:@"Hola, Flaites! This is %@\n\n--- Server status ---\nRequests: %llu\ncpu user: %ld.%02ld\ncpu  sys: %ld.%02ld\n  uptime: %ld.%02ld\nmem used: %ld KiB\n", BR_BUILD_VERSION_NSSTR, request_count, t1, t2, t3, t4, r1, r2, m1];
+}
+
 
 
 + (Http *) createServerWithIP:(NSString *)ip atPort:(NSString *)port callback:(void (^)(Request *req, Response *res))callback {
@@ -197,6 +242,7 @@ int on_url (http_parser* parser, const char *at, size_t length) {
 }
 
 + (void) runloop {
+    gettimeofday(&time_start, NULL);
     br_runloop(loop);
 }
 
