@@ -127,6 +127,7 @@ static NSString *contentType(NSString *path) {
     if ([path hasSuffix:@".xml"]) return @"text/xml";
     if ([path hasSuffix:@".gif"]) return @"image/gif";
     if ([path hasSuffix:@".txt"]) return @"text/plain; charset=utf-8";
+    if ([path hasSuffix:@".svg"]) return @"image/svg+xml";
 
     if ([path hasSuffix:@".ico"]) return @"image/x-icon";
     return @"text/plain";
