@@ -1,186 +1,252 @@
 BRAYATAN:=$(HOME)/local/brayatan
 PATH:=$(BRAYATAN)/bin:$(PATH)
-NUMCORES=`cat /proc/cpuinfo | grep ^processor | wc -l`
+NUMCORES=`cat /proc/cpuinfo | grep -i ^processor | wc -l`
 
-all: build-libbrayatan
+all: .make-libbrayatan
 
 clean:
-	rm -fr clang-3.0.src llvm-3.0.src libffi-3.0.10 build-* CF-635/ icu/ libBlocksRuntime-0.1/ libdispatch-0~svn197/ libkqueue-1.0.6/ libobjc2-1.6/ gnustep-base-svn/ gnustep-make-svn/ gnustep-corebase-svn/ svn-gnustep-base svn-gnustep-make svn-gnustep-corebase
+	rm -fr clang-*.src llvm-*.src libffi-3.0.11 .make-* CF-635/ icu/ libBlocksRuntime-0.1/ libdispatch-0~svn197/ libkqueue-1.0.6/ libobjc2-1.6/ gnustep-base-svn/ gnustep-make-svn/ gnustep-corebase-svn/ svn-gnustep-base svn-gnustep-make svn-gnustep-corebase
 
 clean-all: clean
-	rm -fr wget-* *.gz *.bz2 svn-*
+	rm -fr .wget-* .conf-* *.gz *.bz2 svn-* .clone-* *.log
 
-wget-libffi:
-	@ echo "Downloading libffi"
-	@ wget -Ncq http://ftp.de.debian.org/debian/pool/main/libf/libffi/libffi_3.0.10.orig.tar.gz
-	@ touch wget-libffi
+libffi: .make-libffi
+llvm-clang: .make-llvm-clang
+libffi-2: .make-libffi-2
+blocksruntime: .make-blocksruntime
+libobjc2: .make-libobjc2
+icu: .make-icu
+libkqueue: .make-libkqueue
+libdispatch: .make-libdispatch
+libcorefoundation: .make-libcorefoundation
+gnustep-make: .make-gnustep-make
+gnustep-corebase: .make-gnustep-corebase
+gnustep-base: .make-gnustep-base
+libhttp_parser: .make-libhttp_parser
+libbrayatan: .make-libbrayatan
 
-build-libffi: wget-libffi
-	@ echo "Configuring libffi"
-	@ tar xfz libffi_3.0.10.orig.tar.gz
-	@ cd libffi-3.0.10 && CC=gcc CXX=g++ CFLAGS="-g -O2" CCASFLAGS="-g -O2 -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs -Wl,-Bsymbolic-functions" ./configure --prefix=$(BRAYATAN) > ../build-libffi.log 2>&1
-	@ echo "Building libffi"
-	@ cd libffi-3.0.10 && make -j4 install >> ../build-libffi.log 2>&1
+.wget-libffi:
+	@ echo `date +%s` `date` "Downloading libffi"
+	@ wget -Ncq ftp://sourceware.org/pub/libffi//libffi-3.0.11.tar.gz
+	@ touch .wget-libffi
+
+.conf-libffi: .wget-libffi
+	@ echo `date +%s` `date` "Configuring libffi"
+	@ rm -fr libffi-3.0.11
+	@ tar xfz libffi-3.0.11.tar.gz
+	@ cd libffi-3.0.11 && CC=gcc CXX=g++ CFLAGS="-g -O2" CCASFLAGS="-g -O2 -Wa,--gdwarf2" LDFLAGS="-Wl,-z,defs -Wl,-Bsymbolic-functions" ./configure --prefix=$(BRAYATAN) > ../conf-libffi.log 2>&1
+	@ mv conf-libffi.log .conf-libffi
+
+.make-libffi: .conf-libffi
+	@ echo `date +%s` `date` "Building libffi"
+	@ cd libffi-3.0.11 && make -j$(NUMCORES) install > ../make-libffi.log 2>&1
 	@ mkdir -p $(BRAYATAN)/include/
-	@ cp $(BRAYATAN)/lib/libffi-3.0.10/include/*.h $(BRAYATAN)/include/
-	@ mv build-libffi.log build-libffi
+	@ cp $(BRAYATAN)/lib/libffi-3.0.11/include/*.h $(BRAYATAN)/include
+	@ mv make-libffi.log .make-libffi
 
-wget-clang:
-	@ echo "Downloading clang"
-	@ wget -Ncq http://llvm.org/releases/3.0/clang-3.0.tar.gz
-	@ touch wget-clang
+.wget-clang:
+	@ echo `date +%s` `date` "Downloading clang"
+	@ wget -Ncq http://llvm.org/releases/3.2/clang-3.2.src.tar.gz
+	@ touch .wget-clang
 
-wget-llvm:
-	@ echo "Downloading llvm"
-	@ wget -Ncq http://llvm.org/releases/3.0/llvm-3.0.tar.gz
-	@ touch wget-llvm
+.wget-llvm:
+	@ echo `date +%s` `date` "Downloading llvm"
+	@ wget -Ncq http://llvm.org/releases/3.2/llvm-3.2.src.tar.gz
+	@ touch .wget-llvm
 
-build-llvm-clang: wget-clang wget-llvm build-libffi
-	@ echo "Configuring llvm clang"
-	@ tar xfz llvm-3.0.tar.gz
-	@ tar xfz clang-3.0.tar.gz
-	@ mv clang-3.0.src llvm-3.0.src/tools/clang
-	@ cd llvm-3.0.src && LDFLAGS="-L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) --disable-assertions --enable-optimized --enable-pic --enable-libffi --enable-shared > ../build-llvm-clang.log 2>&1
-	@ echo "Building llvm clang"
-	@ cd llvm-3.0.src && make -j4 install >> ../build-llvm-clang.log 2>&1
-	@ mv build-llvm-clang.log build-llvm-clang
+.conf-llvm-clang: .wget-clang .wget-llvm .make-libffi
+	@ echo `date +%s` `date` "Configuring llvm clang"
+	@ rm -fr llvm-3.2.src
+	@ tar xfz llvm-3.2.src.tar.gz
+	@ tar xfz clang-3.2.src.tar.gz
+	@ mv clang-3.2.src llvm-3.2.src/tools/clang
+	@ cd llvm-3.2.src && LDFLAGS="-L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) --disable-assertions --enable-optimized --enable-pic --enable-libffi --enable-shared > ../conf-llvm-clang.log 2>&1
+	@ mv conf-llvm-clang.log .conf-llvm-clang
 
-wget-blocksruntime:
-	@ echo "Downloading blocksruntime"
+.make-llvm-clang: .conf-llvm-clang
+	@ echo `date +%s` `date` "Building llvm clang"
+	@ cd llvm-3.2.src && make -j$(NUMCORES) install > ../make-llvm-clang.log 2>&1
+	@ mv make-llvm-clang.log .make-llvm-clang
+
+.conf-libffi-2: .wget-libffi
+	@ echo `date +%s` `date` "Configuring libffi-2"
+	@ rm -fr libffi-3.0.11
+	@ tar xfz libffi-3.0.11.tar.gz
+	@ cd libffi-3.0.11 && CC=clang CXX=clang++ CFLAGS="-g -O2" CCASFLAGS="-g -O2" LDFLAGS="-Wl,-z,defs -Wl,-Bsymbolic-functions -L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) > ../conf-libffi-2.log 2>&1
+	@ mv conf-libffi-2.log .conf-libffi-2
+
+.make-libffi-2: .conf-libffi-2
+	@ echo `date +%s` `date` "Building libffi"
+	@ cd libffi-3.0.11 && make -j$(NUMCORES) install > ../make-libffi-2.log 2>&1
+	@ mkdir -p $(BRAYATAN)/include/
+	@ cp $(BRAYATAN)/lib/libffi-3.0.11/include/*.h $(BRAYATAN)/include
+	@ mv make-libffi-2.log .make-libffi-2
+
+.wget-blocksruntime:
+	@ echo `date +%s` `date` "Downloading blocksruntime"
 	@ wget -Ncq http://ftp.de.debian.org/debian/pool/main/libb/libblocksruntime/libblocksruntime_0.1.orig.tar.gz
-	@ touch wget-blocksruntime
+	@ touch .wget-blocksruntime
 
-build-blocksruntime: wget-blocksruntime build-llvm-clang
-	@ echo "Configuring blocksruntime"
+.conf-blocksruntime: .wget-blocksruntime .make-llvm-clang
+	@ echo `date +%s` `date` "Configuring blocksruntime"
 	@ tar xfz libblocksruntime_0.1.orig.tar.gz
-	@ cd libBlocksRuntime-0.1 && CC=clang CXX=clang++ ./configure --prefix=$(BRAYATAN) > ../build-blocksruntime.log 2>&1
-	@ echo "Building blocksruntime"
-	@ cd libBlocksRuntime-0.1 && make -j$(NUMCORES) install >> ../build-blocksruntime.log 2>&1
-	@ mv build-blocksruntime.log build-blocksruntime
+	@ cd libBlocksRuntime-0.1 && CC=clang CXX=clang++ ./configure --prefix=$(BRAYATAN) > ../conf-blocksruntime.log 2>&1
+	@ mv conf-blocksruntime.log .conf-blocksruntime
 
-wget-libobjc2:
-	@ echo "Downloading libobjc2"
+.make-blocksruntime: .conf-blocksruntime
+	@ echo `date +%s` `date` "Building blocksruntime"
+	@ cd libBlocksRuntime-0.1 && make -j$(NUMCORES) install >> ../make-blocksruntime.log 2>&1
+	@ mv make-blocksruntime.log .make-blocksruntime
+
+.wget-libobjc2:
+	@ echo `date +%s` `date` "Downloading libobjc2"
 	@ wget -Ncq http://download.gna.org/gnustep/libobjc2-1.6.tar.bz2
-	@ touch wget-libobjc2
+	@ touch .wget-libobjc2
 
-build-libobjc2: wget-libobjc2 build-blocksruntime
-	@ echo "Configuring libobjc2"
+.conf-libobjc2: .wget-libobjc2 .make-blocksruntime
+	@ echo `date +%s` `date` "Configuring libobjc2"
+	@ rm -fr libobjc2-1.6
 	@ tar xfj libobjc2-1.6.tar.bz2
-	@ echo "Building libobjc2"
-	@ cd libobjc2-1.6 && CC=clang CXX=clang++ PREFIX=$(BRAYATAN) make -f Makefile install > ../build-libobjc2.log 2>&1
-	@ mv build-libobjc2.log build-libobjc2
+	@ touch .conf-libobjc2
+  
+.make-libobjc2: .conf-libobjc2
+	@ echo `date +%s` `date` "Building libobjc2"
+	@ cd libobjc2-1.6 && CC=clang CXX=clang++ PREFIX=$(BRAYATAN) make -f Makefile install > ../make-libobjc2.log 2>&1
+	@ mv make-libobjc2.log .make-libobjc2
 
-wget-icu:
-	@ echo "Downloading icu"
+.wget-icu:
+	@ echo `date +%s` `date` "Downloading icu"
 	@ wget -Ncq http://ftp.de.debian.org/debian/pool/main/i/icu/icu_4.8.1.1.orig.tar.gz
-	@ touch wget-icu
+	@ touch .wget-icu
 
-build-icu: wget-icu build-libobjc2
-	@ echo "Configuring icu"
+.conf-icu: .wget-icu .make-libobjc2
+	@ echo `date +%s` `date` "Configuring icu"
 	@ tar xfz icu_4.8.1.1.orig.tar.gz
-	@ cd icu/source && CC=clang CXX=clang++ ./configure --prefix=$(BRAYATAN) --disable-maintainer-mode --disable-dependency-tracking --disable-samples --enable-static --enable-weak-threads > ../../build-icu.log 2>&1
-	@ echo "Building icu"
-	@ cd icu/source && make -j$(NUMCORES) install >> ../../build-icu.log 2>&1
-	@ mv build-icu.log build-icu
+	@ cd icu/source && CC=clang CXX=clang++ ./configure --prefix=$(BRAYATAN) --disable-maintainer-mode --disable-dependency-tracking --disable-samples --enable-static --enable-weak-threads > ../../conf-icu.log 2>&1
+	@ mv conf-icu.log .conf-icu
 
-wget-libkqueue:
-	@ echo "Downloading libkqueue"
+.make-icu: .conf-icu
+	@ echo `date +%s` `date` "Building icu"
+	@ cd icu/source && make -j$(NUMCORES) install > ../../make-icu.log 2>&1
+	@ mv make-icu.log .make-icu
+
+.wget-libkqueue:
+	@ echo `date +%s` `date` "Downloading libkqueue"
 	@ wget -Ncq http://mark.heily.com/sites/mark.heily.com/files/libkqueue-1.0.6.tar.gz
-	@ touch wget-libkqueue
+	@ touch .wget-libkqueue
 
-build-libkqueue: wget-libkqueue build-icu
-	@ echo "Configuring libkqueue"
+.conf-libkqueue: .wget-libkqueue .make-icu
+	@ echo `date +%s` `date` "Configuring libkqueue"
+	@ rm -fr libkqueue-1.0.6
 	@ tar xfz libkqueue-1.0.6.tar.gz
-	cd libkqueue-1.0.6 && CC=clang CFLAGS="-O2" ./configure --prefix=$(BRAYATAN) > ../build-libkqueue.log 2>&1
-	@ echo "Building libkqueue"
-	@ cd libkqueue-1.0.6 && make -j$(NUMCORES) >> ../build-libkqueue.log 2>&1
-	@ cd libkqueue-1.0.6 && make -j$(NUMCORES) install >> ../build-libkqueue.log 2>&1
-	@ mv build-libkqueue.log build-libkqueue
+	@ cd libkqueue-1.0.6 && CC=clang CFLAGS="-O2" ./configure --prefix=$(BRAYATAN) > ../conf-libkqueue.log 2>&1
+	@ mv conf-libkqueue.log .conf-libkqueue
 
-wget-libdispatch:
-	@ echo "Downloading libdispatch"
+.make-libkqueue: .conf-libkqueue
+	@ echo `date +%s` `date` "Building libkqueue"
+	@ cd libkqueue-1.0.6 && make -j$(NUMCORES) > ../make-libkqueue.log 2>&1
+	@ cd libkqueue-1.0.6 && make -j$(NUMCORES) install >> ../make-libkqueue.log 2>&1
+	@ mv make-libkqueue.log .make-libkqueue
+
+.wget-libdispatch:
+	@ echo `date +%s` `date` "Downloading libdispatch"
 	@ wget -Ncq http://ftp.de.debian.org/debian/pool/main/libd/libdispatch/libdispatch_0~svn197.orig.tar.gz
-	@ touch wget-libdispatch
+	@ touch .wget-libdispatch
 
-build-libdispatch: wget-libdispatch build-libkqueue
-	@ echo "Configuring libdispatch"
+.conf-libdispatch: .wget-libdispatch .make-libkqueue
+	@ echo `date +%s` `date` "Configuring libdispatch"
 	@ tar xfz libdispatch_0~svn197.orig.tar.gz
 	@ cp /usr/include/unistd.h $(BRAYATAN)/include
 	@ perl -p -i -e 's/__block/___block/' $(BRAYATAN)/include/unistd.h
 	@ patch -p 0 < patch-libdispatch
-	@ cd libdispatch-0~svn197 && CC=clang CFLAGS="-I$(BRAYATAN)/include -O2 -DDISPATCH_LINUX_COMPAT" KQUEUE_CFLAGS="-I$(BRAYATAN)/include/kqueue" KQUEUE_LIBS="-L$(BRAYATAN)/lib" LDFLAGS="-L$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) > ../build-libdispatch.log 2>&1
-	@ echo "Building libdispatch"
-	@ cd libdispatch-0~svn197 && make -j$(NUMCORES) install >> ../build-libdispatch.log 2>&1
-	@ mv build-libdispatch.log build-libdispatch
+	@ cd libdispatch-0~svn197 && CC=clang CFLAGS="-I$(BRAYATAN)/include -O2 -DDISPATCH_LINUX_COMPAT" KQUEUE_CFLAGS="-I$(BRAYATAN)/include/kqueue" KQUEUE_LIBS="-L$(BRAYATAN)/lib" LDFLAGS="-L$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) > ../conf-libdispatch.log 2>&1
+	@ mv conf-libdispatch.log .conf-libdispatch
 
-wget-libcorefoundation:
-	@ echo "Downloading libcorefoundation"
+.make-libdispatch: .conf-libdispatch
+	@ echo `date +%s` `date` "Building libdispatch"
+	@ cd libdispatch-0~svn197 && make -j$(NUMCORES) install > ../make-libdispatch.log 2>&1
+	@ mv make-libdispatch.log .make-libdispatch
+
+.wget-libcorefoundation:
+	@ echo `date +%s` `date` "Downloading libcorefoundation"
 	@ wget -Ncq http://www.heily.com/debian/unstable/libcorefoundation_635.orig.tar.gz
-	@ touch wget-libcorefoundation
+	@ touch .wget-libcorefoundation
 
-build-libcorefoundation: wget-libcorefoundation build-libdispatch
-	@ echo "Configuring libcorefoundation"
+.conf-libcorefoundation: .wget-libcorefoundation .make-libdispatch
+	@ echo `date +%s` `date` "Configuring libcorefoundation"
 	@ tar xfz libcorefoundation_635.orig.tar.gz
-	@ cd CF-635 && patch < ../patch-libcorefoundation > ../build-libcorefoundation.log 2>&1
-	@ echo "Building libcorefoundation"
-	@ cd CF-635 && BRAYATAN=$(BRAYATAN) make install >> ../build-libcorefoundation.log 2>&1
-	@ mv build-libcorefoundation.log build-libcorefoundation
+	@ cd CF-635 && patch < ../patch-libcorefoundation > ../conf-libcorefoundation.log 2>&1
+	@ mv conf-libcorefoundation.log .conf-libcorefoundation
 
-svn-gnustep-make:
-	@ echo "SVN Cloning gnustep-make"
+.make-libcorefoundation: .conf-libcorefoundation
+	@ echo `date +%s` `date` "Building libcorefoundation"
+	@ cd CF-635 && BRAYATAN=$(BRAYATAN) make install > ../make-libcorefoundation.log 2>&1
+	@ mv make-libcorefoundation.log .make-libcorefoundation
+
+.clone-gnustep-make:
+	@ echo `date +%s` `date` "SVN Cloning gnustep-make"
 	@ svn co -q http://svn.gna.org/svn/gnustep/tools/make/trunk/ gnustep-make-svn
-	@ touch svn-gnustep-make
+	@ touch .clone-gnustep-make
 
-build-gnustep-make: svn-gnustep-make build-libdispatch
-	@ echo "Configuring gnustep-make"
-	@ cd gnustep-make-svn && CC=clang CXX=clang++ LDFLAGS="-L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) > ../build-gnustep-make.log 2>&1
-	@ echo "Building gnustep-make"
-	@ cd gnustep-make-svn && make -j$(NUMCORES) install >> ../build-gnustep-make.log 2>&1
-	@ mv build-gnustep-make.log build-gnustep-make
+.conf-gnustep-make: .clone-gnustep-make .make-libdispatch
+	@ echo `date +%s` `date` "Configuring gnustep-make"
+	@ cd gnustep-make-svn && CC=clang CXX=clang++ LDFLAGS="-L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) > ../conf-gnustep-make.log 2>&1
+	@ mv conf-gnustep-make.log .conf-gnustep-make
 
-svn-gnustep-corebase:
-	@ echo "SVN Cloning gnustep-corebase"
+.make-gnustep-make: .conf-gnustep-make
+	@ echo `date +%s` `date` "Building gnustep-make"
+	@ cd gnustep-make-svn && make -j$(NUMCORES) install > ../make-gnustep-make.log 2>&1
+	@ mv make-gnustep-make.log .make-gnustep-make
+
+.clone-gnustep-corebase:
+	@ echo `date +%s` `date` "SVN Cloning gnustep-corebase"
 	@ svn co -q http://svn.gna.org/svn/gnustep/libs/corebase/trunk/ gnustep-corebase-svn
-	@ touch svn-gnustep-corebase
+	@ touch .clone-gnustep-corebase
 
-build-gnustep-corebase: svn-gnustep-corebase build-gnustep-base
-	@ echo "Configuring gnustep-corebase"
-	@ cd gnustep-corebase-svn && CC=clang CXX=clang++ CFLAGS="-I$(BRAYATAN)/include" ./configure --prefix=$(BRAYATAN) > ../build-gnustep-corebase.log 2>&1
-	@ echo "Building gnustep-corebase"
-	@ cd gnustep-corebase-svn && make -j$(NUMCORES) install >> ../build-gnustep-corebase.log 2>&1
-	@ mv build-gnustep-corebase.log build-gnustep-corebase
+.conf-gnustep-corebase: .clone-gnustep-corebase .make-gnustep-base
+	@ echo `date +%s` `date` "Configuring gnustep-corebase"
+	@ cd gnustep-corebase-svn && CC=clang CXX=clang++ CFLAGS="-I$(BRAYATAN)/include" ./configure --prefix=$(BRAYATAN) > ../conf-gnustep-corebase.log 2>&1
+	@ mv conf-gnustep-corebase.log .conf-gnustep-corebase
 
-svn-gnustep-base:
-	@ echo "SVN Cloning gnustep-base"
+.make-gnustep-corebase: .conf-gnustep-corebase
+	@ echo `date +%s` `date` "Building gnustep-corebase"
+	@ cd gnustep-corebase-svn && make -j$(NUMCORES) install > ../make-gnustep-corebase.log 2>&1
+	@ mv make-gnustep-corebase.log .make-gnustep-corebase
+
+.clone-gnustep-base:
+	@ echo `date +%s` `date` "SVN Cloning gnustep-base"
 	@ svn co -q http://svn.gna.org/svn/gnustep/libs/base/trunk/ gnustep-base-svn
-	@ touch svn-gnustep-base
+	@ touch .clone-gnustep-base
 
-build-gnustep-base: svn-gnustep-base build-gnustep-make
-	@ echo "Configuring gnustep-base"
-	@ cd gnustep-base-svn && CC=clang CXX=clang++ LDFLAGS="-L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) --disable-xml --disable-tls > ../build-gnustep-base.log 2>&1
-	@ echo "Building gnustep-base"
-	@ cd gnustep-base-svn && make -j$(NUMCORES) install >> ../build-gnustep-base.log 2>&1
-	@ mv build-gnustep-base.log build-gnustep-base
+.conf-gnustep-base: .clone-gnustep-base .make-gnustep-make
+	@ echo `date +%s` `date` "Configuring gnustep-base"
+	@ cd gnustep-base-svn && CC=clang CXX=clang++ LDFLAGS="-L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) --disable-xml --disable-tls > ../conf-gnustep-base.log 2>&1
+	@ mv conf-gnustep-base.log .conf-gnustep-base
 
-build-libhttp_parser: build-llvm-clang
-	@ echo "Building libhttp_parser"
-	@ +make -C ../../libhttp_parser -j$(NUMCORES) package > build-libhttp_parser.log
+.make-gnustep-base: .conf-gnustep-base
+	@ echo `date +%s` `date` "Building gnustep-base"
+	@ cd gnustep-base-svn && make -j$(NUMCORES) install > ../make-gnustep-base.log 2>&1
+	@ mv make-gnustep-base.log .make-gnustep-base
+
+.make-libhttp_parser: .make-llvm-clang
+	@ echo `date +%s` `date` "Building libhttp_parser"
+	@ +make -C ../../libhttp_parser -j$(NUMCORES) package > make-libhttp_parser.log
 	@ cp ../../libhttp_parser/libhttp_parser.a $(BRAYATAN)/lib/libhttp_parser.a
 	@ cp -r ../../libhttp_parser/http_parser.h $(BRAYATAN)/include/
-	@ mv build-libhttp_parser.log build-libhttp_parser
+	@ mv make-libhttp_parser.log .make-libhttp_parser
 
-build-libbrayatan: build-gnustep-base build-libhttp_parser
-	@ echo "Building libbrayatan"
-	@ +make -C ../../libbrayatan -j$(NUMCORES) install > build-libbrayatan.log
+.make-libbrayatan: .make-gnustep-base .make-libhttp_parser
+	@ echo `date +%s` `date` "Building libbrayatan"
+	@ +make -C ../../libbrayatan -j$(NUMCORES) install > make-libbrayatan.log
 	@ cp ../bin/brayatan-cc $(BRAYATAN)/bin
-	@ mv build-libbrayatan.log build-libbrayatan
-	@ echo "DONE."
-	@ echo
-	@ echo '---------------------------------------------------'
-	@ echo 'Do not forget to add the following to your .profile'
-	@ echo
-	@ echo 'export BRAYATAN=$$HOME/local/brayatan'
-	@ echo 'export PATH=$$BRAYATAN/bin:$$PATH' 
-	@ echo
-	@ echo '---------------------------------------------------'
-	@ echo 
+	@ mv make-libbrayatan.log .make-libbrayatan
+	@ echo `date +%s` `date` "DONE."
+	@ echo `date +%s` `date`
+	@ echo `date +%s` `date` '---------------------------------------------------'
+	@ echo `date +%s` `date` 'Do not forget to add the following to your .profile'
+	@ echo `date +%s` `date`
+	@ echo `date +%s` `date` 'export BRAYATAN=$$HOME/local/brayatan'
+	@ echo `date +%s` `date` 'export PATH=$$BRAYATAN/bin:$$PATH' 
+	@ echo `date +%s` `date`
+	@ echo `date +%s` `date` '---------------------------------------------------'
+	@ echo `date +%s` `date` 
