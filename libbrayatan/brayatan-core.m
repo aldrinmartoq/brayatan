@@ -20,7 +20,7 @@
 ////////////////////////////////
 
 #define _BR_KQUEUE_MAX_EVENTS 128
-#define _BR_KQUEUE_TIMEOUT 1
+#define _BR_KQUEUE_TIMEOUT 30
 #define _BR_READ_BUFFLEN 1024*4
 
 static void _br_create_bind_listen(br_server_t *s, char *hostname, char *servname);
@@ -637,6 +637,9 @@ static inline void _br_runloop_client_write(br_loop_t *loop, br_client_t *clnt, 
     if (clnt->on_write != NULL) {
         void (^on_write)(size_t) = (__bridge void(^)(size_t count))clnt->on_write;
         on_write(kev->data);
+    } else {
+        br_log_trace("WARN Closing no handler write client: %d", clnt->sock.fd);
+        br_client_close(clnt);
     }
 }
 
