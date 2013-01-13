@@ -10,5 +10,4 @@ for i in $*; do
 	if [ "$i" == "-c" ]; then LDFLAGS=""; fi
 done
 
-
-exec $CC $CFLAGS $LDFLAGS $*
+exec $CC $CFLAGS $* $LDFLAGS
