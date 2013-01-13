@@ -213,10 +213,18 @@ int on_url (http_parser* parser, const char *at, size_t length) {
     struct timeval r = diff(time_curr, time_start);
     unsigned long r1 = r.tv_sec;
     unsigned long r2 = r.tv_usec / 10000;
+
+    unsigned long rd = (r.tv_sec) / 3600 / 24;
+    unsigned long rh = (r.tv_sec - rd * 3600 *24) / 3600;
+    unsigned long rm = (r.tv_sec - rd * 3600 *24 - rh * 3600) / 60;
+    unsigned long rs = (r.tv_sec - rd * 3600 *24 - rh * 3600 - rm * 60) / 1;
     
+#ifdef __APPLE__
     unsigned long m1 = ru.ru_maxrss / 1024;
-    
-    return [NSString stringWithFormat:@"Hola, Flaites! This is %@\n\n--- Server status ---\nRequests: %llu\ncpu user: %ld.%02ld\ncpu  sys: %ld.%02ld\n  uptime: %ld.%02ld\nmem used: %ld KiB\n", BR_BUILD_VERSION_NSSTR, request_count, t1, t2, t3, t4, r1, r2, m1];
+#else
+    unsigned long m1 = ru.ru_maxrss;
+#endif    
+    return [NSString stringWithFormat:@"Hola, Flaites! This is %@\n\n--- Server status ---\nRequests: %llu\ncpu user: %ld.%02ld\ncpu  sys: %ld.%02ld\n  uptime: %ld.%02lds (%ld %ldh %ldm %lds)\nmem used: %ld KiB\n", BR_BUILD_VERSION_NSSTR, request_count, t1, t2, t3, t4, r1, r2, rd, rh, rm , rs, m1];
 }
 
 
