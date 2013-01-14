@@ -43,10 +43,15 @@ Add the following to your .bashrc, .profile or equivalent:
     export BRAYATAN=$HOME/local/brayatan
     export PATH=$BRAYATAN/bin:$PATH
 
-Go to the linux/build folder and run make.
+Go to the linux/build folder and run make:
 
     $ cd linux/build
     $ time make -j 4
+
+There is a makefile for the [Raspberry Pi](http://http://www.raspberrypi.org/) using the Raspbian image:
+
+    $ cd linux/build
+    $ time make -j 4 -f Makefile.raspbian
 
 Go and get some coffe: everything will be downloaded, compiled and installed in your $HOME/local/brayatan folder. To build the sample01 source code, go to samples/sample01 and build it with brayatan-cc compiler:
 
