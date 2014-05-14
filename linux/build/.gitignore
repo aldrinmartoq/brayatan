@@ -3,6 +3,10 @@ wget-*
 build-*
 *.gz
 *.bz2
+.clone-*
+.conf-*
+.make-*
+.wget-*
 gnustep-base-svn/
 gnustep-corebase-svn/
 gnustep-make-svn/
@@ -13,3 +17,6 @@ libffi-3.0.10/
 libkqueue-1.0.6/
 libobjc2-1.6/
 llvm-3.0.src/
+libffi-3.0.11/
+libkqueue-2.0.1/
+llvm-3.2.src/
