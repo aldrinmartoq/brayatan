@@ -467,7 +467,7 @@ void br_client_close(br_client_t *c) {
 void br_client_write(br_client_t *c, char *buff, size_t buff_len, void (^on_error)(br_client_t *)) {
     _br_dispatch_sync_nolock(_br_loop_queue, ^{
         br_log_trace("%3d br_client_write %12p", c->sock.fd, c);
-        int r = write(c->sock.fd, buff, buff_len);
+        size_t r = write(c->sock.fd, buff, buff_len);
         if (r == -1) {
             if (on_error == NULL) {
                 br_log_trace("%3d ERROR write on fd: %s", c->sock.fd, strerror(errno));

@@ -60,9 +60,9 @@ int on_header_field(http_parser* parser, const char *at, size_t length) {
         
         void *last = client->last_header_field;
         if (client->was_header_field) { // append field
-            client->last_header_field = (__bridge_retained void *)[NSString stringWithFormat:@"%@%.*s", last, length, at];
+            client->last_header_field = (__bridge_retained void *)[NSString stringWithFormat:@"%@%.*s", last, (int)length, at];
         } else { // create field
-            client->last_header_field = (__bridge_retained void *)[NSString stringWithFormat:@"%.*s", length, at];
+            client->last_header_field = (__bridge_retained void *)[NSString stringWithFormat:@"%.*s", (int)length, at];
             client->was_header_field = YES;
         }
         
@@ -81,10 +81,10 @@ int on_header_value(http_parser* parser, const char *at, size_t length) {
         if (client->was_header_value) { // append value
             NSString *field = (__bridge NSString *)client->last_header_field;
             NSString *value = [request.headers objectForKey:field];
-            [request.headers setObject:[NSString stringWithFormat:@"%@%.*s", value, length, at] forKey:field];
+            [request.headers setObject:[NSString stringWithFormat:@"%@%.*s", value, (int)length, at] forKey:field];
         } else { // create value
             NSString *field = (__bridge NSString *)client->last_header_field;
-            [request.headers setObject:[NSString stringWithFormat:@"%.*s", length, at] forKey:field];
+            [request.headers setObject:[NSString stringWithFormat:@"%.*s", (int)length, at] forKey:field];
         }
         
         client->was_header_field = NO;
@@ -119,7 +119,7 @@ int on_url (http_parser* parser, const char *at, size_t length) {
         client_t *client = (client_t *)parser->data;
         Request *request = (__bridge Request *)client->request;
         
-        request.urlPath = (request.urlPath == nil ? [NSString stringWithFormat:@"%.*s", length, at] : [NSString stringWithFormat:@"%@%.*s", request.urlPath, length, at]);
+        request.urlPath = (request.urlPath == nil ? [NSString stringWithFormat:@"%.*s", (int)length, at] : [NSString stringWithFormat:@"%@%.*s", request.urlPath, (int)length, at]);
         return 0;
     }
 }
@@ -242,7 +242,7 @@ int on_url (http_parser* parser, const char *at, size_t length) {
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<Http: 0x%lx ip: %@ port: %@ url: http://%@:%@/ >", self, _ip, _port, _ip, _port];
+    return [NSString stringWithFormat:@"<Http: 0x%llx ip: %@ port: %@ url: http://%@:%@/ >", (unsigned long long)self, _ip, _port, _ip, _port];
 }
 
 + (void) initialize {

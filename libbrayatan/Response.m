@@ -195,7 +195,7 @@ static NSString *contentType(NSString *path) {
             [tmp appendFormat:@"%@: %@\r\n", key, [headers objectForKey:key]];
         }
         [tmp appendFormat:@"\r\n"];
-        [tmp appendFormat:body];
+        [tmp appendString:body];
         char *buff = (char *)[tmp UTF8String];
         size_t buff_len = strlen(buff);
         br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
@@ -281,7 +281,7 @@ static NSString *contentType(NSString *path) {
             }
             
             [self setHeader:@"Content-Type" value:contentType(req.urlPath)];
-            [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%d", stat.st_size]];
+            [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", (long)stat.st_size]];
             [self setHeader:@"Last-Modified" value:lastmod];
             [self writeHeader];
 
