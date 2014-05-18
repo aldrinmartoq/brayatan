@@ -5,10 +5,25 @@ NUMCORES=`cat /proc/cpuinfo | grep -i ^processor | wc -l`
 all: .make-libbrayatan
 
 clean:
-	rm -fr clang-*.src llvm-*.src libffi-3.0.11 .make-* CF-635/ icu/ libBlocksRuntime-0.1/ libdispatch-0~svn197/ libkqueue-1.0.6/ libobjc2-1.6/ gnustep-base-svn/ gnustep-make-svn/ gnustep-corebase-svn/ svn-gnustep-base svn-gnustep-make svn-gnustep-corebase
+	rm -fr clang-*.src llvm-*.src libffi-3.0.11 .make-* CF-635/ icu/ libBlocksRuntime-0.1/ libdispatch-0~svn197/ libkqueue-1.0.6/ libobjc2-1.6/ gnustep-base-svn/ gnustep-make-svn/ gnustep-corebase-svn/ svn-gnustep-base svn-gnustep-make svn-gnustep-corebase gnustep-corebase gnustep-base gnustep-libobjc2
 
 clean-all: clean
-	rm -fr .wget-* .conf-* *.gz *.bz2 svn-* .clone-* *.log
+	rm -fr .wget-* .conf-* *.gz *.bz2 svn-* .clone-* *.log *.tar
+
+.backup: .wget-libffi .wget-clang .wget-llvm .wget-blocksruntime .wget-libobjc2 .wget-icu .wget-libkqueue .wget-libdispatch .wget-libcorefoundation .clone-gnustep-make .clone-gnustep-corebase .clone-gnustep-base
+	@ mkdir -p .backup
+	@ tar cf gnustep.tar gnustep-*
+	@ cp -r *.tar.gz *.tar.bz2 *.tar .backup
+
+.all-but-llvm: .backup clean-all
+	@ cp -r .backup/* .
+	@ rm -fr gnustep-*
+	@ tar xf gnustep.tar
+	@ touch .wget-libffi .wget-clang .wget-llvm .wget-blocksruntime .wget-libobjc2 .wget-icu .wget-libkqueue .wget-libdispatch .wget-libcorefoundation .clone-gnustep-make .clone-gnustep-corebase .clone-gnustep-base
+	@ make .make-libffi
+	@ touch .make-llvm-clang .conf-llvm-clang
+
+all-but-llvm: .all-but-llvm all
 
 libffi: .make-libffi
 llvm-clang: .make-llvm-clang
@@ -44,6 +59,9 @@ libbrayatan: .make-libbrayatan
 	@ cp $(BRAYATAN)/lib/libffi-3.0.11/include/*.h $(BRAYATAN)/include
 	@ mv make-libffi.log .make-libffi
 
+clean-libffi:
+	@ rm -fr libffi-3.0.11
+
 .wget-clang:
 	@ echo `date +%s` `date` "Downloading clang"
 	@ wget -Ncq http://llvm.org/releases/3.2/clang-3.2.src.tar.gz
@@ -67,6 +85,9 @@ libbrayatan: .make-libbrayatan
 	@ echo `date +%s` `date` "Building llvm clang"
 	@ cd llvm-3.2.src && make -j$(NUMCORES) install > ../make-llvm-clang.log 2>&1
 	@ mv make-llvm-clang.log .make-llvm-clang
+
+clean-llvm-clang:
+	@ rm -fr llvm-3.2.src
 
 .conf-libffi-2: .wget-libffi
 	@ echo `date +%s` `date` "Configuring libffi-2"
@@ -98,6 +119,9 @@ libbrayatan: .make-libbrayatan
 	@ cd libBlocksRuntime-0.1 && make -j$(NUMCORES) install >> ../make-blocksruntime.log 2>&1
 	@ mv make-blocksruntime.log .make-blocksruntime
 
+clean-blocksruntime:
+	@ rm -fr libBlocksRuntime-0.1
+
 .wget-libobjc2:
 	@ echo `date +%s` `date` "Downloading libobjc2"
 	@ wget -Ncq http://download.gna.org/gnustep/libobjc2-1.6.tar.bz2
@@ -113,6 +137,9 @@ libbrayatan: .make-libbrayatan
 	@ echo `date +%s` `date` "Building libobjc2"
 	@ cd libobjc2-1.6 && CC=clang CXX=clang++ PREFIX=$(BRAYATAN) make -f Makefile install > ../make-libobjc2.log 2>&1
 	@ mv make-libobjc2.log .make-libobjc2
+
+clean-libobjc2:
+	@ rm -fr libobjc2-1.6
 
 .wget-icu:
 	@ echo `date +%s` `date` "Downloading icu"
@@ -130,9 +157,12 @@ libbrayatan: .make-libbrayatan
 	@ cd icu/source && make -j$(NUMCORES) install > ../../make-icu.log 2>&1
 	@ mv make-icu.log .make-icu
 
+clean-icu:
+	@ rm -fr icu
+
 .wget-libkqueue:
 	@ echo `date +%s` `date` "Downloading libkqueue"
-	@ wget -Ncq http://mark.heily.com/sites/mark.heily.com/files/libkqueue-1.0.6.tar.gz
+	@ wget -Ncq http://sourceforge.net/projects/libkqueue/files/libkqueue-1.0/libkqueue-1.0.6.tar.gz/download -O libkqueue-1.0.6.tar.gz
 	@ touch .wget-libkqueue
 
 .conf-libkqueue: .wget-libkqueue .make-icu
@@ -147,6 +177,9 @@ libbrayatan: .make-libbrayatan
 	@ cd libkqueue-1.0.6 && make -j$(NUMCORES) > ../make-libkqueue.log 2>&1
 	@ cd libkqueue-1.0.6 && make -j$(NUMCORES) install >> ../make-libkqueue.log 2>&1
 	@ mv make-libkqueue.log .make-libkqueue
+
+clean-libkqueue:
+	@ rm -fr libkqueue-1.0.6
 
 .wget-libdispatch:
 	@ echo `date +%s` `date` "Downloading libdispatch"
@@ -167,6 +200,9 @@ libbrayatan: .make-libbrayatan
 	@ cd libdispatch-0~svn197 && make -j$(NUMCORES) install > ../make-libdispatch.log 2>&1
 	@ mv make-libdispatch.log .make-libdispatch
 
+clean-libdispatch:
+	@ rm -fr libdispatch-0~svn197
+
 .wget-libcorefoundation:
 	@ echo `date +%s` `date` "Downloading libcorefoundation"
 	@ wget -Ncq http://www.heily.com/debian/unstable/libcorefoundation_635.orig.tar.gz
@@ -183,6 +219,9 @@ libbrayatan: .make-libbrayatan
 	@ cd CF-635 && BRAYATAN=$(BRAYATAN) make install > ../make-libcorefoundation.log 2>&1
 	@ mv make-libcorefoundation.log .make-libcorefoundation
 
+clean-libcorefoundation:
+	@ rm -fr CF-635
+
 .clone-gnustep-make:
 	@ echo `date +%s` `date` "SVN Cloning gnustep-make"
 	@ svn co -q http://svn.gna.org/svn/gnustep/tools/make/trunk/ gnustep-make-svn
@@ -198,20 +237,26 @@ libbrayatan: .make-libbrayatan
 	@ cd gnustep-make-svn && make -j$(NUMCORES) install > ../make-gnustep-make.log 2>&1
 	@ mv make-gnustep-make.log .make-gnustep-make
 
+clean-gnustep-make:
+	@ rm -fr gnustep-make-svn
+
 .clone-gnustep-corebase:
-	@ echo `date +%s` `date` "SVN Cloning gnustep-corebase"
-	@ svn co -q http://svn.gna.org/svn/gnustep/libs/corebase/trunk/ gnustep-corebase-svn
+	@ echo `date +%s` `date` "GIT Cloning gnustep-corebase"
+	@ git clone https://github.com/gnustep/gnustep-corebase.git
 	@ touch .clone-gnustep-corebase
 
 .conf-gnustep-corebase: .clone-gnustep-corebase .make-gnustep-base
 	@ echo `date +%s` `date` "Configuring gnustep-corebase"
-	@ cd gnustep-corebase-svn && CC=clang CXX=clang++ CFLAGS="-I$(BRAYATAN)/include" ./configure --prefix=$(BRAYATAN) > ../conf-gnustep-corebase.log 2>&1
+	@ cd gnustep-corebase && CC=clang CXX=clang++ CPPFLAGS="-I$(BRAYATAN)/include" LDFLAGS="-L$(BRAYATAN)/lib -Wl,-rpath,$(BRAYATAN)/lib" ./configure --prefix=$(BRAYATAN) --disable-gcd > ../conf-gnustep-corebase.log 2>&1
 	@ mv conf-gnustep-corebase.log .conf-gnustep-corebase
 
 .make-gnustep-corebase: .conf-gnustep-corebase
 	@ echo `date +%s` `date` "Building gnustep-corebase"
-	@ cd gnustep-corebase-svn && make -j$(NUMCORES) install > ../make-gnustep-corebase.log 2>&1
+	@ cd gnustep-corebase && make -j$(NUMCORES) install > ../make-gnustep-corebase.log 2>&1
 	@ mv make-gnustep-corebase.log .make-gnustep-corebase
+
+clean-gnustep-corebase:
+	@ rm -fr gnustep-corebase-svn
 
 .clone-gnustep-base:
 	@ echo `date +%s` `date` "SVN Cloning gnustep-base"
@@ -228,6 +273,9 @@ libbrayatan: .make-libbrayatan
 	@ cd gnustep-base-svn && make -j$(NUMCORES) install > ../make-gnustep-base.log 2>&1
 	@ mv make-gnustep-base.log .make-gnustep-base
 
+clean-gnustep-base:
+	@ rm -fr gnustep-base-svn
+
 .make-libhttp_parser: .make-llvm-clang
 	@ echo `date +%s` `date` "Building libhttp_parser"
 	@ +make -C ../../libhttp_parser -j$(NUMCORES) package > make-libhttp_parser.log
@@ -235,7 +283,10 @@ libbrayatan: .make-libbrayatan
 	@ cp -r ../../libhttp_parser/http_parser.h $(BRAYATAN)/include/
 	@ mv make-libhttp_parser.log .make-libhttp_parser
 
-.make-libbrayatan: .make-gnustep-base .make-libhttp_parser
+clean-libhttp_parser:
+	@ +make -C ../../libhttp_parser -j$(NUMCORES) clean
+
+.make-libbrayatan: .make-gnustep-base .make-gnustep-corebase .make-libhttp_parser
 	@ echo `date +%s` `date` "Building libbrayatan"
 	@ +make -C ../../libbrayatan -j$(NUMCORES) install > make-libbrayatan.log
 	@ cp ../bin/brayatan-cc $(BRAYATAN)/bin
@@ -250,3 +301,7 @@ libbrayatan: .make-libbrayatan
 	@ echo `date +%s` `date`
 	@ echo `date +%s` `date` '---------------------------------------------------'
 	@ echo `date +%s` `date` 
+
+clean-libbrayatan:
+	@ +make -C ../../libbrayatan -j$(NUMCORES) clean
+	@ +make -C ../../libhttp_parser -j$(NUMCORES) clean
