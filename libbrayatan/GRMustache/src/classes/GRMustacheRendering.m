@@ -257,7 +257,7 @@ void freeCurrentContentTypeStack(void *objects) {
 
 - (id)initWithBlock:(NSString *(^)(GRMustacheTag *tag, GRMustacheContext *context, BOOL *HTMLSafe, NSError **error))block
 {
-    if (block == nil) {
+    if (block == NULL) {
         [NSException raise:NSInvalidArgumentException format:@"Can't build a rendering object with a nil block."];
     }
     

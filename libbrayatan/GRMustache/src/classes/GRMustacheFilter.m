@@ -83,7 +83,7 @@
 
 - (id)initWithBlock:(id(^)(id value))block
 {
-    if (block == nil) {
+    if (block == NULL) {
         [NSException raise:NSInvalidArgumentException format:@"Can't build a filter with a nil block."];
     }
     
@@ -118,7 +118,7 @@
 
 - (id)initWithBlock:(id(^)(NSArray *arguments))block arguments:(NSArray *)arguments
 {
-    if (block == nil) {
+    if (block == NULL) {
         [NSException raise:NSInvalidArgumentException format:@"Can't build a filter with a nil block."];
     }
     
