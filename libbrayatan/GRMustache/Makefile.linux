@@ -1,0 +1,19 @@
+BRAYATAN=$(HOME)/local/brayatan
+
+CC=clang
+CFLAGS=-fblocks -fobjc-nonfragile-abi -I$(BRAYATAN)/include -I$(BRAYATAN)/include/kqueue -D_NATIVE_OBJC_EXCEPTIONS -O2
+ARC=-fobjc-arc
+
+libGRMustache7-linux.a: GRMustacheTranslateCharacters.o
+	ar rcs libGRMustache7-linux.a 
+
+install: libGRMustache7-linux.a
+	cp libGRMustache7-linux.a $(BRAYATAN)/lib
+	mkdir -p $(BRAYATAN)/include/GRMustache/
+	cp src/classes/*.h $(BRAYATAN)/include/GRMustache/
+
+GRMustacheTranslateCharacters.o: src/classes/GRMustacheTranslateCharacters.m
+	$(CC) $(CFLAGS) -c -o GRMustacheTranslateCharacters.o src/classes/GRMustacheTranslateCharacters.m
+
+clean:
+	rm -f *.o *.a
