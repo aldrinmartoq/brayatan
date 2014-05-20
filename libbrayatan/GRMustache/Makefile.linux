@@ -1,11 +1,11 @@
 BRAYATAN=$(HOME)/local/brayatan
 
 CC=clang
-CFLAGS=-fblocks -fobjc-nonfragile-abi -I$(BRAYATAN)/include -I$(BRAYATAN)/include/kqueue -D_NATIVE_OBJC_EXCEPTIONS -O2
+CFLAGS=-fblocks -fobjc-nonfragile-abi -I$(BRAYATAN)/include -I$(BRAYATAN)/include/kqueue -D_NATIVE_OBJC_EXCEPTIONS -O2 -include $(BRAYATAN)/include/CoreFoundation/CoreFoundation.h -include brayatan-osx-compat.h -I . -I src/vendor/groue/jrswizzle/
 ARC=-fobjc-arc
 
-libGRMustache7-linux.a: GRMustacheTranslateCharacters.o
-	ar rcs libGRMustache7-linux.a 
+libGRMustache7-linux.a: GRMustacheTranslateCharacters.o GRMustache.o GRMustacheError.o GRMustacheTemplate.o GRMustacheCompiler.o GRMustacheTemplateRepository.o GRMustacheAST.o GRMustacheKeyAccess.o GRMustacheTextComponent.o GRMustacheToken.o GRMustacheParser.o GRMustacheRendering.o GRMustacheVariableTag.o GRMustacheFilter.o GRMustacheInheritableSection.o GRMustacheFilteredExpression.o GRMustacheStandardLibrary.o GRMustachePartial.o GRMustacheIdentifierExpression.o GRMustacheImplicitIteratorExpression.o GRMustacheScopedExpression.o GRMustacheExpression.o GRMustacheInheritablePartial.o GRMustacheSectionTag.o GRMustacheTag.o GRMustacheContext.o GRMustacheConfiguration.o GRMustacheLocalizer.o NSFormatter+GRMustache.o NSValueTransformer+GRMustache.o GRMustacheJavascriptLibrary.o GRMustacheURLLibrary.o GRMustacheHTMLLibrary.o GRMustacheExpressionParser.o
+	ar rcs libGRMustache7-linux.a $?
 
 install: libGRMustache7-linux.a
 	cp libGRMustache7-linux.a $(BRAYATAN)/lib
@@ -13,7 +13,110 @@ install: libGRMustache7-linux.a
 	cp src/classes/*.h $(BRAYATAN)/include/GRMustache/
 
 GRMustacheTranslateCharacters.o: src/classes/GRMustacheTranslateCharacters.m
-	$(CC) $(CFLAGS) -c -o GRMustacheTranslateCharacters.o src/classes/GRMustacheTranslateCharacters.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustache.o: src/classes/GRMustache.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheError.o: src/classes/GRMustacheError.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheTemplate.o: src/classes/GRMustacheTemplate.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheCompiler.o: src/classes/GRMustacheCompiler.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheTemplateRepository.o: src/classes/GRMustacheTemplateRepository.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheAST.o: src/classes/GRMustacheAST.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheKeyAccess.o: src/classes/GRMustacheKeyAccess.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheTextComponent.o: src/classes/GRMustacheTextComponent.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheToken.o: src/classes/GRMustacheToken.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheParser.o: src/classes/GRMustacheParser.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheRendering.o: src/classes/GRMustacheRendering.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheVariableTag.o: src/classes/GRMustacheVariableTag.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+JRSwizzle.o: src/vendor/groue/jrswizzle/JRSwizzle.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheFilter.o: src/classes/GRMustacheFilter.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheInheritableSection.o: src/classes/GRMustacheInheritableSection.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheFilteredExpression.o: src/classes/GRMustacheFilteredExpression.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheStandardLibrary.o: src/classes/GRMustacheStandardLibrary.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustachePartial.o: src/classes/GRMustachePartial.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheIdentifierExpression.o: src/classes/GRMustacheIdentifierExpression.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheImplicitIteratorExpression.o: src/classes/GRMustacheImplicitIteratorExpression.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheScopedExpression.o: src/classes/GRMustacheScopedExpression.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheExpression.o: src/classes/GRMustacheExpression.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheInheritablePartial.o: src/classes/GRMustacheInheritablePartial.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheSectionTag.o: src/classes/GRMustacheSectionTag.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheTag.o: src/classes/GRMustacheTag.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheContext.o: src/classes/GRMustacheContext.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheConfiguration.o: src/classes/GRMustacheConfiguration.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheLocalizer.o: src/classes/GRMustacheLocalizer.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+NSFormatter+GRMustache.o: src/classes/NSFormatter+GRMustache.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+NSValueTransformer+GRMustache.o: src/classes/NSValueTransformer+GRMustache.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheJavascriptLibrary.o: src/classes/GRMustacheJavascriptLibrary.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheURLLibrary.o: src/classes/GRMustacheURLLibrary.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheHTMLLibrary.o: src/classes/GRMustacheHTMLLibrary.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+GRMustacheExpressionParser.o: src/classes/GRMustacheExpressionParser.m
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 
 clean:
 	rm -f *.o *.a
