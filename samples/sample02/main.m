@@ -11,6 +11,7 @@
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
+        __block int count = 0;
         Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(Request *req, Response *res) {
             if ([req.urlPath hasPrefix:@"/status"]) {
                 [res redirectToURL:@"/brayatan-status"];
@@ -18,6 +19,8 @@ int main(int argc, const char * argv[]) {
                 /* show server status in /brayatan-status */
                 [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
                 [res endWithBody:[Http statusString]];
+            } else if ([req.urlPath hasPrefix:@"/template"]) {
+                [res dynamicContentForRequest:req Data:@{@"cuenta" : [NSNumber numberWithInt:count], @"thread" : [NSThread currentThread]} TemplateFolder:@"/var/www/brayatan/"];
             } else {
                 /* mapping virtual host brayatan.org to static content in /var/www/brayatan/ */
                 if ([req.host hasPrefix:@"brayatan.org"]) {

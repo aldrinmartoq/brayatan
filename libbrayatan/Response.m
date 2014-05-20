@@ -25,6 +25,7 @@
 
 #import "Response.h"
 #import <dirent.h>
+#import "GRMustache.h"
 
 static NSString *statusCode(int status) {
     switch(status) {
@@ -225,6 +226,41 @@ static NSString *contentType(NSString *path) {
 
         [self writeBody:[NSString stringWithFormat:@"<BR><HR><I>%@</I>", BR_BUILD_VERSION_NSSTR]];
     };
+}
+
+- (BOOL)dynamicContentForRequest:(Request *)req Data:(id)object TemplateFolder:(NSString *)folder {
+    @autoreleasepool {
+        NSRange range = [req.urlPath rangeOfString:@"/../"];
+        if (range.location != NSNotFound) {
+            self.status = 400;
+            [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
+            [self endWithBody:@"/../ is not allowed in path\r\n"];
+            return YES;
+        }
+        
+        GRMustacheTemplateRepository *repository = [GRMustacheTemplateRepository templateRepositoryWithDirectory:folder];
+        GRMustacheTemplate *template = [repository templateNamed:req.urlPath error:nil];
+        
+        NSString *data = [template renderObject:object error:nil];
+        
+        char *buff = (char *)[data UTF8String];
+        size_t buff_len = 0;
+        if (buff != NULL) {
+            buff_len = strlen(buff);
+        }
+        
+        [self setHeader:@"Content-Type" value:@"text/html"];
+        [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", buff_len]];
+        [self writeHeader];
+        
+        br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
+            br_log_error("RESPONSE ERROR on %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
+        });
+        
+        br_client_close(client->clnt);
+        
+        return YES;
+    }
 }
 
 - (BOOL)staticContentForRequest:(Request *)req FromFolder:(NSString *)folder {

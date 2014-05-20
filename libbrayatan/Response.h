@@ -37,6 +37,7 @@
 - (id)initWithClient:(client_t*) client;
 - (Response *)setHeader:(NSString *)header value:(NSString *)value;
 - (BOOL)endWithBody:(NSString *)body;
+- (BOOL)dynamicContentForRequest:(Request *)req Data:(id)object TemplateFolder:(NSString *)folder;
 - (BOOL)staticContentForRequest:(Request *)req FromFolder:(NSString *)folder;
 - (BOOL)redirectToURL:(NSString *)url;
 
