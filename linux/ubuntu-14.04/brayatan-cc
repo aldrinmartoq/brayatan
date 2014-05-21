@@ -4,7 +4,7 @@ export PATH=$BRAYATAN/bin:$PATH
 
 CC="clang"
 CFLAGS="$(gnustep-config --objc-flags) $(pkg-config libkqueue --cflags) -I$BRAYATAN/include/brayatan -fblocks -ldispatch"
-LDFLAGS="-lbrayatan -lhttp_parser -ldispatch $(gnustep-config --base-libs) $(pkg-config libkqueue --libs) -lgnustep-gui"
+LDFLAGS="-lbrayatan -lhttp-parser -lGRMustache7-linux -lgnustep-corebase -ldispatch $(gnustep-config --base-libs) $(pkg-config libkqueue --libs) -lgnustep-gui"
 
 for i in $*; do
 	if [ "$i" == "-c" ]; then LDFLAGS=""; fi

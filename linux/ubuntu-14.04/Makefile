@@ -113,7 +113,13 @@ install-clean:
 	@ cp -r ../../libhttp_parser/http_parser.h $(BRAYATAN)/include/
 	@ mv make-libhttp-parser.log .inst-libhttp-parser
 
-.inst-libbrayatan: .inst-libhttp-parser
+.inst-libgrmustache: .pos-packages
+	@ echo `date +%s` `date` "Installing libGRMustache"
+	@ +make -C ../../libbrayatan/GRMustache -j$(NUMCORES) -f Makefile.linux clean > make-libhttp-parser.log
+	@ +make -C ../../libbrayatan/GRMustache -j$(NUMCORES) -f Makefile.linux install > make-libhttp-parser.log
+
+
+.inst-libbrayatan: .inst-libhttp-parser .inst-libgrmustache
 	@ echo `date +%s` `date` "Installing libbrayatan"
 	@ +make -C ../../libbrayatan -j$(NUMCORES) clean > make-libbrayatan.log
 	@ +make -C ../../libbrayatan -j$(NUMCORES) install > make-libbrayatan.log

@@ -1,7 +1,7 @@
 BRAYATAN=$(HOME)/local/brayatan
 
 CC=clang
-CFLAGS=-fblocks -fobjc-nonfragile-abi -I$(BRAYATAN)/include -I$(BRAYATAN)/include/kqueue -I/usr/include/kqueue -D_NATIVE_OBJC_EXCEPTIONS -O2
+CFLAGS=-fblocks -fobjc-nonfragile-abi -I$(BRAYATAN)/include -I$(BRAYATAN)/include/kqueue -I$(BRAYATAN)/include/GRMustache -include $(BRAYATAN)/include/GRMustache/brayatan-osx-compat.h -I/usr/include/kqueue -D_NATIVE_OBJC_EXCEPTIONS -O2
 ARC=-fobjc-arc
 
 libbrayatan.a: Http.o Request.o Response.o linux-miniruntime.o brayatan-core.o

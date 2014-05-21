@@ -10,7 +10,7 @@ libGRMustache7-linux.a: GRMustacheTranslateCharacters.o GRMustache.o GRMustacheE
 install: libGRMustache7-linux.a
 	cp libGRMustache7-linux.a $(BRAYATAN)/lib
 	mkdir -p $(BRAYATAN)/include/GRMustache/
-	cp src/classes/*.h $(BRAYATAN)/include/GRMustache/
+	cp brayatan-osx-compat.h src/classes/*.h $(BRAYATAN)/include/GRMustache/
 
 GRMustacheTranslateCharacters.o: src/classes/GRMustacheTranslateCharacters.m
 	$(CC) $(CFLAGS) -c -o $@ $<
