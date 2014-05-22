@@ -24,8 +24,8 @@
 //  THE SOFTWARE.
 
 #import "Http.h"
-#import "Request.h"
-#import "Response.h"
+#import "HttpRequest.h"
+#import "HttpResponse.h"
 #import "brayatan-core.h"
 #import <sys/resource.h>
 #import <sys/time.h>
@@ -76,7 +76,7 @@ int on_header_field(http_parser* parser, const char *at, size_t length) {
 int on_header_value(http_parser* parser, const char *at, size_t length) {
     @autoreleasepool {
         client_t *client = (client_t *)parser->data;
-        Request *request = (__bridge Request *)client->request;
+        HttpRequest *request = (__bridge HttpRequest *)client->request;
         
         if (client->was_header_value) { // append value
             NSString *field = (__bridge NSString *)client->last_header_field;
@@ -95,7 +95,7 @@ int on_header_value(http_parser* parser, const char *at, size_t length) {
 int on_headers_complete(http_parser* parser) {
     @autoreleasepool {
         client_t *client = (client_t *)parser->data;
-        Request *request = (__bridge Request *)client->request;
+        HttpRequest *request = (__bridge HttpRequest *)client->request;
         
         request.host = [[request headers] objectForKey:@"Host"];
         return 0;
@@ -105,8 +105,8 @@ int on_headers_complete(http_parser* parser) {
 int on_message_complete(http_parser *parser) {
     @autoreleasepool {
         client_t *client = (client_t *)parser->data;
-        Response *response = client->response != NULL ? (__bridge Response *)client->response : nil;
-        Request *request = client->request != NULL ? (__bridge Request *)client->request : nil;
+        HttpResponse *response = client->response != NULL ? (__bridge HttpResponse *)client->response : nil;
+        HttpRequest *request = client->request != NULL ? (__bridge HttpRequest *)client->request : nil;
         Http *http = (__bridge Http *)client->http;
 
         [http invokeReq:request invokeRes:response];
@@ -117,7 +117,7 @@ int on_message_complete(http_parser *parser) {
 int on_url (http_parser* parser, const char *at, size_t length) {
     @autoreleasepool {
         client_t *client = (client_t *)parser->data;
-        Request *request = (__bridge Request *)client->request;
+        HttpRequest *request = (__bridge HttpRequest *)client->request;
         
         request.urlPath = (request.urlPath == nil ? [NSString stringWithFormat:@"%.*s", (int)length, at] : [NSString stringWithFormat:@"%@%.*s", request.urlPath, (int)length, at]);
         return 0;
@@ -140,7 +140,7 @@ int on_url (http_parser* parser, const char *at, size_t length) {
     return self;
 }
 
-- (BOOL) listenWithIP:(NSString *)ip atPort:(NSString *)port callback:(void (^)(Request *req, Response *res))cb {
+- (BOOL) listenWithIP:(NSString *)ip atPort:(NSString *)port callback:(void (^)(HttpRequest *req, HttpResponse *res))cb {
     callback = cb;
     _ip = ip;
     _port = port;
@@ -156,8 +156,8 @@ int on_url (http_parser* parser, const char *at, size_t length) {
             parser->data = client;
             client->clnt = clnt;
             client->http = (__bridge void *)self;
-            client->request =  (__bridge_retained void *)[[Request alloc] init];
-            client->response = (__bridge_retained void *)[[Response alloc] initWithClient:client];
+            client->request =  (__bridge_retained void *)[[HttpRequest alloc] init];
+            client->response = (__bridge_retained void *)[[HttpResponse alloc] initWithClient:client];
             client->was_header_field = NO;
             client->was_header_value = NO;
             client->last_header_field = nil;
@@ -195,7 +195,7 @@ int on_url (http_parser* parser, const char *at, size_t length) {
     return YES;
 }
 
-- (void) invokeReq:(Request *)req invokeRes:(Response *)res {
+- (void) invokeReq:(HttpRequest *)req invokeRes:(HttpResponse *)res {
     request_count++;
     callback(req, res);
 }
@@ -229,7 +229,7 @@ int on_url (http_parser* parser, const char *at, size_t length) {
 
 
 
-+ (Http *) createServerWithIP:(NSString *)ip atPort:(NSString *)port callback:(void (^)(Request *req, Response *res))callback {
++ (Http *) createServerWithIP:(NSString *)ip atPort:(NSString *)port callback:(void (^)(HttpRequest *req, HttpResponse *res))callback {
     Http *http = [[Http alloc] init];
     if ([http listenWithIP:ip atPort:port callback:callback]) {
         return http;

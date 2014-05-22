@@ -25,7 +25,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Request : NSObject {
+@interface HttpRequest : NSObject {
 }
 
 @property (retain, nonatomic) NSMutableDictionary *headers;

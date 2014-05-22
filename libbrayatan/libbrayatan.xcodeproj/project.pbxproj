@@ -10,10 +10,10 @@
 		20335AE41544135000A94822 /* brayatan-common.h in Headers */ = {isa = PBXBuildFile; fileRef = 20335ADD1544135000A94822 /* brayatan-common.h */; };
 		20335AE51544135000A94822 /* Http.h in Headers */ = {isa = PBXBuildFile; fileRef = 20335ADE1544135000A94822 /* Http.h */; };
 		20335AE61544135000A94822 /* Http.m in Sources */ = {isa = PBXBuildFile; fileRef = 20335ADF1544135000A94822 /* Http.m */; };
-		20335AE71544135000A94822 /* Request.h in Headers */ = {isa = PBXBuildFile; fileRef = 20335AE01544135000A94822 /* Request.h */; };
-		20335AE81544135000A94822 /* Request.m in Sources */ = {isa = PBXBuildFile; fileRef = 20335AE11544135000A94822 /* Request.m */; };
-		20335AE91544135000A94822 /* Response.h in Headers */ = {isa = PBXBuildFile; fileRef = 20335AE21544135000A94822 /* Response.h */; };
-		20335AEA1544135000A94822 /* Response.m in Sources */ = {isa = PBXBuildFile; fileRef = 20335AE31544135000A94822 /* Response.m */; };
+		20335AE71544135000A94822 /* HttpRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 20335AE01544135000A94822 /* HttpRequest.h */; };
+		20335AE81544135000A94822 /* HttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 20335AE11544135000A94822 /* HttpRequest.m */; };
+		20335AE91544135000A94822 /* HttpResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 20335AE21544135000A94822 /* HttpResponse.h */; };
+		20335AEA1544135000A94822 /* HttpResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 20335AE31544135000A94822 /* HttpResponse.m */; };
 		20335AFE1544139C00A94822 /* libhttp_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335AF41544138100A94822 /* libhttp_parser.a */; };
 		207BEB5C1924098000F4122D /* libGRMustache7-MacOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2044B4E9192408CA00928587 /* libGRMustache7-MacOS.a */; };
 		20D10ED515616FC300100E3C /* brayatan-core.h in Headers */ = {isa = PBXBuildFile; fileRef = 20D10ED315616FC300100E3C /* brayatan-core.h */; };
@@ -198,10 +198,10 @@
 		20335ADD1544135000A94822 /* brayatan-common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "brayatan-common.h"; sourceTree = "<group>"; };
 		20335ADE1544135000A94822 /* Http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Http.h; sourceTree = "<group>"; };
 		20335ADF1544135000A94822 /* Http.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Http.m; sourceTree = "<group>"; };
-		20335AE01544135000A94822 /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Request.h; sourceTree = "<group>"; };
-		20335AE11544135000A94822 /* Request.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Request.m; sourceTree = "<group>"; };
-		20335AE21544135000A94822 /* Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Response.h; sourceTree = "<group>"; };
-		20335AE31544135000A94822 /* Response.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Response.m; sourceTree = "<group>"; };
+		20335AE01544135000A94822 /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequest.h; sourceTree = "<group>"; };
+		20335AE11544135000A94822 /* HttpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpRequest.m; sourceTree = "<group>"; };
+		20335AE21544135000A94822 /* HttpResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpResponse.h; sourceTree = "<group>"; };
+		20335AE31544135000A94822 /* HttpResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpResponse.m; sourceTree = "<group>"; };
 		20335AEC1544138100A94822 /* libhttp_parser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libhttp_parser.xcodeproj; path = ../libhttp_parser/libhttp_parser.xcodeproj; sourceTree = "<group>"; };
 		2044B2FA192408C900928587 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		2044B2FB192408C900928587 /* .gitmodules */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitmodules; sourceTree = "<group>"; };
@@ -823,10 +823,10 @@
 				20D10ED415616FC300100E3C /* brayatan-core.m */,
 				20335ADE1544135000A94822 /* Http.h */,
 				20335ADF1544135000A94822 /* Http.m */,
-				20335AE01544135000A94822 /* Request.h */,
-				20335AE11544135000A94822 /* Request.m */,
-				20335AE21544135000A94822 /* Response.h */,
-				20335AE31544135000A94822 /* Response.m */,
+				20335AE01544135000A94822 /* HttpRequest.h */,
+				20335AE11544135000A94822 /* HttpRequest.m */,
+				20335AE21544135000A94822 /* HttpResponse.h */,
+				20335AE31544135000A94822 /* HttpResponse.m */,
 				200225131545329F0067D98E /* linux-miniruntime.m */,
 				20D10ED7156188AE00100E3C /* Makefile */,
 				20335AB8154412D700A94822 /* Frameworks */,
@@ -2185,8 +2185,8 @@
 			files = (
 				20335AE41544135000A94822 /* brayatan-common.h in Headers */,
 				20335AE51544135000A94822 /* Http.h in Headers */,
-				20335AE71544135000A94822 /* Request.h in Headers */,
-				20335AE91544135000A94822 /* Response.h in Headers */,
+				20335AE71544135000A94822 /* HttpRequest.h in Headers */,
+				20335AE91544135000A94822 /* HttpResponse.h in Headers */,
 				20D10ED515616FC300100E3C /* brayatan-core.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2435,8 +2435,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				20335AE61544135000A94822 /* Http.m in Sources */,
-				20335AE81544135000A94822 /* Request.m in Sources */,
-				20335AEA1544135000A94822 /* Response.m in Sources */,
+				20335AE81544135000A94822 /* HttpRequest.m in Sources */,
+				20335AEA1544135000A94822 /* HttpResponse.m in Sources */,
 				20D10ED615616FC300100E3C /* brayatan-core.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

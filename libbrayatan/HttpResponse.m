@@ -23,7 +23,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-#import "Response.h"
+#import "HttpResponse.h"
 #import <dirent.h>
 #import "GRMustache.h"
 
@@ -88,7 +88,7 @@ static NSString *contentType(NSString *path) {
     return @"text/plain";
 }
 
-@implementation Response
+@implementation HttpResponse
 
 @synthesize headers;
 @synthesize status;
@@ -104,7 +104,7 @@ static NSString *contentType(NSString *path) {
     return self;
 }
 
-- (Response *)setHeader:(NSString *)header value:(NSString *)value {
+- (HttpResponse *)setHeader:(NSString *)header value:(NSString *)value {
     [headers setObject:value forKey:header];
     
     return self;
@@ -178,7 +178,7 @@ static NSString *contentType(NSString *path) {
     };
 }
 
-- (BOOL)dynamicContentForRequest:(Request *)req Data:(id)object TemplateFolder:(NSString *)folder {
+- (BOOL)dynamicContentForRequest:(HttpRequest *)req Data:(id)object TemplateFolder:(NSString *)folder {
     @autoreleasepool {
         NSRange range = [req.urlPath rangeOfString:@"/../"];
         if (range.location != NSNotFound) {
@@ -214,7 +214,7 @@ static NSString *contentType(NSString *path) {
     }
 }
 
-- (BOOL)staticContentForRequest:(Request *)req FromFolder:(NSString *)folder {
+- (BOOL)staticContentForRequest:(HttpRequest *)req FromFolder:(NSString *)folder {
     @autoreleasepool {
         NSRange range = [req.urlPath rangeOfString:@"/../"];
         if (range.location != NSNotFound) {

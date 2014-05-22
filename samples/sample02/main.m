@@ -12,7 +12,7 @@
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         __block int count = 0;
-        Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(Request *req, Response *res) {
+        Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(HttpRequest *req, HttpResponse *res) {
             if ([req.urlPath hasPrefix:@"/status"]) {
                 [res redirectToURL:@"/brayatan-status"];
             } else if ([req.urlPath hasPrefix:@"/brayatan-status"]) {

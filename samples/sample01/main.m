@@ -15,7 +15,7 @@ int main(int argc, const char * argv[]) {
         NSError *error = nil;
         MongoConnection *mongoConnection = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
         MongoDBCollection *collection = [mongoConnection collectionWithName:@"brayatan.datos"];
-        Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(Request *req, Response *res) {
+        Http *http = [Http createServerWithIP:@"0.0.0.0" atPort:@"8888" callback:^(HttpRequest *req, HttpResponse *res) {
             unsigned long long random = 0;
             arc4random_buf(&random, sizeof(random));
 

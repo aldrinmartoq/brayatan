@@ -25,9 +25,9 @@
 
 #import <Foundation/Foundation.h>
 #import "brayatan-common.h"
-#import "Request.h"
+#import "HttpRequest.h"
 
-@interface Response : NSObject {
+@interface HttpResponse : NSObject {
     NSMutableString *bodyBuffer;
     client_t *client;
 }
@@ -36,12 +36,12 @@
 @property (nonatomic) int status;
 
 - (id)initWithClient:(client_t*) client;
-- (Response *)setHeader:(NSString *)header value:(NSString *)value;
+- (HttpResponse *)setHeader:(NSString *)header value:(NSString *)value;
 - (void)appendStringToBodyBuffer:(NSString *)string;
 - (void)appendFormatToBodyBuffer:(NSString *)format, ...;
 - (void)send;
-- (BOOL)dynamicContentForRequest:(Request *)req Data:(id)object TemplateFolder:(NSString *)folder;
-- (BOOL)staticContentForRequest:(Request *)req FromFolder:(NSString *)folder;
+- (BOOL)dynamicContentForRequest:(HttpRequest *)req Data:(id)object TemplateFolder:(NSString *)folder;
+- (BOOL)staticContentForRequest:(HttpRequest *)req FromFolder:(NSString *)folder;
 - (BOOL)redirectToURL:(NSString *)url;
 
 @end
