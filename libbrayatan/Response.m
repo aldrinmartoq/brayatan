@@ -177,54 +177,43 @@ static NSString *contentType(NSString *path) {
     };
 }
 
-- (void)writeBody:(NSString *)body {
-    char *buff = (char *)[body UTF8String];
-    size_t buff_len = strlen(buff);
-    br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
-        br_log_error("ERROR on writeHeader %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
-    });
+- (void)appendStringToBodyBuffer:(NSString *)string {
+    bodyBuffer = bodyBuffer == nil ? [[NSMutableString alloc] init] : bodyBuffer;
+    [bodyBuffer appendString:string];
 }
 
-- (BOOL)endWithBody:(NSString *)body {
+- (void)send {
     @autoreleasepool {
-        NSMutableString *tmp = [[NSMutableString alloc] init];
-        
-        br_log_debug("HERE");
-        
-        [tmp appendFormat:@"HTTP/1.1 %d %@\r\n", status, statusCode(status)];
-        for (id key in headers) {
-            [tmp appendFormat:@"%@: %@\r\n", key, [headers objectForKey:key]];
+        if (bodyBuffer != nil) {
+            [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", [bodyBuffer length]]];
         }
-        [tmp appendFormat:@"\r\n"];
-        [tmp appendString:body];
-        char *buff = (char *)[tmp UTF8String];
+        [self writeHeader];
+        char *buff = (char *)[bodyBuffer UTF8String];
         size_t buff_len = strlen(buff);
         br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
             br_log_error("RESPONSE ERROR on %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
         });
         
         br_client_close(client->clnt);
-        
-        return YES;
     };
 }
 
 - (void)writeDirectoryListingFor:(NSString *)fullpath Path:(NSString *)path{
     @autoreleasepool {
         [self setHeader:@"Content-Type" value:@"text/html; charset=utf-8"];
-        [self writeHeader];
-        [self writeBody:[NSString stringWithFormat:@"<HMTL><BODY><H1>Directory Listing for %@</H1>", path]];
+        [self appendStringToBodyBuffer:[NSString stringWithFormat:@"<HMTL><BODY><H1>Directory Listing for %@</H1>", path]];
 
         struct dirent *e;
         DIR *dir = opendir([fullpath UTF8String]);
         while ((e = readdir(dir)) != NULL) {
             if (e->d_name[0] == '.') continue;
             char *s = e->d_type == DT_DIR ? "/" : "";
-            [self writeBody:[NSString stringWithFormat:@"<A href=\"%s%s\"/>%s%s</A><BR>", e->d_name, s, e->d_name, s]];
+            [self appendStringToBodyBuffer:[NSString stringWithFormat:@"<A href=\"%s%s\"/>%s%s</A><BR>", e->d_name, s, e->d_name, s]];
         }
         closedir(dir);
 
-        [self writeBody:[NSString stringWithFormat:@"<BR><HR><I>%@</I>", BR_BUILD_VERSION_NSSTR]];
+        [self appendStringToBodyBuffer:[NSString stringWithFormat:@"<BR><HR><I>%@</I>", BR_BUILD_VERSION_NSSTR]];
+        [self send];
     };
 }
 
@@ -234,7 +223,8 @@ static NSString *contentType(NSString *path) {
         if (range.location != NSNotFound) {
             self.status = 400;
             [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-            [self endWithBody:@"/../ is not allowed in path\r\n"];
+            [self appendStringToBodyBuffer:@"/../ is not allowed in path\r\n"];
+            [self send];
             return YES;
         }
         
@@ -269,7 +259,8 @@ static NSString *contentType(NSString *path) {
         if (range.location != NSNotFound) {
             self.status = 400;
             [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-            [self endWithBody:@"/../ is not allowed in path\r\n"];
+            [self appendStringToBodyBuffer:@"/../ is not allowed in path\r\n"];
+            [self send];
             return YES;
         }
 
@@ -333,7 +324,8 @@ static NSString *contentType(NSString *path) {
             /* on_open_error */
             self.status = 404;
             [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-            [self endWithBody:[NSString stringWithFormat:@"%@ Not Found.\r\n\r\n-- %@\r\n", req.urlPath, BR_BUILD_VERSION_NSSTR]];
+            [self appendStringToBodyBuffer:[NSString stringWithFormat:@"%@ Not Found.\r\n\r\n-- %@\r\n", req.urlPath, BR_BUILD_VERSION_NSSTR]];
+            [self send];
         });
 
         if (indexFile != nil) {
@@ -348,7 +340,8 @@ static NSString *contentType(NSString *path) {
 - (BOOL)redirectToURL:(NSString *)url {
     self.status = 302;
     [self setHeader:@"Location" value:url];
-    [self endWithBody:[NSString stringWithFormat:@"Redirected to %@", url]];
+    [self appendStringToBodyBuffer:[NSString stringWithFormat:@"Redirected to %@", url]];
+    [self send];
     return YES;
 }
 

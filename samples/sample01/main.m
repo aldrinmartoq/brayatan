@@ -16,7 +16,8 @@ int main(int argc, const char * argv[]) {
             if ([req.urlPath hasPrefix:@"/testing"]) {
                 NSString *msg = [NSString stringWithFormat:@"Hola, Flaites!\r\npath: %@ host: %@\r\n", req.urlPath, req.host];
                 [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-                [res endWithBody:msg];
+                [res appendStringToBodyBuffer:msg];
+                [res send];
             } else {
                 [res staticContentForRequest:req FromFolder:@"/var/www/test"];
             }

@@ -18,7 +18,8 @@ int main(int argc, const char * argv[]) {
             } else if ([req.urlPath hasPrefix:@"/brayatan-status"]) {
                 /* show server status in /brayatan-status */
                 [res setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-                [res endWithBody:[Http statusString]];
+                [res appendStringToBodyBuffer:[Http statusString]];
+                [res send];
             } else if ([req.urlPath hasPrefix:@"/template"]) {
                 [res dynamicContentForRequest:req Data:@{@"cuenta" : [NSNumber numberWithInt:count], @"thread" : [NSThread currentThread]} TemplateFolder:@"/var/www/brayatan/"];
             } else {

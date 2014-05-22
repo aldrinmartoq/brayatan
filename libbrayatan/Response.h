@@ -28,6 +28,7 @@
 #import "Request.h"
 
 @interface Response : NSObject {
+    NSMutableString *bodyBuffer;
     client_t *client;
 }
 
@@ -36,7 +37,8 @@
 
 - (id)initWithClient:(client_t*) client;
 - (Response *)setHeader:(NSString *)header value:(NSString *)value;
-- (BOOL)endWithBody:(NSString *)body;
+- (void)appendStringToBodyBuffer:(NSString *)string;
+- (void)send;
 - (BOOL)dynamicContentForRequest:(Request *)req Data:(id)object TemplateFolder:(NSString *)folder;
 - (BOOL)staticContentForRequest:(Request *)req FromFolder:(NSString *)folder;
 - (BOOL)redirectToURL:(NSString *)url;
