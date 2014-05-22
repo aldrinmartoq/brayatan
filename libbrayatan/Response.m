@@ -136,6 +136,13 @@ static NSString *contentType(NSString *path) {
     [bodyBuffer appendString:string];
 }
 
+- (void)appendFormatToBodyBuffer:(NSString *)format, ... {
+    va_list args;
+    va_start(args, format);
+    [self appendStringToBodyBuffer:[[NSString alloc] initWithFormat:format arguments:args]];
+    va_end(args);
+}
+
 - (void)send {
     @autoreleasepool {
         if (bodyBuffer != nil) {

@@ -38,6 +38,7 @@
 - (id)initWithClient:(client_t*) client;
 - (Response *)setHeader:(NSString *)header value:(NSString *)value;
 - (void)appendStringToBodyBuffer:(NSString *)string;
+- (void)appendFormatToBodyBuffer:(NSString *)format, ...;
 - (void)send;
 - (BOOL)dynamicContentForRequest:(Request *)req Data:(id)object TemplateFolder:(NSString *)folder;
 - (BOOL)staticContentForRequest:(Request *)req FromFolder:(NSString *)folder;
