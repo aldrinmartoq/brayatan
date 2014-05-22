@@ -10,6 +10,8 @@
 		20AF0DAE156246CD005AF576 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20AF0DAD156246CD005AF576 /* main.m */; };
 		20AF0DB315624822005AF576 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
 		20AF0DB415624827005AF576 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 203359BF1544021800A94822 /* Foundation.framework */; };
+		20B96B13192DBB2F002DF403 /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20B96B12192DBB2F002DF403 /* ObjCMongoDB.framework */; };
+		20B96B15192DBB37002DF403 /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20B96B12192DBB2F002DF403 /* ObjCMongoDB.framework */; };
 		20D8227A1544E56A00024240 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 203359BF1544021800A94822 /* Foundation.framework */; };
 		20D8229C1544E64700024240 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D8229A1544E64700024240 /* main.m */; };
 		20D8229D1544E67700024240 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
@@ -54,6 +56,7 @@
 		20AF0D9015624641005AF576 /* sample02 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample02; sourceTree = BUILT_PRODUCTS_DIR; };
 		20AF0D9215624641005AF576 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		20AF0DAD156246CD005AF576 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		20B96B12192DBB2F002DF403 /* ObjCMongoDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjCMongoDB.framework; path = "../../Library/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug/ObjCMongoDB.framework"; sourceTree = "<group>"; };
 		20D822781544E56A00024240 /* sample01 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample01; sourceTree = BUILT_PRODUCTS_DIR; };
 		20D8229A1544E64700024240 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		20D8229B1544E64700024240 /* sample01-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "sample01-Prefix.pch"; sourceTree = "<group>"; };
@@ -64,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20B96B15192DBB37002DF403 /* ObjCMongoDB.framework in Frameworks */,
 				20AF0DB415624827005AF576 /* Foundation.framework in Frameworks */,
 				20AF0DB315624822005AF576 /* libbrayatan.a in Frameworks */,
 			);
@@ -73,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20B96B13192DBB2F002DF403 /* ObjCMongoDB.framework in Frameworks */,
 				20D8229D1544E67700024240 /* libbrayatan.a in Frameworks */,
 				20D8227A1544E56A00024240 /* Foundation.framework in Frameworks */,
 			);
@@ -105,6 +110,7 @@
 		203359BE1544021800A94822 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				20B96B12192DBB2F002DF403 /* ObjCMongoDB.framework */,
 				203359BF1544021800A94822 /* Foundation.framework */,
 				20AF0D9215624641005AF576 /* CoreFoundation.framework */,
 			);
@@ -311,6 +317,10 @@
 		20AF0D9A15624641005AF576 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -318,6 +328,10 @@
 		20AF0D9B15624641005AF576 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -325,6 +339,10 @@
 		20D822831544E56A00024240 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "samples/sample01/sample01-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -334,6 +352,10 @@
 		20D822841544E56A00024240 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "samples/sample01/sample01-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
