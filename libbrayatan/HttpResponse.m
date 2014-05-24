@@ -149,12 +149,14 @@ static NSString *contentType(NSString *path) {
             [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", [bodyBuffer length]]];
         }
         [self writeHeader];
-        char *buff = (char *)[bodyBuffer UTF8String];
-        size_t buff_len = strlen(buff);
-        br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
-            br_log_error("RESPONSE ERROR on %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
-        });
-        
+        if (bodyBuffer != nil) {
+            char *buff = (char *)[bodyBuffer UTF8String];
+            size_t buff_len = strlen(buff);
+            br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
+                br_log_error("RESPONSE ERROR on %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
+            });
+            bodyBuffer = nil;
+        }
         br_client_close(client->clnt);
     };
 }

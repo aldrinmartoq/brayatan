@@ -21,7 +21,8 @@ int main(int argc, const char * argv[]) {
                 [res appendStringToBodyBuffer:[Http statusString]];
                 [res send];
             } else if ([req.urlPath hasPrefix:@"/template"]) {
-                [res dynamicContentForRequest:req Data:@{@"cuenta" : [NSNumber numberWithInt:count], @"thread" : [NSThread currentThread]} TemplateFolder:@"/var/www/brayatan/"];
+                [res dynamicContentForRequest:req Data:@{@"numero" : [NSNumber numberWithInt:(1000-count)], @"cuenta" : [NSNumber numberWithInt:count], @"thread" : [NSThread currentThread]} TemplateFolder:@"/var/www/brayatan/"];
+                count++;
             } else {
                 /* mapping virtual host brayatan.org to static content in /var/www/brayatan/ */
                 if ([req.host hasPrefix:@"brayatan.org"]) {

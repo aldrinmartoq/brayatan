@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2027B73E192E9F2C00FB9FB2 /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20B96B12192DBB2F002DF403 /* ObjCMongoDB.framework */; };
+		2027B73F192E9F2C00FB9FB2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 203359BF1544021800A94822 /* Foundation.framework */; };
+		2027B740192E9F2C00FB9FB2 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
+		2027B746192E9F3A00FB9FB2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2027B738192E9E8200FB9FB2 /* main.m */; };
+		2027B74F192EFE3900FB9FB2 /* AdminController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2027B74D192EFD1A00FB9FB2 /* AdminController.m */; };
 		20AF0DAE156246CD005AF576 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20AF0DAD156246CD005AF576 /* main.m */; };
 		20AF0DB315624822005AF576 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
 		20AF0DB415624827005AF576 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 203359BF1544021800A94822 /* Foundation.framework */; };
@@ -28,6 +33,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2027B741192E9F2C00FB9FB2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		20AF0D8E15624641005AF576 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,6 +65,10 @@
 /* Begin PBXFileReference section */
 		20022518154533750067D98E /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		200225191545337D0067D98E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		2027B738192E9E8200FB9FB2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2027B745192E9F2C00FB9FB2 /* sample03 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample03; sourceTree = BUILT_PRODUCTS_DIR; };
+		2027B74C192EFD1A00FB9FB2 /* AdminController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdminController.h; sourceTree = "<group>"; };
+		2027B74D192EFD1A00FB9FB2 /* AdminController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdminController.m; sourceTree = "<group>"; };
 		203359BF1544021800A94822 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		20335AD31544132D00A94822 /* libbrayatan.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libbrayatan.xcodeproj; path = libbrayatan/libbrayatan.xcodeproj; sourceTree = "<group>"; };
 		20AF0D9015624641005AF576 /* sample02 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample02; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +81,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2027B73D192E9F2C00FB9FB2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2027B73E192E9F2C00FB9FB2 /* ObjCMongoDB.framework in Frameworks */,
+				2027B73F192E9F2C00FB9FB2 /* Foundation.framework in Frameworks */,
+				2027B740192E9F2C00FB9FB2 /* libbrayatan.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		20AF0D8D15624641005AF576 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -86,6 +114,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2027B736192E9E8200FB9FB2 /* sample03 */ = {
+			isa = PBXGroup;
+			children = (
+				2027B738192E9E8200FB9FB2 /* main.m */,
+				2027B74C192EFD1A00FB9FB2 /* AdminController.h */,
+				2027B74D192EFD1A00FB9FB2 /* AdminController.m */,
+			);
+			path = sample03;
+			sourceTree = "<group>";
+		};
 		203359B01544021800A94822 = {
 			isa = PBXGroup;
 			children = (
@@ -103,6 +141,7 @@
 			children = (
 				20D822781544E56A00024240 /* sample01 */,
 				20AF0D9015624641005AF576 /* sample02 */,
+				2027B745192E9F2C00FB9FB2 /* sample03 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -138,6 +177,7 @@
 			children = (
 				20D822991544E64700024240 /* sample01 */,
 				20AF0DAC156246CD005AF576 /* sample02 */,
+				2027B736192E9E8200FB9FB2 /* sample03 */,
 			);
 			path = samples;
 			sourceTree = "<group>";
@@ -154,6 +194,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2027B73A192E9F2C00FB9FB2 /* sample03 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2027B742192E9F2C00FB9FB2 /* Build configuration list for PBXNativeTarget "sample03" */;
+			buildPhases = (
+				2027B73B192E9F2C00FB9FB2 /* Sources */,
+				2027B73D192E9F2C00FB9FB2 /* Frameworks */,
+				2027B741192E9F2C00FB9FB2 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = sample03;
+			productName = sample02;
+			productReference = 2027B745192E9F2C00FB9FB2 /* sample03 */;
+			productType = "com.apple.product-type.tool";
+		};
 		20AF0D8F15624641005AF576 /* sample02 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 20AF0D9915624641005AF576 /* Build configuration list for PBXNativeTarget "sample02" */;
@@ -217,6 +274,7 @@
 			targets = (
 				20D822771544E56A00024240 /* sample01 */,
 				20AF0D8F15624641005AF576 /* sample02 */,
+				2027B73A192E9F2C00FB9FB2 /* sample03 */,
 			);
 		};
 /* End PBXProject section */
@@ -232,6 +290,15 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2027B73B192E9F2C00FB9FB2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2027B74F192EFE3900FB9FB2 /* AdminController.m in Sources */,
+				2027B746192E9F3A00FB9FB2 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		20AF0D8C15624641005AF576 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -251,6 +318,28 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		2027B743192E9F2C00FB9FB2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
+				);
+				PRODUCT_NAME = sample03;
+			};
+			name = Debug;
+		};
+		2027B744192E9F2C00FB9FB2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
+				);
+				PRODUCT_NAME = sample03;
+			};
+			name = Release;
+		};
 		203359C81544021800A94822 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -365,6 +454,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2027B742192E9F2C00FB9FB2 /* Build configuration list for PBXNativeTarget "sample03" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2027B743192E9F2C00FB9FB2 /* Debug */,
+				2027B744192E9F2C00FB9FB2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		203359B51544021800A94822 /* Build configuration list for PBXProject "brayatan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
