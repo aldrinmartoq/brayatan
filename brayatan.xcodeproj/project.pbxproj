@@ -12,6 +12,7 @@
 		2027B740192E9F2C00FB9FB2 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
 		2027B746192E9F3A00FB9FB2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2027B738192E9E8200FB9FB2 /* main.m */; };
 		2027B74F192EFE3900FB9FB2 /* AdminController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2027B74D192EFD1A00FB9FB2 /* AdminController.m */; };
+		2037CBF8193167DB0029A30F /* MongoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2037CBF5193166BE0029A30F /* MongoController.m */; };
 		20AF0DAE156246CD005AF576 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20AF0DAD156246CD005AF576 /* main.m */; };
 		20AF0DB315624822005AF576 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
 		20AF0DB415624827005AF576 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 203359BF1544021800A94822 /* Foundation.framework */; };
@@ -71,6 +72,8 @@
 		2027B74D192EFD1A00FB9FB2 /* AdminController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdminController.m; sourceTree = "<group>"; };
 		203359BF1544021800A94822 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		20335AD31544132D00A94822 /* libbrayatan.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libbrayatan.xcodeproj; path = libbrayatan/libbrayatan.xcodeproj; sourceTree = "<group>"; };
+		2037CBF4193166BE0029A30F /* MongoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoController.h; sourceTree = "<group>"; };
+		2037CBF5193166BE0029A30F /* MongoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoController.m; sourceTree = "<group>"; };
 		20AF0D9015624641005AF576 /* sample02 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample02; sourceTree = BUILT_PRODUCTS_DIR; };
 		20AF0D9215624641005AF576 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		20AF0DAD156246CD005AF576 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -120,6 +123,8 @@
 				2027B738192E9E8200FB9FB2 /* main.m */,
 				2027B74C192EFD1A00FB9FB2 /* AdminController.h */,
 				2027B74D192EFD1A00FB9FB2 /* AdminController.m */,
+				2037CBF4193166BE0029A30F /* MongoController.h */,
+				2037CBF5193166BE0029A30F /* MongoController.m */,
 			);
 			path = sample03;
 			sourceTree = "<group>";
@@ -294,6 +299,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2037CBF8193167DB0029A30F /* MongoController.m in Sources */,
 				2027B74F192EFE3900FB9FB2 /* AdminController.m in Sources */,
 				2027B746192E9F3A00FB9FB2 /* main.m in Sources */,
 			);

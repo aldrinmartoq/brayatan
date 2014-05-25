@@ -26,6 +26,7 @@
 #import <Foundation/Foundation.h>
 #import "brayatan-common.h"
 #import "HttpRequest.h"
+#import "GRMustache.h"
 
 @interface HttpResponse : NSObject {
     NSMutableString *bodyBuffer;
@@ -40,6 +41,7 @@
 - (void)appendStringToBodyBuffer:(NSString *)string;
 - (void)appendFormatToBodyBuffer:(NSString *)format, ...;
 - (void)send;
+- (BOOL)dynamicContentForTemplate:(NSString *)name Data:(id)object TemplateRepository:(GRMustacheTemplateRepository *)repository;
 - (BOOL)dynamicContentForRequest:(HttpRequest *)req Data:(id)object TemplateFolder:(NSString *)folder;
 - (BOOL)staticContentForRequest:(HttpRequest *)req FromFolder:(NSString *)folder;
 - (BOOL)redirectToURL:(NSString *)url;

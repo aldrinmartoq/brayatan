@@ -9,6 +9,7 @@
 #import "HttpDispatcher.h"
 #import "Http.h"
 #import "HttpController.h"
+#import "GRMustache.h"
 
 @implementation HttpDispatcher {
     Http *_http;
@@ -26,6 +27,7 @@
                 NSString *route = [entry objectForKey:@"route"];
                 Class controller_class = [entry objectForKey:@"controller"];
                 NSString *folder = [entry objectForKey:@"folder"];
+                GRMustacheTemplateRepository *repository = [entry objectForKey:@"repository"];
                 folder = (folder == nil) ? _templateFolder : folder;
                 br_log_debug("Checking route: %s controller: %s folder: %s", [route UTF8String], [NSStringFromClass(controller_class) UTF8String], [folder UTF8String]);
                 if ([req.urlPath hasPrefix:route]) {
@@ -47,7 +49,8 @@
                         if ([response isKindOfClass:[NSString class]]) {
                             [res appendStringToBodyBuffer:response];
                         } else if ([response isKindOfClass:[NSDictionary class]]) {
-                            [res dynamicContentForRequest:req Data:response TemplateFolder:folder];
+                            NSString *name = [NSString stringWithFormat:@"%@/%@", route, method];
+                            [res dynamicContentForTemplate:name Data:response TemplateRepository:repository];
                         }
                     }
                 }
@@ -71,7 +74,8 @@
 }
 
 - (void)addRoute:(NSString *)route withController:(Class)controller {
-    [_routes addObject:@{@"route" : route, @"controller" : controller, @"folder" : _templateFolder}];
+    GRMustacheTemplateRepository *repository = [GRMustacheTemplateRepository templateRepositoryWithDirectory:_templateFolder];
+    [_routes addObject:@{@"route" : route, @"controller" : controller, @"folder" : _templateFolder, @"repository": repository}];
 }
 
 - (void)addRoute:(NSString *)route withStaticContentFromFolder:(NSString *)folder {

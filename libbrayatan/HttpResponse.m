@@ -180,6 +180,28 @@ static NSString *contentType(NSString *path) {
     };
 }
 
+- (BOOL)dynamicContentForTemplate:(NSString *)name Data:(id)object TemplateRepository:(GRMustacheTemplateRepository *)repository {
+    GRMustacheTemplate *template = [repository templateNamed:name error:nil];
+    NSString *data = [template renderObject:object error:nil];
+    char *buff = (char *)[data UTF8String];
+    size_t buff_len = 0;
+    if (buff != NULL) {
+        buff_len = strlen(buff);
+    }
+    
+    [self setHeader:@"Content-Type" value:@"text/html"];
+    [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", buff_len]];
+    [self writeHeader];
+    
+    br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
+        br_log_error("RESPONSE ERROR on %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
+    });
+    
+    br_client_close(client->clnt);
+    
+    return YES;
+}
+
 - (BOOL)dynamicContentForRequest:(HttpRequest *)req Data:(id)object TemplateFolder:(NSString *)folder {
     @autoreleasepool {
         NSRange range = [req.urlPath rangeOfString:@"/../"];
