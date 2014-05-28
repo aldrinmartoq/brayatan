@@ -196,16 +196,16 @@ static void _br_init() {
 
 /* dump loop sockets */
 static void _br_loop_sock_dump(br_loop_t *loop) {
-    br_log_trace("%12p br_loop usage %d sockets: %d", loop, loop->usage, loop->sockets_len);
+    br_log_trace("%11p br_loop usage %d sockets: %d", loop, loop->usage, loop->sockets_len);
     for (int i = 0; i < loop->sockets_len; i++) {
         br_socket_t *sock = loop->sockets[i];
-        br_log_trace("%12p br_loop usage %d %s socket %d usage %u %12p", loop, loop->usage, (sock->type == BRSOCKET_SERVER ? "SERVER" : "CLIENT"), sock->fd, sock->usage, sock);
+        br_log_trace("%11p br_loop usage %d %s socket %d usage %u %11p", loop, loop->usage, (sock->type == BRSOCKET_SERVER ? "SERVER" : "CLIENT"), sock->fd, sock->usage, sock);
     }
 }
 
 /* add socket to loop */
 static void _br_loop_sock_add(br_loop_t *loop, br_socket_t *sock) {
-    br_log_trace("%12p add socket %d to loop", loop, sock->fd);
+    br_log_trace("%11p add socket %d to loop", loop, sock->fd);
     
     if (loop->sockets_len >= BRLOOP_SCK_ARR_LEN) {
         br_log_error("SOCKET LEAKED: TODO FIXME!");
@@ -222,14 +222,14 @@ static void _br_loop_sock_add(br_loop_t *loop, br_socket_t *sock) {
 static void _br_loop_sock_del(br_loop_t *loop, br_socket_t *sock) {
     for (int i = 0; i < loop->sockets_len; i++) {
         if (sock == loop->sockets[i]) {
-            br_log_trace("%12p del socket %d from loop %12p", loop, sock->fd, sock);
+            br_log_trace("%11p del socket %d from loop %11p", loop, sock->fd, sock);
             loop->sockets_len--;
             loop->usage--;
             loop->sockets[i] = loop->sockets[loop->sockets_len];
             return;
         }
     }
-    br_log_error("SOCKET NOT FOUND: %12p", sock);
+    br_log_error("SOCKET NOT FOUND: %11p", sock);
 }
 
 /* release all server socket on all loops */
@@ -267,7 +267,7 @@ static void _br_server_closeall() {
 /* simple logging */
 void br_log(char level, char *fmt, va_list ap) {
     char format[4096];
-    snprintf(format, sizeof(format), "%19.19s %5d %-15.15s %c %s\n",
+    snprintf(format, sizeof(format), "%19.19s %5d %25.25s %c %s\n",
              _br_current_time_shrt,
              getpid(),
              dispatch_queue_get_label(dispatch_get_current_queue()),
@@ -347,7 +347,7 @@ br_loop_t *br_loop_create() {
         abort();
     }
     
-    br_log_trace("%12p br_loop_create", loop);
+    br_log_trace("%11p br_loop_create", loop);
     memset(loop, 0, sizeof(br_loop_t));
     
     /* kqueue init */
@@ -359,7 +359,7 @@ br_loop_t *br_loop_create() {
     
     /* add to loop list and return */
     _br_loop_list = loop;
-    br_log_trace("%12p br_loop_create done: qfd %d", loop, loop->qfd);
+    br_log_trace("%11p br_loop_create done: qfd %d", loop, loop->qfd);
     
     return loop;
 }
@@ -394,7 +394,7 @@ br_server_t *br_server_create(br_loop_t *loop,
     /* add server to loop and return */
     _br_loop_sock_add(loop, (br_socket_t *)s);
     
-    br_log_trace("%12p server created", s);
+    br_log_trace("%11p server created", s);
     return s;
 }
 
@@ -455,7 +455,7 @@ void br_socket_delwatch(br_socket_t *s, int mode) {
 
 void br_client_close(br_client_t *c) {
     _br_dispatch_sync_nolock(_br_loop_queue, ^{
-        br_log_trace("%3d br_client_close %12p usage %u", c->sock.fd, c, c->sock.usage);
+        br_log_trace("%3d br_client_close %11p usage %u", c->sock.fd, c, c->sock.usage);
         
         /* decrement usage and test if ready to close */
         if (c->sock.usage == 0) return;
@@ -466,7 +466,7 @@ void br_client_close(br_client_t *c) {
 
 void br_client_write(br_client_t *c, char *buff, size_t buff_len, void (^on_error)(br_client_t *)) {
     _br_dispatch_sync_nolock(_br_loop_queue, ^{
-        br_log_trace("%3d br_client_write %12p", c->sock.fd, c);
+        br_log_trace("%3d br_client_write %11p", c->sock.fd, c);
         size_t r = write(c->sock.fd, buff, buff_len);
         if (r == -1) {
             if (on_error == NULL) {
@@ -587,7 +587,7 @@ static inline void _br_runloop_server_accept(br_loop_t *loop, br_server_t *serv)
             break;
         }
         
-        br_log_trace("%3d %12p client created server %d", fd, c, serv->sock.fd);
+        br_log_trace("%3d %11p client created server %d", fd, c, serv->sock.fd);
         memset(c, 0, sizeof(br_client_t));
         c->sock.fd = fd;
         c->sock.type = BRSOCKET_CLIENT;
@@ -616,13 +616,13 @@ static inline void _br_runloop_client_read(br_loop_t *loop, br_client_t *clnt) {
                 br_log_trace("%3d ERROR read client: %s", clnt->sock.fd, strerror(errno));
                 br_client_close(clnt);
             }
-            br_log_trace("%3d %12p read fd EGAIN", clnt->sock.fd, clnt);
+            br_log_trace("%3d %11p read fd EGAIN", clnt->sock.fd, clnt);
             break;
         } else if (count == 0) {
             br_client_close(clnt);
             break;
         }
-        br_log_trace("%3d %12p read on fd count:%ld", clnt->sock.fd, clnt, count);
+        br_log_trace("%3d %11p read on fd count:%ld", clnt->sock.fd, clnt, count);
         
         /* call user block */
         void (^on_read)(br_client_t *, char *, size_t) = (__bridge void (^)(br_client_t *x1, char *x2, size_t x3))clnt->serv->on_read;
@@ -645,7 +645,7 @@ static inline void _br_runloop_client_write(br_loop_t *loop, br_client_t *clnt, 
 
 /* runloop, it exists if everything is closed */
 void br_runloop(br_loop_t *loop) {
-    br_log_info("%12p br_run_loop", loop);
+    br_log_info("%11p br_run_loop", loop);
     
     /* kqueue init */
     struct kevent *kevents = NULL;
@@ -732,7 +732,7 @@ void br_runloop(br_loop_t *loop) {
                     if (on_close != NULL) {
                         on_close(c);
                     }
-                    br_log_trace("%3d %12p removed client", c->sock.fd, c);
+                    br_log_trace("%3d %11p removed client", c->sock.fd, c);
                     
                     _br_loop_sock_del(loop, sock);
                     free(sock);
