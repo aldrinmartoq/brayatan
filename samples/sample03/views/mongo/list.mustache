@@ -1,0 +1,26 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+LISTADO.
+
+Total: {{cuenta}}
+
+Random: {{random}}
+
+Error: {{error}}
+
+<table border="1">
+	<thead>
+		<tr>
+			<th>nombre</th>
+			<th>código</th>
+		</tr>
+	</thead>
+	{{#results}}
+	<tbody>
+		<tr>
+			<td>{{nombre}}</td>
+			<td>{{codigo}}</td>
+		</tr>
+	</tbody>
+	{{/results}}
+</table>

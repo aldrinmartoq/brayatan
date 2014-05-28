@@ -13,7 +13,8 @@
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        HttpDispatcher *dispatcher = [HttpDispatcher dispatcherWithIP:@"0.0.0.0" port:@"8888" templateFolder:@"/var/www/brayatan/sample03/"];
+        NSString *templateFolder = [NSString stringWithFormat:@"%@/views", [[NSBundle mainBundle] resourcePath]];
+        HttpDispatcher *dispatcher = [HttpDispatcher dispatcherWithIP:@"0.0.0.0" port:@"8888" templateFolder:templateFolder];
         [dispatcher addRoute:@"/mongo/" withController:[MongoController class]];
         [dispatcher addRoute:@"/test/" withController:[AdminController class]];
         NSLog(@"%@", dispatcher);

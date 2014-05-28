@@ -24,13 +24,12 @@
     for (NSUInteger i = 0; i < [results count]; i++) {
         [results setObject:[BSONDecoder decodeDictionaryWithDocument:[results objectAtIndex:i]] atIndexedSubscript:i];
     }
-    
-    NSMutableDictionary *data = [@{} mutableCopy];
-    if (results != nil) {
-        [data setObject:results forKey:@"results"];
-    }
 
-    return data;
+    if (results != nil) {
+        return @{@"results" : results, @"cuenta" : [NSNumber numberWithUnsignedInteger:[results count]]};
+    } else {
+        return @{};
+    }
 }
 
 - (id)create {
@@ -39,7 +38,7 @@
     MongoDBCollection *collection = [MongoController collection];
     for (int i = 1; i <=10; i++) {
         NSError *error = nil;
-        NSDictionary *data = @{@"codigo" : [NSNumber numberWithUnsignedLongLong:random] , @"nombre" : [NSString stringWithFormat:@"dato %lld", i + random]};
+        NSDictionary *data = @{@"codigo" : [NSNumber numberWithUnsignedLongLong:random] , @"nombre" : [NSString stringWithFormat:@"dato %llu", i + random]};
         [collection insertDictionary:data writeConcern:nil error:&error];
     }
     
@@ -47,7 +46,7 @@
 }
 
 + (MongoDBCollection *) collection {
-    MongoDBCollection __block *collection = nil;
+    static MongoDBCollection *collection = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSError *error = nil;
