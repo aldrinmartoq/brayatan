@@ -30,7 +30,7 @@ typedef void (^BRClientSendfileOnErrorBlock)(int err);
 - (void)start_client;
 - (void)stop_client;
 - (void)write_data:(NSData *)data;
-- (void)write_buff:(char *)buff;
+- (void)write_string:(NSString *)string;
 - (void)write_file:(NSString *)path onOpen:(BRClientSendfileOnOpenBlock)on_open onError:(BRClientSendfileOnErrorBlock)on_error;
 - (void)write_close;
 

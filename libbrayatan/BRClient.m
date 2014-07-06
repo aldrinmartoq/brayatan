@@ -100,14 +100,34 @@
 
 - (void)write_data:(NSData *)data {
     __block off_t offset = 0;
+    __block NSUInteger data_length = [data length];
     [self push_write:^brayatan_write_block_result(BRClient *client, size_t length) {
-        
-        return kBrayatanWriteBlockCont;
+        if (length <=0) {
+            BRTraceLog(@"%@ next because length: %lu", self, length);
+            return kBrayatanWriteBlockNext;
+        }
+        const void *bytes = [data bytes];
+        bytes += offset;
+        size_t write_length = data_length - offset;
+        if (write_length > length) {
+            write_length = length;
+        }
+        ssize_t r = write(self.fd, bytes, write_length);
+        BRTraceLog(@"%@ data_length: %ld offset: %lld write_length: %ld r: %ld", self, data_length, offset, write_length, r);
+        if (r == -1) {
+            BRErrorLog(@"%@ WRITE ERROR: %s", self, strerror(errno));
+            return kBrayatanWriteBlockDone;
+        } else if (r < write_length) {
+            offset += r;
+            return kBrayatanWriteBlockCont;
+        } else {
+            return kBrayatanWriteBlockNext;
+        }
     }];
 }
 
-- (void)write_buff:(char *)buff {
-    
+- (void)write_string:(NSString *)string {
+    [self write_data:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (void)write_file:(NSString *)path onOpen:(BRClientSendfileOnOpenBlock)on_open onError:(BRClientSendfileOnErrorBlock)on_error {
@@ -134,7 +154,7 @@
     __block size_t offset = 0;
     [self push_write:^brayatan_write_block_result(BRClient *client, size_t length) {
         if (length <= 0) {
-            BRTraceLog(@"%@ send file closing because length: %lu", self, length);
+            BRTraceLog(@"%@ next because length: %lu, closing sendfile", self, length);
             close(fd);
             fd = -1;
             return kBrayatanWriteBlockNext;
