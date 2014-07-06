@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		20063512192FBDFE008476A6 /* HttpController.h in Headers */ = {isa = PBXBuildFile; fileRef = 20063510192FBDFE008476A6 /* HttpController.h */; };
 		20063513192FBDFE008476A6 /* HttpController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20063511192FBDFE008476A6 /* HttpController.m */; };
+		2012E7EB1966AF06006452E8 /* BRServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2012E7E91966AF06006452E8 /* BRServer.h */; };
+		2012E7EC1966AF06006452E8 /* BRServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2012E7EA1966AF06006452E8 /* BRServer.m */; };
+		2012E8061966B002006452E8 /* BRSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 2012E8041966B002006452E8 /* BRSocket.h */; };
+		2012E8071966B002006452E8 /* BRSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2012E8051966B002006452E8 /* BRSocket.m */; };
+		2012E80A1966B300006452E8 /* BRClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 2012E8081966B300006452E8 /* BRClient.h */; };
+		2012E80B1966B300006452E8 /* BRClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2012E8091966B300006452E8 /* BRClient.m */; };
 		2027B749192EA0AB00FB9FB2 /* HttpDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 2027B747192EA0AB00FB9FB2 /* HttpDispatcher.h */; };
 		2027B74A192EA0AB00FB9FB2 /* HttpDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 2027B748192EA0AB00FB9FB2 /* HttpDispatcher.m */; };
 		20335AE41544135000A94822 /* brayatan-common.h in Headers */ = {isa = PBXBuildFile; fileRef = 20335ADD1544135000A94822 /* brayatan-common.h */; };
@@ -20,6 +26,21 @@
 		20335AEA1544135000A94822 /* HttpResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 20335AE31544135000A94822 /* HttpResponse.m */; };
 		20335AFE1544139C00A94822 /* libhttp_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335AF41544138100A94822 /* libhttp_parser.a */; };
 		207BEB5C1924098000F4122D /* libGRMustache7-MacOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2044B4E9192408CA00928587 /* libGRMustache7-MacOS.a */; };
+		207D2BA719511D6D0013474E /* SBJson4.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2B9819511D6D0013474E /* SBJson4.h */; };
+		207D2BA819511D6D0013474E /* SBJson4Parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2B9919511D6D0013474E /* SBJson4Parser.h */; };
+		207D2BA919511D6D0013474E /* SBJson4Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 207D2B9A19511D6D0013474E /* SBJson4Parser.m */; };
+		207D2BAA19511D6D0013474E /* SBJson4StreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2B9B19511D6D0013474E /* SBJson4StreamParser.h */; };
+		207D2BAB19511D6D0013474E /* SBJson4StreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 207D2B9C19511D6D0013474E /* SBJson4StreamParser.m */; };
+		207D2BAC19511D6D0013474E /* SBJson4StreamParserState.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2B9D19511D6D0013474E /* SBJson4StreamParserState.h */; };
+		207D2BAD19511D6D0013474E /* SBJson4StreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 207D2B9E19511D6D0013474E /* SBJson4StreamParserState.m */; };
+		207D2BAE19511D6D0013474E /* SBJson4StreamTokeniser.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2B9F19511D6D0013474E /* SBJson4StreamTokeniser.h */; };
+		207D2BAF19511D6D0013474E /* SBJson4StreamTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 207D2BA019511D6D0013474E /* SBJson4StreamTokeniser.m */; };
+		207D2BB019511D6D0013474E /* SBJson4StreamWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2BA119511D6D0013474E /* SBJson4StreamWriter.h */; };
+		207D2BB119511D6D0013474E /* SBJson4StreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 207D2BA219511D6D0013474E /* SBJson4StreamWriter.m */; };
+		207D2BB219511D6D0013474E /* SBJson4StreamWriterState.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2BA319511D6D0013474E /* SBJson4StreamWriterState.h */; };
+		207D2BB319511D6D0013474E /* SBJson4StreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = 207D2BA419511D6D0013474E /* SBJson4StreamWriterState.m */; };
+		207D2BB419511D6D0013474E /* SBJson4Writer.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2BA519511D6D0013474E /* SBJson4Writer.h */; };
+		207D2BB519511D6D0013474E /* SBJson4Writer.m in Sources */ = {isa = PBXBuildFile; fileRef = 207D2BA619511D6D0013474E /* SBJson4Writer.m */; };
 		20D10ED515616FC300100E3C /* brayatan-core.h in Headers */ = {isa = PBXBuildFile; fileRef = 20D10ED315616FC300100E3C /* brayatan-core.h */; };
 		20D10ED615616FC300100E3C /* brayatan-core.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D10ED415616FC300100E3C /* brayatan-core.m */; };
 /* End PBXBuildFile section */
@@ -199,6 +220,12 @@
 		200225131545329F0067D98E /* linux-miniruntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "linux-miniruntime.m"; sourceTree = "<group>"; };
 		20063510192FBDFE008476A6 /* HttpController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpController.h; sourceTree = "<group>"; };
 		20063511192FBDFE008476A6 /* HttpController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpController.m; sourceTree = "<group>"; };
+		2012E7E91966AF06006452E8 /* BRServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRServer.h; sourceTree = "<group>"; };
+		2012E7EA1966AF06006452E8 /* BRServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRServer.m; sourceTree = "<group>"; };
+		2012E8041966B002006452E8 /* BRSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRSocket.h; sourceTree = "<group>"; };
+		2012E8051966B002006452E8 /* BRSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRSocket.m; sourceTree = "<group>"; };
+		2012E8081966B300006452E8 /* BRClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRClient.h; sourceTree = "<group>"; };
+		2012E8091966B300006452E8 /* BRClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRClient.m; sourceTree = "<group>"; };
 		2027B747192EA0AB00FB9FB2 /* HttpDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpDispatcher.h; sourceTree = "<group>"; };
 		2027B748192EA0AB00FB9FB2 /* HttpDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpDispatcher.m; sourceTree = "<group>"; };
 		20335AB6154412D700A94822 /* libbrayatan.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbrayatan.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -631,6 +658,21 @@
 		2044B4E1192408CA00928587 /* MethodSwizzle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodSwizzle.m; sourceTree = "<group>"; };
 		2044B4E2192408CA00928587 /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
 		2044B4E3192408CA00928587 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.md; sourceTree = "<group>"; };
+		207D2B9819511D6D0013474E /* SBJson4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4.h; sourceTree = "<group>"; };
+		207D2B9919511D6D0013474E /* SBJson4Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4Parser.h; sourceTree = "<group>"; };
+		207D2B9A19511D6D0013474E /* SBJson4Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJson4Parser.m; sourceTree = "<group>"; };
+		207D2B9B19511D6D0013474E /* SBJson4StreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4StreamParser.h; sourceTree = "<group>"; };
+		207D2B9C19511D6D0013474E /* SBJson4StreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJson4StreamParser.m; sourceTree = "<group>"; };
+		207D2B9D19511D6D0013474E /* SBJson4StreamParserState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4StreamParserState.h; sourceTree = "<group>"; };
+		207D2B9E19511D6D0013474E /* SBJson4StreamParserState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJson4StreamParserState.m; sourceTree = "<group>"; };
+		207D2B9F19511D6D0013474E /* SBJson4StreamTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4StreamTokeniser.h; sourceTree = "<group>"; };
+		207D2BA019511D6D0013474E /* SBJson4StreamTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJson4StreamTokeniser.m; sourceTree = "<group>"; };
+		207D2BA119511D6D0013474E /* SBJson4StreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4StreamWriter.h; sourceTree = "<group>"; };
+		207D2BA219511D6D0013474E /* SBJson4StreamWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJson4StreamWriter.m; sourceTree = "<group>"; };
+		207D2BA319511D6D0013474E /* SBJson4StreamWriterState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4StreamWriterState.h; sourceTree = "<group>"; };
+		207D2BA419511D6D0013474E /* SBJson4StreamWriterState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJson4StreamWriterState.m; sourceTree = "<group>"; };
+		207D2BA519511D6D0013474E /* SBJson4Writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4Writer.h; sourceTree = "<group>"; };
+		207D2BA619511D6D0013474E /* SBJson4Writer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJson4Writer.m; sourceTree = "<group>"; };
 		20B96A1D192DB75E002DF403 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		20B96A1E192DB75E002DF403 /* .gitmodules */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitmodules; sourceTree = "<group>"; };
 		20B96A1F192DB75E002DF403 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
@@ -823,6 +865,13 @@
 		20335AAB154412D700A94822 = {
 			isa = PBXGroup;
 			children = (
+				2012E8081966B300006452E8 /* BRClient.h */,
+				2012E8091966B300006452E8 /* BRClient.m */,
+				2012E8041966B002006452E8 /* BRSocket.h */,
+				2012E8051966B002006452E8 /* BRSocket.m */,
+				2012E7E91966AF06006452E8 /* BRServer.h */,
+				2012E7EA1966AF06006452E8 /* BRServer.m */,
+				207D2B9719511D6C0013474E /* SBJson */,
 				20B96A1C192DB75E002DF403 /* ObjCMongoDB */,
 				2044B2F9192408C900928587 /* GRMustache */,
 				20335AEC1544138100A94822 /* libhttp_parser.xcodeproj */,
@@ -1819,6 +1868,28 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		207D2B9719511D6C0013474E /* SBJson */ = {
+			isa = PBXGroup;
+			children = (
+				207D2B9819511D6D0013474E /* SBJson4.h */,
+				207D2B9919511D6D0013474E /* SBJson4Parser.h */,
+				207D2B9A19511D6D0013474E /* SBJson4Parser.m */,
+				207D2B9B19511D6D0013474E /* SBJson4StreamParser.h */,
+				207D2B9C19511D6D0013474E /* SBJson4StreamParser.m */,
+				207D2B9D19511D6D0013474E /* SBJson4StreamParserState.h */,
+				207D2B9E19511D6D0013474E /* SBJson4StreamParserState.m */,
+				207D2B9F19511D6D0013474E /* SBJson4StreamTokeniser.h */,
+				207D2BA019511D6D0013474E /* SBJson4StreamTokeniser.m */,
+				207D2BA119511D6D0013474E /* SBJson4StreamWriter.h */,
+				207D2BA219511D6D0013474E /* SBJson4StreamWriter.m */,
+				207D2BA319511D6D0013474E /* SBJson4StreamWriterState.h */,
+				207D2BA419511D6D0013474E /* SBJson4StreamWriterState.m */,
+				207D2BA519511D6D0013474E /* SBJson4Writer.h */,
+				207D2BA619511D6D0013474E /* SBJson4Writer.m */,
+			);
+			path = SBJson;
+			sourceTree = "<group>";
+		};
 		20B96A1C192DB75E002DF403 /* ObjCMongoDB */ = {
 			isa = PBXGroup;
 			children = (
@@ -2196,12 +2267,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				20335AE41544135000A94822 /* brayatan-common.h in Headers */,
+				207D2BAE19511D6D0013474E /* SBJson4StreamTokeniser.h in Headers */,
 				20335AE51544135000A94822 /* Http.h in Headers */,
+				207D2BA719511D6D0013474E /* SBJson4.h in Headers */,
+				207D2BB419511D6D0013474E /* SBJson4Writer.h in Headers */,
+				207D2BA819511D6D0013474E /* SBJson4Parser.h in Headers */,
+				2012E80A1966B300006452E8 /* BRClient.h in Headers */,
 				20063512192FBDFE008476A6 /* HttpController.h in Headers */,
+				207D2BAA19511D6D0013474E /* SBJson4StreamParser.h in Headers */,
 				20335AE71544135000A94822 /* HttpRequest.h in Headers */,
 				20335AE91544135000A94822 /* HttpResponse.h in Headers */,
+				2012E7EB1966AF06006452E8 /* BRServer.h in Headers */,
 				20D10ED515616FC300100E3C /* brayatan-core.h in Headers */,
+				2012E8061966B002006452E8 /* BRSocket.h in Headers */,
+				207D2BB019511D6D0013474E /* SBJson4StreamWriter.h in Headers */,
+				207D2BAC19511D6D0013474E /* SBJson4StreamParserState.h in Headers */,
 				2027B749192EA0AB00FB9FB2 /* HttpDispatcher.h in Headers */,
+				207D2BB219511D6D0013474E /* SBJson4StreamWriterState.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2449,11 +2531,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				20335AE61544135000A94822 /* Http.m in Sources */,
+				207D2BB519511D6D0013474E /* SBJson4Writer.m in Sources */,
+				2012E8071966B002006452E8 /* BRSocket.m in Sources */,
 				20063513192FBDFE008476A6 /* HttpController.m in Sources */,
+				207D2BAD19511D6D0013474E /* SBJson4StreamParserState.m in Sources */,
 				20335AE81544135000A94822 /* HttpRequest.m in Sources */,
 				20335AEA1544135000A94822 /* HttpResponse.m in Sources */,
+				207D2BAB19511D6D0013474E /* SBJson4StreamParser.m in Sources */,
+				207D2BAF19511D6D0013474E /* SBJson4StreamTokeniser.m in Sources */,
+				207D2BB119511D6D0013474E /* SBJson4StreamWriter.m in Sources */,
 				20D10ED615616FC300100E3C /* brayatan-core.m in Sources */,
 				2027B74A192EA0AB00FB9FB2 /* HttpDispatcher.m in Sources */,
+				207D2BB319511D6D0013474E /* SBJson4StreamWriterState.m in Sources */,
+				2012E80B1966B300006452E8 /* BRClient.m in Sources */,
+				207D2BA919511D6D0013474E /* SBJson4Parser.m in Sources */,
+				2012E7EC1966AF06006452E8 /* BRServer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

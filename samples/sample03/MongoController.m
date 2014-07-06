@@ -8,6 +8,7 @@
 
 #import "MongoController.h"
 #import "ObjCMongoDB.h"
+#import "SBJson4.h"
 
 
 @implementation NSDate (StringValue)
@@ -46,22 +47,16 @@
     MongoDBCollection *collection = [MongoController collection];
     NSMutableArray *results = [NSMutableArray array];
     for (int i = 1; i <=10; i++) {
-        NSDate *date = [NSDate date];
-        
-        [date stringValue];
-        
         arc4random_buf(&random, sizeof(random));
         NSError *error = nil;
-        NSMutableDictionary *data = [@{@"codigo" : [NSNumber numberWithUnsignedLongLong:random] , @"nombre" : [NSString stringWithFormat:@"dato %llu", i + random], @"cuando" : [NSDate date]} mutableCopy];
+        NSDictionary *data = @{@"codigo" : [NSNumber numberWithUnsignedLongLong:random] , @"nombre" : [NSString stringWithFormat:@"dato %llu", i + random], @"cuando" : [NSDate date]};
         [results addObject:data];
         [collection insertDictionary:data writeConcern:nil error:&error];
-        [data setObject:[[data objectForKey:@"cuando"] stringValue] forKey:@"cuando"];
     }
     
-    NSDictionary *result = @{@"results" : results, @"cuenta" : [NSNumber numberWithUnsignedInteger:[results count]]};
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:nil];
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSDictionary *result = @{@"results" : results};
+    SBJson4Writer *writer = [[SBJson4Writer alloc] init];
+    return [writer stringWithObject:result];
 }
 
 - (id)listJSON {
@@ -76,14 +71,13 @@
     NSMutableArray *results = [[collection findWithRequest:findRequest error:&error] mutableCopy];
     for (NSUInteger i = 0; i < [results count]; i++) {
         NSMutableDictionary *d = [[BSONDecoder decodeDictionaryWithDocument:[results objectAtIndex:i]] mutableCopy];
-        [d setObject:[[d objectForKey:@"_id"] stringValue] forKey:@"_id"];
         [results setObject:d atIndexedSubscript:i];
     }
     
     NSDictionary *result = @{@"results" : results, @"cuenta" : [NSNumber numberWithUnsignedInteger:[results count]]};
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:result options:NSJSONWritingPrettyPrinted error:nil];
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+    SBJson4Writer *writer = [[SBJson4Writer alloc] init];
+    return [writer stringWithObject:result];
 }
 
 + (MongoDBCollection *) collection {
