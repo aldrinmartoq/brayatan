@@ -8,9 +8,7 @@
 
 #import "BRClient.h"
 
-@implementation BRClient {
-    NSMutableArray *push_write_array;
-}
+@implementation BRClient
 
 - (id)initWithFd:(int)fd server:(BRServer *)server addr:(struct sockaddr)in_addr hostname:(NSString *)hostname servname:(NSString *)servname {
     if (self = [super init]) {
@@ -19,7 +17,7 @@
         self.in_addr = in_addr;
         self.hostname = hostname;
         self.servname = servname;
-        push_write_array = [[NSMutableArray alloc] init];
+        self.push_write_array = [[NSMutableArray alloc] init];
 
         BRDebugLog(@"%@ Client created", self);
     }
@@ -28,6 +26,7 @@
 
 - (void)start_client {
     [self setNonBlock];
+
     [self read_start:^{
         size_t length = dispatch_source_get_data(self.dispatch_source_read);
         BRTraceLog(@"%@ read available: %lu", self, length);
@@ -62,40 +61,48 @@
 }
 
 - (void)push_write:(BRClientWriteBlock)block {
-    if (push_write_array == nil) {
-        push_write_array = [[NSMutableArray alloc] initWithObjects:block, nil];
-        BRTraceLog(@"%@ write create array: %@", self, push_write_array);
-    } else {
-        [push_write_array addObject:block];
-        BRTraceLog(@"%@ write add length:%ld array: %@", self, [push_write_array count], push_write_array);
-    }
-    [self write_start_Event:^{
-        size_t length = dispatch_source_get_data(self.dispatch_source_write);
-        BRTraceLog(@"%@ write available: %lu array length:%ld", self, length, [push_write_array count]);
-        if (length == 0) {
-            [self stop_client];
+        if (self.push_write_array == nil) {
+            self.push_write_array = [[NSMutableArray alloc] initWithObjects:block, nil];
+            BRTraceLog(@"%@ write create array: %@", self, self.push_write_array);
         } else {
-            BRClientWriteBlock block = [push_write_array firstObject];
-            brayatan_write_block_result result = block(self, length);
-            if (result == kBrayatanWriteBlockCont) {
-                BRTraceLog(@"%@ block: continue", self);
-            } else if (result == kBrayatanWriteBlockNext) {
-                BRTraceLog(@"%@ block: next", self);
-                [push_write_array removeObjectAtIndex:0];
-                if ([push_write_array count] == 0) {
-                    [self write_cancel];
-                }
-            } else if (result == kBrayatanWriteBlockDone) {
-                BRTraceLog(@"%@ block: done", self);
+            [self.push_write_array addObject:block];
+            BRTraceLog(@"%@ write add length:%ld array: %@", self, [self.push_write_array count], self.push_write_array);
+        }
+        [self write_start_Event:^{
+            size_t length = dispatch_source_get_data(self.dispatch_source_write);
+            BRTraceLog(@"%@ write available: %lu array length:%ld", self, length, [self.push_write_array count]);
+            if (length == 0) {
                 [self stop_client];
+            } else {
+                BRClientWriteBlock block = [self.push_write_array firstObject];
+                if (block == nil) {
+                    BRErrorLog(@"NIL BLOCK IN WRITE");
+                    return;
+                }
+                brayatan_write_block_result result = block(self, length);
+                if (result == kBrayatanWriteBlockCont) {
+                    BRTraceLog(@"%@ block: continue", self);
+                } else if (result == kBrayatanWriteBlockNext) {
+                    BRTraceLog(@"%@ block: next", self);
+                    [self.push_write_array removeObjectAtIndex:0];
+                    if ([self.push_write_array count] == 0) {
+                        [self write_cancel];
+                    }
+                } else if (result == kBrayatanWriteBlockDone) {
+                    BRTraceLog(@"%@ block: done", self);
+                    [self stop_client];
+                }
             }
-        }
-    } Cancel:^{
-        BRTraceLog(@"%@ Cleaning up…", self);
-        for (BRClientWriteBlock block in push_write_array) {
-            block(self, 0);
-        }
-    }];
+        } Cancel:^{
+            BRTraceLog(@"%@ Cleaning up…", self);
+            for (BRClientWriteBlock block in self.push_write_array) {
+                if (block == nil) {
+                    BRErrorLog(@"NIL BLOCK IN CANCEL");
+                } else {
+                    block(self, 0);
+                }
+            }
+        }];
 }
 
 - (void)write_data:(NSData *)data {
@@ -127,6 +134,7 @@
 }
 
 - (void)write_string:(NSString *)string {
+    BRTraceLog(@"%@ string: %@", self, string);
     [self write_data:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
 

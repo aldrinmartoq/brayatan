@@ -26,11 +26,80 @@
 #import "Http.h"
 #import "HttpRequest.h"
 #import "HttpResponse.h"
-#import "brayatan-core.h"
+#import "BRServer.h"
 #import <sys/resource.h>
 #import <sys/time.h>
 
-static br_loop_t *loop;
+@interface HttpClient : NSObject {
+    http_parser parser;
+    NSString *current_header_field;
+    NSString *current_header_value;
+}
+
+@property (weak) BRClient *client;
+@property (weak) Http *http;
+@property HttpRequest *request;
+@property HttpResponse *response;
+
+@end
+
+@implementation HttpClient
+
+- (id)initWithClient:(BRClient *)client Http:(Http *)http {
+    if (self = [super init]) {
+        self.client = client;
+        self.http = http;
+        self.request = [[HttpRequest alloc] init];
+        self.response = [[HttpResponse alloc] initWithClient:client];
+        http_parser_init(&parser, HTTP_REQUEST);
+        parser.data = (__bridge void *)self;
+        current_header_field = current_header_value = nil;
+    }
+    
+    return self;
+}
+
+- (void)execute_parser:(http_parser_settings *)settings data:(const void *)data len:(size_t)len {
+    http_parser_execute(&parser, settings, data, len);
+}
+
+- (void)on_header_field_At:(const char *)at length:(size_t)length {
+    if (current_header_field != nil && current_header_value == nil) {
+        // append to current header field
+        current_header_field = [NSString stringWithFormat:@"%@%.*s", current_header_field, (int)length, at];
+    } else {
+        if (current_header_field != nil) {
+            // add field,value to request headers
+            [self.request.headers setObject:current_header_value forKey:current_header_field];
+        }
+        // create header field
+        current_header_field = [NSString stringWithFormat:@"%.*s", (int)length, at];
+        current_header_value = nil;
+    }
+}
+
+- (void)on_header_value_At:(const char *)at length:(size_t)length {
+    if (current_header_value != nil) {
+        // append to current header value
+        current_header_value = [NSString stringWithFormat:@"%@%.*s", current_header_value, (int)length, at];
+    } else {
+        // create header field
+        current_header_value = [NSString stringWithFormat:@"%.*s", (int)length, at];
+    }
+}
+
+- (void)on_headers_complete {
+    if (current_header_field != nil && current_header_value != nil) {
+        [self.request.headers setObject:current_header_value forKey:current_header_field];
+    }
+    self.request.host = [[self.request headers] objectForKey:@"Host"];
+}
+
+- (void)dealloc {
+    BRDebugLog(@"%@ DEALLOC", self);
+}
+
+@end
 
 struct timeval diff(struct timeval x, struct timeval y) {
     struct timeval r;
@@ -55,77 +124,52 @@ static unsigned long long request_count = 0;
 
 
 int on_header_field(http_parser* parser, const char *at, size_t length) {
-    @autoreleasepool {
-        client_t *client = (client_t *)parser->data;
-        
-        void *last = client->last_header_field;
-        if (client->was_header_field) { // append field
-            client->last_header_field = (__bridge_retained void *)[NSString stringWithFormat:@"%@%.*s", last, (int)length, at];
-        } else { // create field
-            client->last_header_field = (__bridge_retained void *)[NSString stringWithFormat:@"%.*s", (int)length, at];
-            client->was_header_field = YES;
-        }
-        
-        if (last != NULL) CFRelease(last);
-        
-        client->was_header_value = NO;
-        return 0;
-    }
+    HttpClient *http_client = (__bridge HttpClient *)parser->data;
+    [http_client on_header_field_At:at length:length];
+
+    return 0;
 }
 
 int on_header_value(http_parser* parser, const char *at, size_t length) {
-    @autoreleasepool {
-        client_t *client = (client_t *)parser->data;
-        HttpRequest *request = (__bridge HttpRequest *)client->request;
-        
-        if (client->was_header_value) { // append value
-            NSString *field = (__bridge NSString *)client->last_header_field;
-            NSString *value = [request.headers objectForKey:field];
-            [request.headers setObject:[NSString stringWithFormat:@"%@%.*s", value, (int)length, at] forKey:field];
-        } else { // create value
-            NSString *field = (__bridge NSString *)client->last_header_field;
-            [request.headers setObject:[NSString stringWithFormat:@"%.*s", (int)length, at] forKey:field];
-        }
-        
-        client->was_header_field = NO;
-        return 0;
-    }
+    HttpClient *http_client = (__bridge HttpClient *)parser->data;
+    [http_client on_header_value_At:at length:length];
+
+    return 0;
 }
 
 int on_headers_complete(http_parser* parser) {
-    @autoreleasepool {
-        client_t *client = (client_t *)parser->data;
-        HttpRequest *request = (__bridge HttpRequest *)client->request;
-        
-        request.host = [[request headers] objectForKey:@"Host"];
-        return 0;
-    };
+    HttpClient *http_client = (__bridge HttpClient *)parser->data;
+    [http_client on_headers_complete];
+
+    return 0;
 }
 
 int on_message_complete(http_parser *parser) {
-    @autoreleasepool {
-        client_t *client = (client_t *)parser->data;
-        HttpResponse *response = client->response != NULL ? (__bridge HttpResponse *)client->response : nil;
-        HttpRequest *request = client->request != NULL ? (__bridge HttpRequest *)client->request : nil;
-        Http *http = (__bridge Http *)client->http;
+    HttpClient *http_client = (__bridge HttpClient *)parser->data;
+    [http_client.http invokeReq:http_client.request invokeRes:http_client.response];
 
-        [http invokeReq:request invokeRes:response];
-        return 0;
-    }
+    return 0;
 }
 
 int on_url (http_parser* parser, const char *at, size_t length) {
-    @autoreleasepool {
-        client_t *client = (client_t *)parser->data;
-        HttpRequest *request = (__bridge HttpRequest *)client->request;
-        
-        request.urlPath = (request.urlPath == nil ? [NSString stringWithFormat:@"%.*s", (int)length, at] : [NSString stringWithFormat:@"%@%.*s", request.urlPath, (int)length, at]);
-        return 0;
+    HttpClient *http_client = (__bridge HttpClient *)parser->data;
+    if (http_client.request.urlPath == nil) {
+        http_client.request.urlPath = [NSString stringWithFormat:@"%.*s", (int)length, at];
+    } else {
+        http_client.request.urlPath = [NSString stringWithFormat:@"%@%.*s", http_client.request.urlPath, (int)length, at];
     }
+
+    return 0;
 }
 
 
-@implementation Http
+@implementation Http {
+    void (^callback)(HttpRequest *req, HttpResponse *res);
+    NSString *_ip;
+    NSString *_port;
+    http_parser_settings _settings;
+    client_t _clients[8192];
+}
 
 - (id) init {
     if (self = [super init]) {
@@ -145,54 +189,29 @@ int on_url (http_parser* parser, const char *at, size_t length) {
     _ip = ip;
     _port = port;
 
-    br_server_t *serv = br_server_create(loop, (char *)[ip UTF8String], (char *)[port UTF8String], ^(br_client_t *clnt) {
-        @autoreleasepool {
-            /* on_accept */
-            br_log_debug("HTTP ACCEPT socket %d %s:%s", clnt->sock.fd, clnt->sock.hbuf, clnt->sock.sbuf);
-            
-            client_t *client = &_clients[clnt->sock.fd];
-            http_parser *parser = &(client->parser);
-            http_parser_init(parser, HTTP_REQUEST);
-            parser->data = client;
-            client->clnt = clnt;
-            client->http = (__bridge void *)self;
-            client->request =  (__bridge_retained void *)[[HttpRequest alloc] init];
-            client->response = (__bridge_retained void *)[[HttpResponse alloc] initWithClient:client];
-            client->was_header_field = NO;
-            client->was_header_value = NO;
-            client->last_header_field = nil;
-            
-            br_socket_addwatch((br_socket_t *)clnt, BRSOCKET_WATCH_READ);
-        };
-    }, ^(br_client_t *clnt, char *buff, size_t buff_len) {
-        @autoreleasepool {
-            /* on_read */
-            br_log_debug("HTTP READ   socket %d %s:%s", clnt->sock.fd, clnt->sock.hbuf, clnt->sock.sbuf);
-            
-            client_t *client = &_clients[clnt->sock.fd];
-            http_parser *parser = &(client->parser);
-            http_parser_execute(parser, &_settings, buff, buff_len);
-        };
-    }, ^(br_client_t *clnt) {
-        @autoreleasepool {
-            /* on_close */
-            br_log_debug("HTTP CLOSE  socket %d %s:%s", clnt->sock.fd, clnt->sock.hbuf, clnt->sock.sbuf);
-            
-            client_t *client = &_clients[clnt->sock.fd];
-            if (client->last_header_field != nil) CFRelease(client->last_header_field);
-            if (client->request != nil) CFRelease(client->request);
-            if (client->request != nil) CFRelease(client->response);
-        }
-    }, ^(br_server_t *serv) {
-        /* on_release */
-        br_log_debug("HTTP RELEASE SERVER %d %s:%s", serv->sock.fd, serv->sock.hbuf, serv->sock.sbuf);
-    });
-
-    if (serv == NULL) {
-        return NO;
-    }
-
-    return YES;
+    BRServer *server = [[BRServer alloc] initWithHostname:ip serviceName:port];
+    server.on_accept_client = ^void(BRServer *server, BRClient *client) {
+        BRDebugLog(@"%@ HTTP ACCEPT %@", self, client);
+        HttpClient *http_client = [[HttpClient alloc] initWithClient:client Http:self];
+        client.udata = http_client;
+    };
+    
+    server.on_read_client = ^void(BRServer *server, BRClient *client, NSData *data) {
+        BRDebugLog(@"%@ HTTP READ %@", self, client);
+        HttpClient *http_client = (HttpClient *)client.udata;
+        [http_client execute_parser:&_settings data:[data bytes] len:[data length]];
+    };
+    
+    server.on_close_client = ^void(BRServer *server, BRClient *client) {
+        BRDebugLog(@"%@ HTTP CLOSE %@", self, client);
+    };
+    
+    server.on_close = ^void(BRServer *server) {
+        BRDebugLog(@"%@ CLOSE %@", self, server);
+    };
+    
+    [server start_server];
+    return server != nil;
 }
 
 - (void) invokeReq:(HttpRequest *)req invokeRes:(HttpResponse *)res {
@@ -238,7 +257,7 @@ int on_url (http_parser* parser, const char *at, size_t length) {
 }
 
 - (void) dealloc {
-    NSLog(@"dealloc: %@", self);
+    BRDebugLog(@"%@ DEALLOC", self);
 }
 
 - (NSString *)description {
@@ -246,12 +265,11 @@ int on_url (http_parser* parser, const char *at, size_t length) {
 }
 
 + (void) initialize {
-    loop = br_loop_create();
+    gettimeofday(&time_start, NULL);
 }
 
 + (void) runloop {
-    gettimeofday(&time_start, NULL);
-    br_runloop(loop);
+    dispatch_main();
 }
 
 @end

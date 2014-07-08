@@ -24,7 +24,9 @@ typedef void (^BRClientSendfileOnErrorBlock)(int err);
 
 @interface BRClient : BRSocket
 
+@property NSMutableArray *push_write_array;
 @property BRServer *server;
+@property NSObject *udata;
 
 - (id)initWithFd:(int)fd server:(BRServer *)server addr:(struct sockaddr)in_addr hostname:(NSString *)hostname servname:(NSString *)servname;
 - (void)start_client;

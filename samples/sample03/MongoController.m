@@ -17,6 +17,15 @@
     return [self descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M:%S" timeZone:nil locale:nil];
 }
 
+- (id)proxyForJson {
+    return [self description];
+}
+@end
+
+@implementation BSONObjectID (JSON)
+- (id)proxyForJson {
+    return [self stringValue];
+}
 @end
 
 @implementation MongoController
@@ -56,7 +65,8 @@
     
     NSDictionary *result = @{@"results" : results};
     SBJson4Writer *writer = [[SBJson4Writer alloc] init];
-    return [writer stringWithObject:result];
+    NSString *string = [writer stringWithObject:result];
+    return string;
 }
 
 - (id)listJSON {
@@ -77,7 +87,8 @@
     NSDictionary *result = @{@"results" : results, @"cuenta" : [NSNumber numberWithUnsignedInteger:[results count]]};
 
     SBJson4Writer *writer = [[SBJson4Writer alloc] init];
-    return [writer stringWithObject:result];
+    NSString *string = [writer stringWithObject:result];
+    return string;
 }
 
 + (MongoDBCollection *) collection {

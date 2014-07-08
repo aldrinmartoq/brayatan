@@ -7,47 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-
-#define BRAYATAN_LOG_TRACE_ENABLED  0
-#define BRAYATAN_LOG_DEBUG_ENABLED  1
-#define BRAYATAN_LOG_INFOR_ENABLED  0
-#define BRAYATAN_LOG_ERROR_ENABLED  1
-
-
-
-#if BRAYATAN_LOG_TRACE_ENABLED
-#define BRTraceLog(fmt, ...) NSLog((@"T %60s:%-4d " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
-#else
-#define BRTraceLog(...)
-#endif
-
-#if BRAYATAN_LOG_DEBUG_ENABLED
-#define BRDebugLog(fmt, ...) NSLog((@"D %60s:%-4d " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
-#else
-#define BRDebugLog(...)
-#endif
-
-#if BRAYATAN_LOG_INFOR_ENABLED
-#define BRInforLog(fmt, ...) NSLog((@"I %60s:%-4d " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
-#else
-#define BRInforLog(...)
-#endif
-
-#if BRAYATAN_LOG_ERROR_ENABLED
-#define BRErrorLog(fmt, ...) NSLog((@"E %60s:%-4d " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
-#else
-#define BRErrorLog(...)
-#endif
+#import "brayatan-common.h"
 
 @interface BRSocket : NSObject
 

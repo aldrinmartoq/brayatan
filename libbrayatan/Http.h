@@ -33,13 +33,7 @@ void CFRelease(void *o);
 #endif
 
 
-@interface Http : NSObject {
-    void (^callback)(HttpRequest *req, HttpResponse *res);
-    NSString *_ip;
-    NSString *_port;
-    http_parser_settings _settings;
-    client_t _clients[8192];
-}
+@interface Http : NSObject
 
 - (void) invokeReq:(HttpRequest *)req invokeRes:(HttpResponse *)res;
 + (NSString *) statusString;

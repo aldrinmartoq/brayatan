@@ -43,6 +43,7 @@
 		207D2BB519511D6D0013474E /* SBJson4Writer.m in Sources */ = {isa = PBXBuildFile; fileRef = 207D2BA619511D6D0013474E /* SBJson4Writer.m */; };
 		20D10ED515616FC300100E3C /* brayatan-core.h in Headers */ = {isa = PBXBuildFile; fileRef = 20D10ED315616FC300100E3C /* brayatan-core.h */; };
 		20D10ED615616FC300100E3C /* brayatan-core.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D10ED415616FC300100E3C /* brayatan-core.m */; };
+		20DFE184196916AA00933E99 /* brayatan-common.m in Sources */ = {isa = PBXBuildFile; fileRef = 20DFE183196916AA00933E99 /* brayatan-common.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -847,6 +848,7 @@
 		20D10ED315616FC300100E3C /* brayatan-core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "brayatan-core.h"; sourceTree = "<group>"; };
 		20D10ED415616FC300100E3C /* brayatan-core.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "brayatan-core.m"; sourceTree = "<group>"; };
 		20D10ED7156188AE00100E3C /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		20DFE183196916AA00933E99 /* brayatan-common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "brayatan-common.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -876,6 +878,7 @@
 				2044B2F9192408C900928587 /* GRMustache */,
 				20335AEC1544138100A94822 /* libhttp_parser.xcodeproj */,
 				20335ADD1544135000A94822 /* brayatan-common.h */,
+				20DFE183196916AA00933E99 /* brayatan-common.m */,
 				20D10ED315616FC300100E3C /* brayatan-core.h */,
 				20D10ED415616FC300100E3C /* brayatan-core.m */,
 				20335ADE1544135000A94822 /* Http.h */,
@@ -2530,6 +2533,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20DFE184196916AA00933E99 /* brayatan-common.m in Sources */,
 				20335AE61544135000A94822 /* Http.m in Sources */,
 				207D2BB519511D6D0013474E /* SBJson4Writer.m in Sources */,
 				2012E8071966B002006452E8 /* BRSocket.m in Sources */,

@@ -27,16 +27,17 @@
 #import "brayatan-common.h"
 #import "HttpRequest.h"
 #import "GRMustache.h"
+#import "BRClient.h"
 
 @interface HttpResponse : NSObject {
     NSMutableString *bodyBuffer;
-    client_t *client;
 }
 
 @property (retain, nonatomic) NSMutableDictionary *headers;
 @property (nonatomic) int status;
+@property (weak) BRClient *client;
 
-- (id)initWithClient:(client_t*) client;
+- (id)initWithClient:(BRClient *) client;
 - (HttpResponse *)setHeader:(NSString *)header value:(NSString *)value;
 - (void)appendStringToBodyBuffer:(NSString *)string;
 - (void)appendFormatToBodyBuffer:(NSString *)format, ...;

@@ -20,7 +20,7 @@
 - (id)initWithIp:(NSString *)ip port:(NSString *)port templateFolder:(NSString *)templateFolder {
     if (self = [super init]) {
         _http = [Http createServerWithIP:ip atPort:port callback:^(HttpRequest *req, HttpResponse *res) {
-            br_log_debug("Processing request: %s", [req.urlPath UTF8String]);
+            BRTraceLog("%@ Processing request: %s", self, [req.urlPath UTF8String]);
             BOOL controlled = NO;
             
             for (NSDictionary *entry in _routes) {
@@ -29,7 +29,7 @@
                 NSString *folder = [entry objectForKey:@"folder"];
                 GRMustacheTemplateRepository *repository = [entry objectForKey:@"repository"];
                 folder = (folder == nil) ? _templateFolder : folder;
-                br_log_debug("Checking route: %s controller: %s folder: %s", [route UTF8String], [NSStringFromClass(controller_class) UTF8String], [folder UTF8String]);
+                BRTraceLog("%@ Checking route: %s controller: %s folder: %s", self, [route UTF8String], [NSStringFromClass(controller_class) UTF8String], [folder UTF8String]);
                 if ([req.urlPath hasPrefix:route]) {
                     NSString *path = [req.urlPath substringFromIndex:[route length]];
                     path = [path length] == 0 ? @"index" : path;
@@ -37,7 +37,7 @@
                     NSString *method = [pathElements firstObject];
                     [pathElements removeObjectAtIndex:0];
                     path = [pathElements componentsJoinedByString:@"/"];
-                    br_log_debug("matched, method: [%s] path: [%s]", [method UTF8String], [path UTF8String]);
+                    BRTraceLog("%@ matched, method: [%s] path: [%s]", self, [method UTF8String], [path UTF8String]);
                     HttpController *controller = [(HttpController *)[controller_class alloc] initWithTemplateForlder:folder];
                     SEL selector = NSSelectorFromString(method);
                     if ([controller respondsToSelector:selector]) {

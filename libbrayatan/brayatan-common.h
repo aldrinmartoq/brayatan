@@ -26,12 +26,84 @@
 #ifndef brayatan_common_h
 #define brayatan_common_h
 
-#import "brayatan-core.h"
 #import "http_parser.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
 
-#define BRAYATAN_VERSION "0.0.1"
+#define BRAYATAN_VERSION "0.1.1"
 
 #define BR_BUILD_VERSION_NSSTR @"Brayatan/" BRAYATAN_VERSION " (Build " __TIME__ " " __DATE__ ")"
+
+#define BRAYATAN_LOG_TRACE_ENABLED  0
+#define BRAYATAN_LOG_DEBUG_ENABLED  0
+#define BRAYATAN_LOG_INFOR_ENABLED  0
+#define BRAYATAN_LOG_ERROR_ENABLED  1
+
+#if BRAYATAN_LOG_TRACE_ENABLED
+#define BRTraceLog(fmt, ...) NSLog((@"T %60s:%-4d " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+#define BRTraceLog(...)
+#endif
+
+#if BRAYATAN_LOG_DEBUG_ENABLED
+#define BRDebugLog(fmt, ...) NSLog((@"D %60s:%-4d " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+#define BRDebugLog(...)
+#endif
+
+#if BRAYATAN_LOG_INFOR_ENABLED
+#define BRInforLog(fmt, ...) NSLog((@"I %60s:%-4d " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+#define BRInforLog(...)
+#endif
+
+#if BRAYATAN_LOG_ERROR_ENABLED
+#define BRErrorLog(fmt, ...) NSLog((@"E %60s:%-4d " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+#define BRErrorLog(...)
+#endif
+
+typedef struct br_loop {
+    int qfd;
+    unsigned int usage;
+    struct br_socket *sockets[1024];
+    int sockets_len;
+} br_loop_t;
+
+typedef struct br_socket {
+    int type;
+    unsigned int usage;
+    int fd;
+    br_loop_t *loop;
+//    struct sockaddr in_addr;
+    char hbuf[256], sbuf[256];
+    int watchmode;
+} br_socket_t;
+
+typedef struct br_server {
+    br_socket_t sock;
+    void *on_accept;
+    void *on_read;
+    void *on_close;
+    void *on_release;
+    void *udata;
+} br_server_t;
+
+typedef struct br_client {
+    br_socket_t sock;
+    br_server_t *serv;
+    void *on_write;
+    void *udata;
+    char rbuff[1024*4];
+} br_client_t;
 
 typedef struct {
     br_client_t *clnt;
@@ -44,6 +116,7 @@ typedef struct {
     void *last_header_field;
 } client_t;
 
-
+NSString *br_time_fmt_gmt(time_t t);
+NSString *br_time_fmt_gmt_now();
 
 #endif

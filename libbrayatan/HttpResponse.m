@@ -26,6 +26,7 @@
 #import "HttpResponse.h"
 #import <dirent.h>
 #import "GRMustache.h"
+#import <sys/stat.h>
 
 static char *statusCodeChar(int status) {
     switch(status) {
@@ -93,13 +94,13 @@ static NSString *contentType(NSString *path) {
 @synthesize headers;
 @synthesize status;
 
-- (id) initWithClient:(client_t*)c {
+- (id) initWithClient:(BRClient *)client {
     if (self = [super init]) {
         headers = [[NSMutableDictionary alloc] init];
-        client = c;
+        self.client = client;
         status = 200;
         [headers setObject:BR_BUILD_VERSION_NSSTR forKey:@"Server"];
-        [headers setObject:[[NSString alloc] initWithCString:br_time_curr_gmt() encoding:NSUTF8StringEncoding] forKey:@"Date"];
+        [headers setObject:br_time_fmt_gmt_now() forKey:@"Date"];
     }
     return self;
 }
@@ -112,26 +113,17 @@ static NSString *contentType(NSString *path) {
 
 
 - (void)writeHeader {
-    @autoreleasepool {
-        char buff2[1024*4];
-        char *b = buff2;
-        
-        int n = sprintf(buff2, "HTTP/1.1 %d %s\r\n", status, statusCodeChar(status));
-        b += n;
-        
-        for (id key in headers) {
-            n = sprintf(b, "%s: %s\r\n", [key UTF8String], [[headers objectForKey:key] UTF8String]);
-            b += n;
-        }
-        n = sprintf(b, "\r\n");
-        size_t buff_len = strlen(buff2);
-        br_client_write(client->clnt, buff2, buff_len, ^(br_client_t *c) {
-            br_log_error("ERROR on writeHeader %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
-        });
-    };
+    NSMutableString *buff = [NSMutableString stringWithFormat:@"HTTP/1.1 %d %s\r\n", status, statusCodeChar(status)];
+
+    for (id key in headers) {
+        [buff appendFormat:@"%@: %@\r\n", key, [headers objectForKey:key]];
+    }
+    [buff appendString:@"\r\n"];
+    [self.client write_string:buff];
 }
 
 - (void)appendStringToBodyBuffer:(NSString *)string {
+    BRTraceLog(@"%@ %@", self, self.client);
     bodyBuffer = bodyBuffer == nil ? [[NSMutableString alloc] init] : bodyBuffer;
     [bodyBuffer appendString:string];
 }
@@ -144,180 +136,146 @@ static NSString *contentType(NSString *path) {
 }
 
 - (void)send {
-    @autoreleasepool {
-        if (bodyBuffer != nil) {
-            [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", [bodyBuffer length]]];
-        }
-        [self writeHeader];
-        if (bodyBuffer != nil) {
-            char *buff = (char *)[bodyBuffer UTF8String];
-            size_t buff_len = strlen(buff);
-            br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
-                br_log_error("RESPONSE ERROR on %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
-            });
-            bodyBuffer = nil;
-        }
-        br_client_close(client->clnt);
-    };
+    if (bodyBuffer != nil) {
+        [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", [bodyBuffer length]]];
+    }
+    [self writeHeader];
+    if (bodyBuffer != nil) {
+        [self.client write_string:bodyBuffer];
+    }
+    [self.client write_close];
 }
 
 - (void)writeDirectoryListingFor:(NSString *)fullpath Path:(NSString *)path{
-    @autoreleasepool {
-        [self setHeader:@"Content-Type" value:@"text/html; charset=utf-8"];
-        [self appendStringToBodyBuffer:[NSString stringWithFormat:@"<HMTL><BODY><H1>Directory Listing for %@</H1>", path]];
-
-        struct dirent *e;
-        DIR *dir = opendir([fullpath UTF8String]);
-        while ((e = readdir(dir)) != NULL) {
-            if (e->d_name[0] == '.') continue;
-            char *s = e->d_type == DT_DIR ? "/" : "";
-            [self appendStringToBodyBuffer:[NSString stringWithFormat:@"<A href=\"%s%s\"/>%s%s</A><BR>", e->d_name, s, e->d_name, s]];
-        }
-        closedir(dir);
-
-        [self appendStringToBodyBuffer:[NSString stringWithFormat:@"<BR><HR><I>%@</I>", BR_BUILD_VERSION_NSSTR]];
-        [self send];
-    };
+    [self setHeader:@"Content-Type" value:@"text/html; charset=utf-8"];
+    [self appendStringToBodyBuffer:[NSString stringWithFormat:@"<HMTL><BODY><H1>Directory Listing for %@</H1>", path]];
+    
+    struct dirent *e;
+    DIR *dir = opendir([fullpath UTF8String]);
+    while ((e = readdir(dir)) != NULL) {
+        if (e->d_name[0] == '.') continue;
+        char *s = e->d_type == DT_DIR ? "/" : "";
+        [self appendStringToBodyBuffer:[NSString stringWithFormat:@"<A href=\"%s%s\"/>%s%s</A><BR>", e->d_name, s, e->d_name, s]];
+    }
+    closedir(dir);
+    
+    [self appendStringToBodyBuffer:[NSString stringWithFormat:@"<BR><HR><I>%@</I>", BR_BUILD_VERSION_NSSTR]];
+    [self send];
 }
 
 - (BOOL)dynamicContentForTemplate:(NSString *)name Data:(id)object TemplateRepository:(GRMustacheTemplateRepository *)repository {
     GRMustacheTemplate *template = [repository templateNamed:name error:nil];
     NSString *data = [template renderObject:object error:nil];
-    char *buff = (char *)[data UTF8String];
-    size_t buff_len = 0;
-    if (buff != NULL) {
-        buff_len = strlen(buff);
-    }
     
     [self setHeader:@"Content-Type" value:@"text/html"];
-    [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", buff_len]];
+    [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", [data lengthOfBytesUsingEncoding:NSUTF8StringEncoding]]];
     [self writeHeader];
-    
-    br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
-        br_log_error("RESPONSE ERROR on %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
-    });
-    
-    br_client_close(client->clnt);
+
+    [self.client write_string:data];
+    [self.client write_close];
     
     return YES;
 }
 
 - (BOOL)dynamicContentForRequest:(HttpRequest *)req Data:(id)object TemplateFolder:(NSString *)folder {
-    @autoreleasepool {
-        NSRange range = [req.urlPath rangeOfString:@"/../"];
-        if (range.location != NSNotFound) {
-            self.status = 400;
-            [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-            [self appendStringToBodyBuffer:@"/../ is not allowed in path\r\n"];
-            [self send];
-            return YES;
-        }
-        
-        GRMustacheTemplateRepository *repository = [GRMustacheTemplateRepository templateRepositoryWithDirectory:folder];
-        GRMustacheTemplate *template = [repository templateNamed:req.urlPath error:nil];
-        
-        NSString *data = [template renderObject:object error:nil];
-        
-        char *buff = (char *)[data UTF8String];
-        size_t buff_len = 0;
-        if (buff != NULL) {
-            buff_len = strlen(buff);
-        }
-        
-        [self setHeader:@"Content-Type" value:@"text/html"];
-        [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", buff_len]];
-        [self writeHeader];
-        
-        br_client_write(client->clnt, buff, buff_len, ^(br_client_t *c) {
-            br_log_error("RESPONSE ERROR on %d %s:%s", c->sock.fd, c->sock.hbuf, c->sock.sbuf);
-        });
-        
-        br_client_close(client->clnt);
-        
+    NSRange range = [req.urlPath rangeOfString:@"/../"];
+    if (range.location != NSNotFound) {
+        self.status = 400;
+        [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
+        [self appendStringToBodyBuffer:@"/../ is not allowed in path\r\n"];
+        [self send];
         return YES;
     }
+    
+    GRMustacheTemplateRepository *repository = [GRMustacheTemplateRepository templateRepositoryWithDirectory:folder];
+    GRMustacheTemplate *template = [repository templateNamed:req.urlPath error:nil];
+    
+    NSString *data = [template renderObject:object error:nil];
+    
+    [self setHeader:@"Content-Type" value:@"text/html"];
+    [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", [data lengthOfBytesUsingEncoding:NSUTF8StringEncoding]]];
+    [self writeHeader];
+    
+    [self.client write_string:data];
+    [self.client write_close];
+    
+    return YES;
 }
 
 - (BOOL)staticContentForRequest:(HttpRequest *)req FromFolder:(NSString *)folder {
-    @autoreleasepool {
-        NSRange range = [req.urlPath rangeOfString:@"/../"];
-        if (range.location != NSNotFound) {
-            self.status = 400;
-            [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-            [self appendStringToBodyBuffer:@"/../ is not allowed in path\r\n"];
-            [self send];
-            return YES;
-        }
+    NSRange range = [req.urlPath rangeOfString:@"/../"];
+    if (range.location != NSNotFound) {
+        self.status = 400;
+        [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
+        [self appendStringToBodyBuffer:@"/../ is not allowed in path\r\n"];
+        [self send];
+        return YES;
+    }
 
-        NSString *fullPath = [NSString stringWithFormat:@"%@/%@", folder, req.urlPath];
-        
-        __block NSString *indexFile = nil;
-        
-        br_client_sendfile(client->clnt, (char *)[fullPath UTF8String], ^BOOL(br_client_t *c, struct stat stat) {
-            /* on_open */
-            if (S_ISDIR(stat.st_mode)) {
-                
-                if (![fullPath hasSuffix:@"/"]) {
-                    [self redirectToURL:[req.urlPath stringByAppendingString:@"/"]];
-                    return NO;
-                }
-                
-                struct dirent *e;
-                DIR *dir = opendir([fullPath UTF8String]);
-                while ((e = readdir(dir)) != NULL) {
-                    if (strncmp(e->d_name, "index.html", 10) == 0) {
-                        indexFile = @"index.html";
-                        break;
-                    }
-                }
-                closedir(dir);
-                
-                if (indexFile != nil) {
-                    return NO;
-                }
-
-                [self writeDirectoryListingFor:fullPath Path:req.urlPath];
-                br_client_close(client->clnt);        
+    NSString *fullPath = [NSString stringWithFormat:@"%@/%@", folder, req.urlPath];
+    
+    __block NSString *indexFile = nil;
+    [self.client write_file:fullPath onOpen:^BOOL(struct stat stat) {
+        if (S_ISDIR(stat.st_mode)) {
+            
+            if (![fullPath hasSuffix:@"/"]) {
+                [self redirectToURL:[req.urlPath stringByAppendingString:@"/"]];
                 return NO;
             }
             
-            /* HTTP Last-Modified support */
+            struct dirent *e;
+            DIR *dir = opendir([fullPath UTF8String]);
+            while ((e = readdir(dir)) != NULL) {
+                if (strncmp(e->d_name, "index.html", 10) == 0) {
+                    indexFile = @"index.html";
+                    break;
+                }
+            }
+            closedir(dir);
+            
+            if (indexFile != nil) {
+                return NO;
+            }
+            
+            [self writeDirectoryListingFor:fullPath Path:req.urlPath];
+            [self.client write_close];
+            return NO;
+        }
+
+        /* HTTP Last-Modified support */
 #ifdef __APPLE__
-            NSString *lastmod = br_time_fmt_gmt(stat.st_mtimespec.tv_sec);
+        NSString *lastmod = br_time_fmt_gmt(stat.st_mtimespec.tv_sec);
 #else
-            NSString *lastmod = br_time_fmt_gmt(stat.st_mtime);
+        NSString *lastmod = br_time_fmt_gmt(stat.st_mtime);
 #endif
-            
-            if ([lastmod isEqual:[req.headers objectForKey:@"If-Modified-Since"]]) {
-                self.status = 304;
-            }
-            
-            [self setHeader:@"Content-Type" value:contentType(req.urlPath)];
-            [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", (long)stat.st_size]];
-            [self setHeader:@"Last-Modified" value:lastmod];
-            [self writeHeader];
 
-            if (self.status == 304) {
-                br_client_close(client->clnt);        
-                return NO;
-            }
-            
-            br_socket_delwatch((br_socket_t*)c, BRSOCKET_WATCH_READ);
-
-            return YES;
-        }, ^(br_client_t *c, int err) {
-            /* on_open_error */
-            self.status = 404;
-            [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
-            [self appendStringToBodyBuffer:[NSString stringWithFormat:@"%@ Not Found.\r\n\r\n-- %@\r\n", req.urlPath, BR_BUILD_VERSION_NSSTR]];
-            [self send];
-        });
-
-        if (indexFile != nil) {
-            req.urlPath = [req.urlPath stringByAppendingFormat:@"/%@", indexFile];
-            [self staticContentForRequest:req FromFolder:folder];
-            br_client_close(client->clnt);
+        if ([lastmod isEqual:[req.headers objectForKey:@"If-Modified-Since"]]) {
+            self.status = 304;
         }
+
+        [self setHeader:@"Content-Type" value:contentType(req.urlPath)];
+        [self setHeader:@"Content-Length" value:[NSString stringWithFormat:@"%ld", (long)stat.st_size]];
+        [self setHeader:@"Last-Modified" value:lastmod];
+        [self writeHeader];
+
+        if (self.status == 304) {
+            [self.client write_close];
+            return NO;
+        }
+
+        return YES;
+    } onError:^(int err) {
+        /* on_open_error */
+        self.status = 404;
+        [self setHeader:@"Content-Type" value:@"text/plain; charset=utf-8"];
+        [self appendStringToBodyBuffer:[NSString stringWithFormat:@"%@ Not Found.\r\n\r\n-- %@\r\n", req.urlPath, BR_BUILD_VERSION_NSSTR]];
+        [self send];
+    }];
+
+    if (indexFile != nil) {
+        req.urlPath = [req.urlPath stringByAppendingFormat:@"/%@", indexFile];
+        [self staticContentForRequest:req FromFolder:folder];
+        [self.client write_close];
     }
     return YES;
 }
