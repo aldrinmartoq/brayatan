@@ -25,6 +25,9 @@
 		20335AE91544135000A94822 /* HttpResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 20335AE21544135000A94822 /* HttpResponse.h */; };
 		20335AEA1544135000A94822 /* HttpResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 20335AE31544135000A94822 /* HttpResponse.m */; };
 		20335AFE1544139C00A94822 /* libhttp_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335AF41544138100A94822 /* libhttp_parser.a */; };
+		205E8640196B7AD500FCBA0B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 205E863F196B7AD500FCBA0B /* Foundation.framework */; };
+		205E864B196B7B2100FCBA0B /* test01-main.m in Sources */ = {isa = PBXBuildFile; fileRef = 205E8622196B7A4A00FCBA0B /* test01-main.m */; };
+		205E864C196B7B6200FCBA0B /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335AB6154412D700A94822 /* libbrayatan.a */; };
 		207BEB5C1924098000F4122D /* libGRMustache7-MacOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2044B4E9192408CA00928587 /* libGRMustache7-MacOS.a */; };
 		207D2BA719511D6D0013474E /* SBJson4.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2B9819511D6D0013474E /* SBJson4.h */; };
 		207D2BA819511D6D0013474E /* SBJson4Parser.h in Headers */ = {isa = PBXBuildFile; fileRef = 207D2B9919511D6D0013474E /* SBJson4Parser.h */; };
@@ -216,6 +219,18 @@
 			remoteInfo = ObjCMongoDB;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		205E863C196B7AD500FCBA0B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		200225131545329F0067D98E /* linux-miniruntime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "linux-miniruntime.m"; sourceTree = "<group>"; };
@@ -659,6 +674,9 @@
 		2044B4E1192408CA00928587 /* MethodSwizzle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodSwizzle.m; sourceTree = "<group>"; };
 		2044B4E2192408CA00928587 /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
 		2044B4E3192408CA00928587 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.md; sourceTree = "<group>"; };
+		205E8622196B7A4A00FCBA0B /* test01-main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "test01-main.m"; sourceTree = "<group>"; };
+		205E863E196B7AD500FCBA0B /* brayatan_test01 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = brayatan_test01; sourceTree = BUILT_PRODUCTS_DIR; };
+		205E863F196B7AD500FCBA0B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		207D2B9819511D6D0013474E /* SBJson4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4.h; sourceTree = "<group>"; };
 		207D2B9919511D6D0013474E /* SBJson4Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson4Parser.h; sourceTree = "<group>"; };
 		207D2B9A19511D6D0013474E /* SBJson4Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJson4Parser.m; sourceTree = "<group>"; };
@@ -861,12 +879,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		205E863B196B7AD500FCBA0B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				205E864C196B7B6200FCBA0B /* libbrayatan.a in Frameworks */,
+				205E8640196B7AD500FCBA0B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		20335AAB154412D700A94822 = {
 			isa = PBXGroup;
 			children = (
+				205E8620196B7A4A00FCBA0B /* test */,
 				2012E8081966B300006452E8 /* BRClient.h */,
 				2012E8091966B300006452E8 /* BRClient.m */,
 				2012E8041966B002006452E8 /* BRSocket.h */,
@@ -902,6 +930,7 @@
 			isa = PBXGroup;
 			children = (
 				20335AB6154412D700A94822 /* libbrayatan.a */,
+				205E863E196B7AD500FCBA0B /* brayatan_test01 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -909,6 +938,7 @@
 		20335AB8154412D700A94822 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				205E863F196B7AD500FCBA0B /* Foundation.framework */,
 				20335ABB154412D700A94822 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -1871,6 +1901,22 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		205E8620196B7A4A00FCBA0B /* test */ = {
+			isa = PBXGroup;
+			children = (
+				205E8621196B7A4A00FCBA0B /* test01 */,
+			);
+			path = test;
+			sourceTree = "<group>";
+		};
+		205E8621196B7A4A00FCBA0B /* test01 */ = {
+			isa = PBXGroup;
+			children = (
+				205E8622196B7A4A00FCBA0B /* test01-main.m */,
+			);
+			path = test01;
+			sourceTree = "<group>";
+		};
 		207D2B9719511D6C0013474E /* SBJson */ = {
 			isa = PBXGroup;
 			children = (
@@ -2311,6 +2357,23 @@
 			productReference = 20335AB6154412D700A94822 /* libbrayatan.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		205E863D196B7AD500FCBA0B /* brayatan_test01 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 205E8648196B7AD500FCBA0B /* Build configuration list for PBXNativeTarget "brayatan_test01" */;
+			buildPhases = (
+				205E863A196B7AD500FCBA0B /* Sources */,
+				205E863B196B7AD500FCBA0B /* Frameworks */,
+				205E863C196B7AD500FCBA0B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = brayatan_test01;
+			productName = brayatan_test01;
+			productReference = 205E863E196B7AD500FCBA0B /* brayatan_test01 */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -2360,6 +2423,7 @@
 			projectRoot = "";
 			targets = (
 				20335AB5154412D700A94822 /* brayatan */,
+				205E863D196B7AD500FCBA0B /* brayatan_test01 */,
 			);
 		};
 /* End PBXProject section */
@@ -2553,6 +2617,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		205E863A196B7AD500FCBA0B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				205E864B196B7B2100FCBA0B /* test01-main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2712,6 +2784,47 @@
 			};
 			name = Release;
 		};
+		205E8649196B7AD500FCBA0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		205E864A196B7AD500FCBA0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2732,6 +2845,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		205E8648196B7AD500FCBA0B /* Build configuration list for PBXNativeTarget "brayatan_test01" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				205E8649196B7AD500FCBA0B /* Debug */,
+				205E864A196B7AD500FCBA0B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 

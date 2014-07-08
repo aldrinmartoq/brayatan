@@ -15,12 +15,6 @@
 		2027B746192E9F3A00FB9FB2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2027B738192E9E8200FB9FB2 /* main.m */; };
 		2027B74F192EFE3900FB9FB2 /* AdminController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2027B74D192EFD1A00FB9FB2 /* AdminController.m */; };
 		2037CBF8193167DB0029A30F /* MongoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2037CBF5193166BE0029A30F /* MongoController.m */; };
-		2047CC2A196615A2005A4E93 /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20B96B12192DBB2F002DF403 /* ObjCMongoDB.framework */; };
-		2047CC2B196615A2005A4E93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 203359BF1544021800A94822 /* Foundation.framework */; };
-		2047CC2C196615A2005A4E93 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
-		2047CC2E196615A2005A4E93 /* list.mustache in Copy Files */ = {isa = PBXBuildFile; fileRef = 2012905A193591F700EDD0F9 /* list.mustache */; };
-		2047CC30196615A2005A4E93 /* chao.mustache in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2012905C193591F700EDD0F9 /* chao.mustache */; };
-		2047CC37196615D7005A4E93 /* test01-main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2047CC36196615D7005A4E93 /* test01-main.m */; };
 		20AF0DAE156246CD005AF576 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20AF0DAD156246CD005AF576 /* main.m */; };
 		20AF0DB315624822005AF576 /* libbrayatan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 20335ADB1544132D00A94822 /* libbrayatan.a */; };
 		20AF0DB415624827005AF576 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 203359BF1544021800A94822 /* Foundation.framework */; };
@@ -63,27 +57,6 @@
 			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2047CC2D196615A2005A4E93 /* Copy Files */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = views/mongo;
-			dstSubfolderSpec = 16;
-			files = (
-				2047CC2E196615A2005A4E93 /* list.mustache in Copy Files */,
-			);
-			name = "Copy Files";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2047CC2F196615A2005A4E93 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = views/test;
-			dstSubfolderSpec = 16;
-			files = (
-				2047CC30196615A2005A4E93 /* chao.mustache in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		20AF0D8E15624641005AF576 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -117,8 +90,6 @@
 		20335AD31544132D00A94822 /* libbrayatan.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libbrayatan.xcodeproj; path = libbrayatan/libbrayatan.xcodeproj; sourceTree = "<group>"; };
 		2037CBF4193166BE0029A30F /* MongoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoController.h; sourceTree = "<group>"; };
 		2037CBF5193166BE0029A30F /* MongoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoController.m; sourceTree = "<group>"; };
-		2047CC34196615A2005A4E93 /* test01 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test01; sourceTree = BUILT_PRODUCTS_DIR; };
-		2047CC36196615D7005A4E93 /* test01-main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "test01-main.m"; sourceTree = "<group>"; };
 		20AF0D9015624641005AF576 /* sample02 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample02; sourceTree = BUILT_PRODUCTS_DIR; };
 		20AF0D9215624641005AF576 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		20AF0DAD156246CD005AF576 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -136,16 +107,6 @@
 				2027B73E192E9F2C00FB9FB2 /* ObjCMongoDB.framework in Frameworks */,
 				2027B73F192E9F2C00FB9FB2 /* Foundation.framework in Frameworks */,
 				2027B740192E9F2C00FB9FB2 /* libbrayatan.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2047CC29196615A2005A4E93 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2047CC2A196615A2005A4E93 /* ObjCMongoDB.framework in Frameworks */,
-				2047CC2B196615A2005A4E93 /* Foundation.framework in Frameworks */,
-				2047CC2C196615A2005A4E93 /* libbrayatan.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,7 +182,6 @@
 		203359B01544021800A94822 = {
 			isa = PBXGroup;
 			children = (
-				2047CC36196615D7005A4E93 /* test01-main.m */,
 				200225191545337D0067D98E /* README.md */,
 				20022518154533750067D98E /* LICENSE */,
 				20335AD31544132D00A94822 /* libbrayatan.xcodeproj */,
@@ -237,7 +197,6 @@
 				20D822781544E56A00024240 /* sample01 */,
 				20AF0D9015624641005AF576 /* sample02 */,
 				2027B745192E9F2C00FB9FB2 /* sample03 */,
-				2047CC34196615A2005A4E93 /* test01 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -308,24 +267,6 @@
 			productReference = 2027B745192E9F2C00FB9FB2 /* sample03 */;
 			productType = "com.apple.product-type.tool";
 		};
-		2047CC24196615A2005A4E93 /* test01 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2047CC31196615A2005A4E93 /* Build configuration list for PBXNativeTarget "test01" */;
-			buildPhases = (
-				2047CC25196615A2005A4E93 /* Sources */,
-				2047CC29196615A2005A4E93 /* Frameworks */,
-				2047CC2D196615A2005A4E93 /* Copy Files */,
-				2047CC2F196615A2005A4E93 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = test01;
-			productName = sample02;
-			productReference = 2047CC34196615A2005A4E93 /* test01 */;
-			productType = "com.apple.product-type.tool";
-		};
 		20AF0D8F15624641005AF576 /* sample02 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 20AF0D9915624641005AF576 /* Build configuration list for PBXNativeTarget "sample02" */;
@@ -390,7 +331,6 @@
 				20D822771544E56A00024240 /* sample01 */,
 				20AF0D8F15624641005AF576 /* sample02 */,
 				2027B73A192E9F2C00FB9FB2 /* sample03 */,
-				2047CC24196615A2005A4E93 /* test01 */,
 			);
 		};
 /* End PBXProject section */
@@ -413,14 +353,6 @@
 				2037CBF8193167DB0029A30F /* MongoController.m in Sources */,
 				2027B74F192EFE3900FB9FB2 /* AdminController.m in Sources */,
 				2027B746192E9F3A00FB9FB2 /* main.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2047CC25196615A2005A4E93 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2047CC37196615D7005A4E93 /* test01-main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,7 +382,7 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
 				);
-				PRODUCT_NAME = sample03;
+				PRODUCT_NAME = brayatan_sample03;
 			};
 			name = Debug;
 		};
@@ -461,7 +393,7 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
 				);
-				PRODUCT_NAME = sample03;
+				PRODUCT_NAME = brayatan_sample03;
 			};
 			name = Release;
 		};
@@ -525,28 +457,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "libbrayatan/** libhttp_parser/**";
-			};
-			name = Release;
-		};
-		2047CC32196615A2005A4E93 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
-				);
-				PRODUCT_NAME = test01;
-			};
-			name = Debug;
-		};
-		2047CC33196615A2005A4E93 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/brayatan-dphufbcytqrfozfbramtsvrkovqc/Build/Products/Debug",
-				);
-				PRODUCT_NAME = test01;
 			};
 			name = Release;
 		};
@@ -615,15 +525,6 @@
 			buildConfigurations = (
 				203359C81544021800A94822 /* Debug */,
 				203359C91544021800A94822 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2047CC31196615A2005A4E93 /* Build configuration list for PBXNativeTarget "test01" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2047CC32196615A2005A4E93 /* Debug */,
-				2047CC33196615A2005A4E93 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
