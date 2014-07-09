@@ -34,7 +34,6 @@ void http_test() {
         BRDebugLog(@"OK");
     }];
     
-    [Http runloop];
 }
 
 void server_test() {
@@ -44,7 +43,8 @@ void server_test() {
         BRDebugLog(@"%@ ACCEPT %@", server, client);
         count++;
     };
-    
+    NSString *string = [NSString stringWithUTF8String:response];
+
     server.on_read_client = ^void(BRServer *server, BRClient *client, NSData *data) {
         NSString *s = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         BRDebugLog(@"%@ READ   %@: %@", server, client, s);
@@ -57,7 +57,6 @@ void server_test() {
             }];
             [client write_close];
         } else if ([s hasPrefix:@"G"]) {
-            NSString *string = [NSString stringWithUTF8String:response];
             BRDebugLog(@"%@ READ   %@: sending data %@", server, client, string);
             [client write_string:string];
             [client write_close];
@@ -77,5 +76,5 @@ int main(int argc, char **argv) {
     BRInforLog(@"STARTING %s", __FUNCTION__);
     server_test();
 //    http_test();
-    [Http runloop];
+    brayatan_run_loop();
 }

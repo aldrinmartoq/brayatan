@@ -76,6 +76,10 @@
         abort();
     }
     
+//    [self setup_read:^(ssize_t available) {
+//        [self accept_client];
+//    }];
+    
     [self read_start:^{
         [self accept_client];
     }];
@@ -83,6 +87,7 @@
 
 - (void)stop_server {
     [self read_cancel];
+    [self cancel_read];
     [self fd_close];
 }
 
@@ -120,6 +125,10 @@
 
 - (void)dealloc {
     BRTraceLog(@"DEALLOC SERVER %@", self);
+}
+
++ (void)initialize {
+    brayatan_init();
 }
 
 @end

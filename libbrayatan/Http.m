@@ -168,7 +168,6 @@ int on_url (http_parser* parser, const char *at, size_t length) {
     NSString *_ip;
     NSString *_port;
     http_parser_settings _settings;
-    client_t _clients[8192];
 }
 
 - (id) init {
@@ -178,7 +177,6 @@ int on_url (http_parser* parser, const char *at, size_t length) {
         _settings.on_header_value = on_header_value;
         _settings.on_headers_complete = on_headers_complete;
         _settings.on_message_complete = on_message_complete;
-        memset(_clients, 0, sizeof(_clients));
     }
     
     return self;

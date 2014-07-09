@@ -8,7 +8,18 @@
 
 #import "BRSocket.h"
 
-@implementation BRSocket
+@implementation BRSocket {
+    brayatan_read_block     read_block;
+    brayatan_write_block    write_block;
+}
+
+- (id) init {
+    if (self = [super init]) {
+        read_block = write_block = nil;
+    }
+
+    return self;
+}
 
 - (BOOL)setNonBlock {
     int flags, r;
@@ -59,6 +70,7 @@
     dispatch_source_set_cancel_handler(self.dispatch_source_write, cancel_handler);
     dispatch_resume(self.dispatch_source_write);
 }
+
 - (void)write_cancel {
     if (self.dispatch_source_write != nil) {
         BRTraceLog(@"%@", self);
@@ -66,6 +78,40 @@
         dispatch_release(self.dispatch_source_write);
     }
     self.dispatch_source_write = nil;
+}
+
+- (void)setup_read:(brayatan_read_block)block {
+    if (read_block == nil) {
+        BRTraceLog(@"%@ setup read for %d", self, self.fd);
+        read_block = block;
+        brayatan_read_add(self.fd, read_block);
+    } else {
+        BRTraceLog(@"NO READ");
+    }
+}
+
+- (void)cancel_read {
+    if (read_block != nil) {
+        BRTraceLog(@"%@ cancel read for %d", self, self.fd);
+        brayatan_read_del(self.fd, read_block);
+        read_block = nil;
+    }
+}
+
+- (void)setup_write:(brayatan_write_block)block {
+    if (write_block == nil) {
+        BRTraceLog(@"%@ setup write for %d", self, self.fd);
+        write_block = block;
+        brayatan_write_add(self.fd, write_block);
+    }
+}
+
+- (void)cancel_write {
+    if (write_block != nil) {
+        BRTraceLog(@"%@ cancel write for %d", self, self.fd);
+        brayatan_write_del(self.fd, write_block);
+        write_block = nil;
+    }
 }
 
 - (void)fd_close {

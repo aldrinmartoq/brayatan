@@ -23,6 +23,10 @@
 - (void)read_cancel;
 - (void)write_start_Event:(void(^)(void))event_handler Cancel:(void(^)(void))cancel_handler;
 - (void)write_cancel;
+- (void)setup_read:(brayatan_read_block)block;
+- (void)cancel_read;
+- (void)setup_write:(brayatan_write_block)block;
+- (void)cancel_write;
 - (void)fd_close;
 
 + (dispatch_queue_t) dispatch_queue;

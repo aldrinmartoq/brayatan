@@ -26,6 +26,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		203127CC196C3ACE002F8E2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 20335AD31544132D00A94822 /* libbrayatan.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 205E863E196B7AD500FCBA0B;
+			remoteInfo = brayatan_test01;
+		};
 		20335ADA1544132D00A94822 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 20335AD31544132D00A94822 /* libbrayatan.xcodeproj */;
@@ -83,7 +90,7 @@
 		2012905A193591F700EDD0F9 /* list.mustache */ = {isa = PBXFileReference; lastKnownFileType = text; path = list.mustache; sourceTree = "<group>"; };
 		2012905C193591F700EDD0F9 /* chao.mustache */ = {isa = PBXFileReference; lastKnownFileType = text; path = chao.mustache; sourceTree = "<group>"; };
 		2027B738192E9E8200FB9FB2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		2027B745192E9F2C00FB9FB2 /* sample03 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample03; sourceTree = BUILT_PRODUCTS_DIR; };
+		2027B745192E9F2C00FB9FB2 /* sample03 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = sample03; path = brayatan_sample03; sourceTree = BUILT_PRODUCTS_DIR; };
 		2027B74C192EFD1A00FB9FB2 /* AdminController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdminController.h; sourceTree = "<group>"; };
 		2027B74D192EFD1A00FB9FB2 /* AdminController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdminController.m; sourceTree = "<group>"; };
 		203359BF1544021800A94822 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -215,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				20335ADB1544132D00A94822 /* libbrayatan.a */,
+				203127CD196C3ACE002F8E2A /* brayatan_test01 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -336,6 +344,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		203127CD196C3ACE002F8E2A /* brayatan_test01 */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = brayatan_test01;
+			remoteRef = 203127CC196C3ACE002F8E2A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		20335ADB1544132D00A94822 /* libbrayatan.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
