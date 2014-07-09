@@ -105,7 +105,8 @@ dispatch_queue_t queue;
 }
 
 + (void)initialize {
-    queue = dispatch_queue_create("dispatch", 0);
+//    queue = dispatch_queue_create("dispatch", 0);
+    queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 }
 
 + (instancetype)dispatcherWithIP:(NSString *)ip port:(NSString *)port templateFolder:(NSString *)templateFolder {

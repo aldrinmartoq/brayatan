@@ -92,13 +92,23 @@
 }
 
 + (MongoDBCollection *) collection {
-    static MongoDBCollection *collection = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSError *error = nil;
+    NSMutableDictionary *d = [[NSThread currentThread] threadDictionary];
+    NSError *error = nil;
+    MongoDBCollection *collection =  [d objectForKey:@0];
+    if (collection == nil) {
         MongoConnection *mongoConnection = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
         collection = [mongoConnection collectionWithName:@"brayatan.datos"];
-    });
+        [d setObject:collection forKey:@0];
+    }
+    
+    return collection;
+//    static MongoDBCollection *collection = nil;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        NSError *error = nil;
+//        MongoConnection *mongoConnection = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
+//        collection = [mongoConnection collectionWithName:@"brayatan.datos"];
+//    });
     
     return collection;
 }
