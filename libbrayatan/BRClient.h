@@ -18,7 +18,7 @@ typedef enum {
     kBrayatanWriteBlockDone
 } brayatan_write_block_result;
 
-typedef brayatan_write_block_result (^BRClientWriteBlock)(BRClient *client, size_t length);
+typedef brayatan_write_block_result (^BRClientWriteBlock)(BRClient *client, size_t length, id object);
 typedef BOOL (^BRClientSendfileOnOpenBlock)(struct stat stat);
 typedef void (^BRClientSendfileOnErrorBlock)(int err);
 

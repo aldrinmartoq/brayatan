@@ -55,6 +55,7 @@
     if (self.dispatch_source_read != nil) {
         BRTraceLog(@"%@", self);
         dispatch_source_cancel(self.dispatch_source_read);
+        dispatch_source_set_event_handler(self.dispatch_source_read, ^{});
         dispatch_release(self.dispatch_source_read);
     }
     self.dispatch_source_read = nil;
@@ -67,7 +68,6 @@
     BRTraceLog(@"%@", self);
     self.dispatch_source_write = dispatch_source_create(DISPATCH_SOURCE_TYPE_WRITE, self.fd, 0, [BRSocket dispatch_queue]);
     dispatch_source_set_event_handler(self.dispatch_source_write, event_handler);
-    dispatch_source_set_cancel_handler(self.dispatch_source_write, cancel_handler);
     dispatch_resume(self.dispatch_source_write);
 }
 
@@ -75,6 +75,7 @@
     if (self.dispatch_source_write != nil) {
         BRTraceLog(@"%@", self);
         dispatch_source_cancel(self.dispatch_source_write);
+        dispatch_source_set_event_handler(self.dispatch_source_write, ^{});
         dispatch_release(self.dispatch_source_write);
     }
     self.dispatch_source_write = nil;
