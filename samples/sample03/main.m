@@ -11,7 +11,20 @@
 #import "AdminController.h"
 #import "MongoController.h"
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char * argv[], char **envp) {
+    printf("\n");
+    char** env;
+    for (env = envp; *env != 0; env++)
+    {
+        char* thisEnv = *env;
+        printf("export %s\n", thisEnv);
+    }
+    printf("\n");
+    printf("%s > brayatan2.log 2>&1 &\n", argv[0]);
+    printf("\n");
+    printf("\n");
+
+    
     @autoreleasepool {
         NSString *templateFolder = [NSString stringWithFormat:@"%@/views", [[NSBundle mainBundle] resourcePath]];
         HttpDispatcher *dispatcher = [HttpDispatcher dispatcherWithIP:@"0.0.0.0" port:@"9999" templateFolder:templateFolder];

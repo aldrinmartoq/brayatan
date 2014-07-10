@@ -18,7 +18,7 @@
 }
 
 - (id)proxyForJson {
-    return [self description];
+    return [self descriptionWithCalendarFormat:@"%Y-%m-%dT%H:%M:%SZ" timeZone:nil locale:nil];
 }
 @end
 
@@ -55,18 +55,20 @@
     unsigned long long random = 0;
     MongoDBCollection *collection = [MongoController collection];
     NSMutableArray *results = [NSMutableArray array];
+    NSMutableArray *documents = [NSMutableArray array];
     for (int i = 1; i <=10; i++) {
         arc4random_buf(&random, sizeof(random));
-        NSError *error = nil;
-        NSDictionary *data = @{@"codigo" : [NSNumber numberWithUnsignedLongLong:random] , @"nombre" : [NSString stringWithFormat:@"dato %llu", i + random], @"cuando" : [NSDate date]};
+        NSDictionary *data = @{@"_id" : [BSONObjectID objectID], @"codigo" : [NSNumber numberWithUnsignedLongLong:random] , @"nombre" : [NSString stringWithFormat:@"dato %llu", i + random], @"cuando" : [NSDate date]};
         [results addObject:data];
-        [collection insertDictionary:data writeConcern:nil error:&error];
+        [documents addObject:[data BSONDocument]];
     }
     
+    NSError *error = nil;
+    [collection insertDocuments:documents continueOnError:NO writeConcern:nil error:&error];
+
     NSDictionary *result = @{@"results" : results};
     SBJson4Writer *writer = [[SBJson4Writer alloc] init];
-    NSString *string = [writer stringWithObject:result];
-    return string;
+    return [writer stringWithObject:result];
 }
 
 - (id)listJSON {
@@ -100,15 +102,6 @@
         collection = [mongoConnection collectionWithName:@"brayatan.datos"];
         [d setObject:collection forKey:@0];
     }
-    
-    return collection;
-//    static MongoDBCollection *collection = nil;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        NSError *error = nil;
-//        MongoConnection *mongoConnection = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
-//        collection = [mongoConnection collectionWithName:@"brayatan.datos"];
-//    });
     
     return collection;
 }
