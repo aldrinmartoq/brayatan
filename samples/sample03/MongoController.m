@@ -9,7 +9,7 @@
 #import "MongoController.h"
 #import "ObjCMongoDB.h"
 #import "SBJson4.h"
-
+#import "NSObject+MTJSONUtils.h"
 
 @implementation NSDate (StringValue)
 
@@ -17,6 +17,17 @@
     return [self descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M:%S" timeZone:nil locale:nil];
 }
 
+- (id)proxyForJson {
+    NSDateComponents *d = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond fromDate:self];
+    return [NSString stringWithFormat:@"%04ld-%02ld-%02ldT%02ld:%02ld:%02ld", [d year], [d month], [d day], [d hour], [d minute], [d second]];
+}
+
+@end
+
+@implementation BSONObjectID (JSON)
+- (id)proxyForJson {
+    return [self stringValue];
+}
 @end
 
 @implementation MongoController
@@ -46,13 +57,15 @@
     unsigned long long random = 0;
     MongoDBCollection *collection = [MongoController collection];
     NSMutableArray *results = [NSMutableArray array];
+    NSMutableArray *documents = [NSMutableArray array];
     for (int i = 1; i <=10; i++) {
         arc4random_buf(&random, sizeof(random));
-        NSError *error = nil;
-        NSDictionary *data = @{@"codigo" : [NSNumber numberWithUnsignedLongLong:random] , @"nombre" : [NSString stringWithFormat:@"dato %llu", i + random], @"cuando" : [NSDate date]};
+        NSDictionary *data = @{@"_id" : [BSONObjectID objectID], @"codigo" : [NSNumber numberWithUnsignedLongLong:random] , @"nombre" : [NSString stringWithFormat:@"dato %llu", i + random], @"cuando" : [NSDate date]};
         [results addObject:data];
-        [collection insertDictionary:data writeConcern:nil error:&error];
+        [documents addObject:[data BSONDocument]];
     }
+    NSError *error = nil;
+    [collection insertDocuments:documents continueOnError:NO writeConcern:nil error:&error];
     
     NSDictionary *result = @{@"results" : results};
     SBJson4Writer *writer = [[SBJson4Writer alloc] init];

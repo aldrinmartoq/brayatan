@@ -99,7 +99,6 @@
 }
 
 - (void)write_data:(NSData *)data {
-    __block off_t offset = 0;
     [self push_write:^brayatan_write_block_result(BRClient *client, size_t length) {
         
         return kBrayatanWriteBlockCont;
